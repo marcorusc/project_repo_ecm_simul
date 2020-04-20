@@ -306,6 +306,7 @@ void load_ecm_file()
 	std::cout << "Loading ECM file " << parameters.strings("init_ecm_filename") << std::endl;
 	std::ifstream infile;
 	infile.open( parameters.strings("init_ecm_filename") );
+	if (!infile) {std::cout << "problem!" << std::endl;}
 	std::ofstream outfile ("verify_output.txt");
 	std::string array[4];
 	int i = 0;
