@@ -24,6 +24,7 @@ CUSTOM_DIR = sample_projects/ECM_try/custom_modules
 LIB := -L$(CUR_DIR)/$(MABOSS_DIR)/lib -lMaBoSS -ldl
 INC := -I$(CUR_DIR)/$(MABOSS_DIR)/include -DMAXNODES=$(MABOSS_MAX_NODES)
 CUS := -I$(CUR_DIR)/$(CUSTOM_DIR)
+INC_PHYSICELL := -I$(CUR_DIR)/core
 
 
 # If max nodes > 64, change lib path 
@@ -66,9 +67,9 @@ PhysiCell_pugixml.o PhysiCell_settings.o
 
 # put your custom objects here (they should be in the custom_modules directory)  
 
-PhysiBoSSa_OBJECTS := utils.o maboss_network.o boolean_network.o
+PhysiBoSSa_OBJECTS := maboss_network.o boolean_network.o
 
-PhysiCell_custom_module_OBJECTS := custom.o custom_main.o
+PhysiCell_custom_module_OBJECTS := custom.o custom_main.o custom_cell.o
 
 pugixml_OBJECTS := pugixml.o
 
@@ -79,7 +80,7 @@ ALL_OBJECTS := $(PhysiCell_OBJECTS) $(PhysiCell_custom_module_OBJECTS) $(PhysiBo
 
 all: MaBoSS main.cpp $(ALL_OBJECTS)
 	$(COMPILE_COMMAND) $(INC)  -o $(PROGRAM_NAME) $(ALL_OBJECTS) main.cpp $(LIB)
-
+#	cp $(PROGRAM_NAME) ../bin
 # PhysiCell core components	
 
 PhysiCell_phenotype.o: ./core/PhysiCell_phenotype.cpp
@@ -167,9 +168,6 @@ MaBoSS:
 maboss_network.o: ./addons/PhysiBoSSa/src/maboss_network.cpp
 	$(COMPILE_COMMAND) $(INC) -c ./addons/PhysiBoSSa/src/maboss_network.cpp
 
-utils.o: ./addons/PhysiBoSSa/src/utils.cpp
-	$(COMPILE_COMMAND) -c ./addons/PhysiBoSSa/src/utils.cpp
-
 boolean_network.o: ./addons/PhysiBoSSa/src/boolean_network.cpp
 	$(COMPILE_COMMAND) $(INC) -c ./addons/PhysiBoSSa/src/boolean_network.cpp
 
@@ -179,6 +177,8 @@ custom.o: ./custom_modules/custom.cpp
 custom_main.o: ./custom_modules/custom_main.cpp 
 	$(COMPILE_COMMAND) $(INC)  -c ./custom_modules/custom_main.cpp
 
+custom_cell.o: ./custom_modules/custom_cell.cpp 
+	$(COMPILE_COMMAND) $(INC) -c ./custom_modules/custom_cell.cpp
 
 # cleanup
 
@@ -197,7 +197,7 @@ MaBoSS-clean:
 	cd $(MABOSS_DIR)/src && make clean
 	
 # next 2 targets for nanoHUB
-install: 
+install: all
 	. /etc/environ.sh; use -e -r anaconda3-5.1; make all
 	cp $(PROGRAM_NAME) ../bin
 

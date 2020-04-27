@@ -157,8 +157,8 @@ class UserTab(object):
         param_name17 = Button(description='cell_ecm_repulsion', disabled=True, layout=name_button_layout)
         param_name17.style.button_color = 'lightgreen'
 
-        self.cell_ecm_repulsion = IntText(
-          value= 10 ,
+        self.cell_ecm_repulsion = FloatText(
+          value= 10.0 ,
           step=1,
           style=style, layout=widget_layout)
 
@@ -699,7 +699,7 @@ class UserTab(object):
         self.cell_basement_membrane_adhesion.value = float(uep.find('.//cell_basement_membrane_adhesion').text)
         self.ecm_adhesion_min.value = int(uep.find('.//ecm_adhesion_min').text)
         self.ecm_adhesion_max.value = int(uep.find('.//ecm_adhesion_max').text)
-        self.cell_ecm_repulsion.value = int(uep.find('.//cell_ecm_repulsion').text)
+        self.cell_ecm_repulsion.value = float(uep.find('.//cell_ecm_repulsion').text)
         self.ecm_degradation.value = int(uep.find('.//ecm_degradation').text)
         self.max_interaction_factor.value = float(uep.find('.//max_interaction_factor').text)
         self.cell_cell_repulsion.value = int(uep.find('.//cell_cell_repulsion').text)

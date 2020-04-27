@@ -248,7 +248,10 @@ void Cell_Container::update_all_cells(double t, double phenotype_dt_ , double me
 	#pragma omp parallel for 
 	for( int i=0; i < (*all_cells).size(); i++ )
 	{
-		(*all_cells)[i]->phenotype.secretion.advance( (*all_cells)[i], (*all_cells)[i]->phenotype , diffusion_dt_ );
+		if( (*all_cells)[i]->is_out_of_domain == false )
+		{
+			(*all_cells)[i]->phenotype.secretion.advance( (*all_cells)[i], (*all_cells)[i]->phenotype , diffusion_dt_ );
+		}
 	}
 	
 	//if it is the time for running cell cycle, do it!
@@ -313,7 +316,6 @@ void Cell_Container::update_all_cells(double t, double phenotype_dt_ , double me
 		// end of new in Feb 2018 		
 		
 		// Compute velocities
-		
 		#pragma omp parallel for 
 		for( int i=0; i < (*all_cells).size(); i++ )
 		{
@@ -322,19 +324,14 @@ void Cell_Container::update_all_cells(double t, double phenotype_dt_ , double me
 			{
 				// update_velocity already includes the motility update 
 				//(*all_cells)[i]->phenotype.motility.update_motility_vector( (*all_cells)[i] ,(*all_cells)[i]->phenotype , time_since_last_mechanics ); 
-				(*all_cells)[i]->update_velocity( time_since_last_mechanics, PhysiCell::parameters.doubles("membrane_length"), PhysiCell::parameters.strings("membrane_shape"));
-				
+				(*all_cells)[i]->functions.update_velocity( (*all_cells)[i], (*all_cells)[i]->phenotype, time_since_last_mechanics);
 			}
-
-			if ( !(*all_cells)[i]->passive() )
-				((*all_cells)[i])->degrade_ecm( mechanics_dt_ );
 
 			if( (*all_cells)[i]->functions.custom_cell_rule )
 			{
 				(*all_cells)[i]->functions.custom_cell_rule((*all_cells)[i], (*all_cells)[i]->phenotype, time_since_last_mechanics);
 			}
 		}
-		
 		// Calculate new positions
 		#pragma omp parallel for 
 		for( int i=0; i < (*all_cells).size(); i++ )

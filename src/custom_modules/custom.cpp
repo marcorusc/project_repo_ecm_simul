@@ -68,7 +68,7 @@
 #include "./custom.h"
 #include "../BioFVM/BioFVM.h"  
 #include "../addons/PhysiBoSSa/src/boolean_network.h"
-
+#include <math.h>
 using namespace BioFVM;
 
 // declare cell definitions here 
@@ -97,7 +97,7 @@ void create_cell_types( void )
 	
 	// set default cell cycle model 
 
-	cell_defaults.functions.cycle_model = live; 
+	cell_defaults.functions.cycle_model = Ki67_advanced; 
 	
 	// set default_cell_functions; 
 	
@@ -109,7 +109,6 @@ void create_cell_types( void )
 
 	// add custom data here, if any
 	cell_defaults.custom_data.add_variable("next_physibossa_run", "dimensionless", 12.0);
-	std::cout << microenvironment.find_density_index("ecm");
 	
 	load_ecm_file();
 
@@ -122,7 +121,24 @@ void create_cell_types( void )
 
 
 	// initially no necrosis 
+	// cell_defaults.phenotype.death.rates[apoptosis_model_index] = 0.0; 
 	cell_defaults.phenotype.death.rates[necrosis_model_index] = 0.0; 
+	cell_defaults.functions.cycle_model.phase_link(0,1).fixed_duration = true; 
+	cell_defaults.functions.cycle_model.phase_link(1,2).arrest_function = Custom_cell::wait_for_nucleus_growth;
+	cell_defaults.functions.cycle_model.transition_rate(0,1) = 1.0/(1*60.0); 
+	cell_defaults.functions.cycle_model.transition_rate(1,2) = std::numeric_limits<double>::infinity();
+	cell_defaults.phenotype.cycle.data.transition_rate(0,1) = 1.0/(1*60.0); 
+	cell_defaults.phenotype.cycle.data.transition_rate(1,2) = std::numeric_limits<double>::infinity();
+
+	cell_defaults.phenotype.death.models[apoptosis_model_index]->phase_link(0,1).fixed_duration = true;
+
+		// Use the deterministic model, where this phase has fixed duration
+
+	// Use an arrest function to put the transition condition to duration OR small cell size
+	cell_defaults.phenotype.death.models[apoptosis_model_index]->transition_rate( 0, 1) = std::numeric_limits<double>::infinity();//1.0 / (8.6 * 60.0); 
+	cell_defaults.phenotype.death.models[apoptosis_model_index]->phase_link(0,1).arrest_function = Custom_cell::waiting_to_remove; 
+	
+
 
 	// set oxygen uptake / secretion parameters for the default cell type 
 	cell_defaults.phenotype.secretion.uptake_rates[oxygen_substrate_index] = 10; 
@@ -135,7 +151,10 @@ void create_cell_types( void )
 	
 	microenvironment.diffusion_coefficients[ecm_substrate_index] = 1e-85;
 	microenvironment.decay_rates[ecm_substrate_index] = 0;
-	microenvironment.list_indexes(0.5);
+
+	//Setting the custom_create_cell pointer to our create_custom_cell
+	custom_create_cell = Custom_cell::create_custom_cell;
+
 	return; 
 }
 
@@ -154,9 +173,12 @@ void setup_microenvironment( void )
 	return; 
 }
 
+
+
+
 void setup_tissue( void )
 {
-	Cell* pC;
+	Custom_cell* pC;
 	std::vector<init_record> cells = read_init_file(parameters.strings("init_cells_filename"), ';', true);
 	MaBoSSNetwork* maboss;
 	std::string bnd_file = parameters.strings("bnd_file");
@@ -173,20 +195,23 @@ void setup_tissue( void )
 		int phase = cells[i].phase;
 		double elapsed_time = cells[i].elapsed_time;
 
-		pC = create_cell();
-		 
+		pC = static_cast<Custom_cell*>(create_cell());
 		pC->assign_position( x, y, z );
-		// pC->set_total_volume(sphere_volume_from_radius(radius));
-		//std::cout<<(*all_cells)[i]->position<<std::endl;
-		// pC->phenotype.cycle.data.current_phase_index = phase;
+		double volume = sphere_volume_from_radius(radius);
+		pC->set_total_volume(volume);
+		pC->phenotype.volume.target_solid_nuclear = cell_defaults.phenotype.volume.target_solid_nuclear;
+		pC->phenotype.volume.target_solid_cytoplasmic = cell_defaults.phenotype.volume.target_solid_cytoplasmic;
+		pC->phenotype.volume.rupture_volume = cell_defaults.phenotype.volume.rupture_volume;
+		
+		pC->phenotype.cycle.data.current_phase_index = phase+1;
 		pC->phenotype.cycle.data.elapsed_time_in_phase = elapsed_time;
+		if ((phase+1) == 1)
+			pC->phenotype.cycle.pCycle_Model->phases[1].entry_function(pC, pC->phenotype, 0);
+		
 		pC->boolean_network = ecm_network;
 		pC->boolean_network.restart_nodes();
 		pC->custom_data["next_physibossa_run"] = pC->boolean_network.get_time_to_update();
-		//std::cout<< pC->position.size() << std::endl;
-		//std::cout<< pC->position << std::endl;
 	}
-	std::cout<<(*all_cells)[25]<<std::endl;
 	std::cout << "tissue created" << std::endl;
 
 	return; 
@@ -194,8 +219,15 @@ void setup_tissue( void )
 
 std::vector<std::string> my_coloring_function( Cell* pCell )
 {
-	// start with live dead coloring 
-	std::vector<std::string> output = false_cell_coloring_live_dead(pCell); 
+	Custom_cell* pCustomCell = static_cast<Custom_cell*>(pCell);
+	std::vector< std::string > output( 4 , "black" );
+	double ecm_value = pCustomCell->ecm_contact;
+	int color = (int) round( ecm_value * 255.0 / (pCell->phenotype.geometry.radius)  );
+	char szTempString [128];
+	sprintf( szTempString , "rgb(%u,0,%u)", color, 255-color );
+	output[0].assign( szTempString );
+
+	//std::vector< std::string > output = false_cell_coloring_live_dead(pCell);
 	return output; 
 }
 
@@ -204,7 +236,7 @@ void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, dou
 	static int o2_index = microenvironment.find_density_index( "oxygen" );
 	double o2 = pCell->nearest_density_vector()[o2_index];
 
-	update_cell_and_death_parameters_O2_based(pCell, phenotype, dt);
+	// update_cell_and_death_parameters_O2_based(pCell, phenotype, dt);
 
 	if( phenotype.death.dead == true )
 	{
@@ -214,47 +246,48 @@ void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, dou
 
 	if (PhysiCell_globals.current_time >= pCell->custom_data["next_physibossa_run"])
 	{
-		set_input_nodes(pCell);
+		Custom_cell* pCustomCell = static_cast<Custom_cell*>(pCell);
+		set_input_nodes(pCustomCell);
 
 		pCell->boolean_network.run_maboss();
 		// Get noisy step size
 		double next_run_in = pCell->boolean_network.get_time_to_update();
 		pCell->custom_data["next_physibossa_run"] = PhysiCell_globals.current_time + next_run_in;
 		
-		from_nodes_to_cell(pCell, phenotype, dt);
+		from_nodes_to_cell(pCustomCell, phenotype, dt);
 	}
 }
 
-void set_input_nodes(Cell* pCell) {
+void set_input_nodes(Custom_cell* pCell) {
 int ind;
 	nodes = *(pCell->boolean_network.get_nodes());
 	// Oxygen input node O2; Oxygen or Oxy
-	ind = pCell->boolean_network.get_node_index( "Oxygen" );
-	if ( ind < 0 )
-		ind = pCell->boolean_network.get_node_index( "Oxy" );
-	if ( ind < 0 )
-		ind = pCell->boolean_network.get_node_index( "O2" );
-	if ( ind >= 0 )
-		nodes[ind] = ( !pCell->necrotic_oxygen() );
+	// ind = pCell->boolean_network.get_node_index( "Oxygen" );
+	// if ( ind < 0 )
+	// 	ind = pCell->boolean_network.get_node_index( "Oxy" );
+	// if ( ind < 0 )
+	// 	ind = pCell->boolean_network.get_node_index( "O2" );
+	// if ( ind >= 0 )
+	// 	nodes[ind] = ( !pCell->necrotic_oxygen() );
 	
 
-	ind = pCell->boolean_network.get_node_index( "Neighbours" );
-	if ( ind >= 0 )
-		nodes[ind] = ( pCell->has_neighbor(0) );
+	// ind = pCell->boolean_network.get_node_index( "Neighbours" );
+	// if ( ind >= 0 )
+	// 	nodes[ind] = ( pCell->has_neighbor(0) );
 	
-	ind = pCell->boolean_network.get_node_index( "Nei2" );
-	if ( ind >= 0 )
-		nodes[ind] = ( pCell->has_neighbor(1) );
+	// ind = pCell->boolean_network.get_node_index( "Nei2" );
+	// if ( ind >= 0 )
+	// 	nodes[ind] = ( pCell->has_neighbor(1) );
 
-	// If has enough contact with ecm or not
-	ind = pCell->boolean_network.get_node_index( "ECM_sensing" );
-	if ( ind >= 0 )
-		nodes[ind] = ( parameters.ints("contact_cell_ECM_threshold") );
-	// If has enough contact with ecm or not
-	ind = pCell->boolean_network.get_node_index( "ECM" );
-	if ( ind >= 0 )
-		nodes[ind] = ( parameters.ints("contact_cell_ECM_threshold") );
-	// If has enough contact with ecm or not
+	// // If has enough contact with ecm or not
+	// ind = pCell->boolean_network.get_node_index( "ECM_sensing" );
+	// if ( ind >= 0 )
+	// 	nodes[ind] = ( parameters.ints("contact_cell_ECM_threshold") );
+	// // If has enough contact with ecm or not
+	// ind = pCell->boolean_network.get_node_index( "ECM" );
+	// if ( ind >= 0 )
+	// 	nodes[ind] = ( parameters.ints("contact_cell_ECM_threshold") );
+	// // If has enough contact with ecm or not
 	ind = pCell->boolean_network.get_node_index( "ECMicroenv" );
 	if ( ind >= 0 )
 		nodes[ind] = ( parameters.ints("contact_cell_ECM_threshold") );
@@ -268,7 +301,7 @@ int ind;
 	/// example
 }
 
-void from_nodes_to_cell(Cell* pCell, Phenotype& phenotype, double dt)
+void from_nodes_to_cell(Custom_cell* pCell, Phenotype& phenotype, double dt)
 {
 	std::vector<bool>* point_to_nodes = pCell->boolean_network.get_nodes();
 	int bn_index;
@@ -281,18 +314,34 @@ void from_nodes_to_cell(Cell* pCell, Phenotype& phenotype, double dt)
 		return;
 	}
 
-	bn_index = pCell->boolean_network.get_node_index("Matrix_modif");
+	bn_index = pCell->boolean_network.get_node_index( "Migration" );
+	if ( bn_index >= 0 )
+	{
+		pCell->evolve_motility_coef( (*point_to_nodes)[bn_index], dt );
+	}
+
+	// bn_index = pCell->boolean_network.get_node_index( "Survival" );
+	// if ( bn_index >= 0 )
+	// {
+	// 	do_proliferation( pCell, phenotype, dt );
+	// }
+
+	bn_index = pCell->boolean_network.get_node_index("CCA");
 	if ( bn_index != -1 && (*point_to_nodes)[bn_index] )
 	{
-		pCell->set_mmp( (*point_to_nodes)[bn_index] );
-		return;
-	}
+		pCell->freezing(1);
+	}	
+
+	// bn_index = pCell->boolean_network.get_node_index("Matrix_modif");
+	// if ( bn_index != -1 && (*point_to_nodes)[bn_index] )
+	// {
+	// 	pCell->set_mmp( (*point_to_nodes)[bn_index] );
+	// }
 
 	bn_index = pCell->boolean_network.get_node_index("EMT");
 	if ( bn_index != -1 && (*point_to_nodes)[bn_index] )
 	{
 		pCell->set_mmp( (*point_to_nodes)[bn_index] );
-		return;
 	}
 
 	/// example
@@ -306,8 +355,6 @@ void load_ecm_file()
 	std::cout << "Loading ECM file " << parameters.strings("init_ecm_filename") << std::endl;
 	std::ifstream infile;
 	infile.open( parameters.strings("init_ecm_filename") );
-	if (!infile) {std::cout << "problem!" << std::endl;}
-	std::ofstream outfile ("verify_output.txt");
 	std::string array[4];
 	int i = 0;
 	std::string line;
@@ -331,15 +378,9 @@ void load_ecm_file()
 		pos[1] = y;
 		pos[2] = z;
 		int voxel_index = microenvironment.nearest_voxel_index( pos );
-		microenvironment.density_vector(voxel_index)[microenvironment.find_density_index("ecm")] += amount; 
-		
-		outfile << "voxel_index: " << voxel_index << "   " << "ecm_index: " << microenvironment.find_density_index("ecm") << "   " << "amount_of_density: " << microenvironment.density_vector(voxel_index)[microenvironment.find_density_index("ecm")] << std::endl;
-		
+		microenvironment.density_vector(voxel_index)[microenvironment.find_density_index("ecm")] += amount; 		
 	}
-	outfile.close();
 	infile.close();
-	std::cout << "File loaded !" << std::endl;
-
 }
 
 
@@ -392,4 +433,18 @@ std::vector<init_record> read_init_file(std::string filename, char delimiter, bo
 	} while (!fin.eof());
 	
 	return result;
+}
+
+/* Go to proliferative if needed */
+void do_proliferation( Cell* pCell, Phenotype& phenotype, double dt )
+{
+	// If cells is in G0 (quiescent) switch to pre-mitotic phase
+	if ( pCell->phenotype.cycle.current_phase_index() == PhysiCell_constants::Ki67_negative )
+		pCell->phenotype.cycle.advance_cycle(pCell, phenotype, dt);
+}
+
+double sphere_volume_from_radius(double rad)
+{
+	double PI4_3 = 4.0 / 3.0 * M_PI;
+return PI4_3 * rad * rad * rad;
 }

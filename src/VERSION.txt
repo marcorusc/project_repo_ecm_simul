@@ -1,1 +1,1 @@
-Version.txt
+Version 1.2
