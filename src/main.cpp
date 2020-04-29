@@ -124,6 +124,7 @@ int main( int argc, char* argv[] )
 	/* Users typically stop modifying here. END USERMODS */ 
 	
 	// set MultiCellDS save options 
+
 	set_save_biofvm_mesh_as_matlab( true ); 
 	set_save_biofvm_data_as_matlab( true ); 
 	set_save_biofvm_cell_data( true ); 
@@ -131,6 +132,8 @@ int main( int argc, char* argv[] )
 	
 	// save a simulation snapshot 
 	
+	//mkdir("../output");
+
 	char filename[1024];
 	sprintf( filename , "%s/initial" , PhysiCell_settings.folder.c_str() ); 
 	

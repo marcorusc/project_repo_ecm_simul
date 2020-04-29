@@ -222,7 +222,11 @@ std::vector<std::string> my_coloring_function( Cell* pCell )
 	Custom_cell* pCustomCell = static_cast<Custom_cell*>(pCell);
 	std::vector< std::string > output( 4 , "black" );
 	double ecm_value = pCustomCell->ecm_contact;
-	int color = (int) round( ecm_value * 255.0 / (pCell->phenotype.geometry.radius)  );
+	int color = (int) round( (ecm_value * 255)/ (pCell->phenotype.geometry.radius) );
+	if (color > 255)
+	{
+		color = 255;
+	}
 	char szTempString [128];
 	sprintf( szTempString , "rgb(%u,0,%u)", color, 255-color );
 	output[0].assign( szTempString );
@@ -290,7 +294,7 @@ int ind;
 	// // If has enough contact with ecm or not
 	ind = pCell->boolean_network.get_node_index( "ECMicroenv" );
 	if ( ind >= 0 )
-		nodes[ind] = ( parameters.ints("contact_cell_ECM_threshold") );
+		nodes[ind] = ( touch_ECM(pCell) );
 	
 	// If nucleus is deformed, probability of damage
 	// Change to increase proba with deformation ? + put as parameter
@@ -447,4 +451,9 @@ double sphere_volume_from_radius(double rad)
 {
 	double PI4_3 = 4.0 / 3.0 * M_PI;
 return PI4_3 * rad * rad * rad;
+}
+
+bool touch_ECM(Custom_cell* pCell)
+{ 
+	return pCell->contact_ecm() > parameters.doubles("contact_cell_ECM_threshold"); 
 }

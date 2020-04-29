@@ -80,7 +80,7 @@ ALL_OBJECTS := $(PhysiCell_OBJECTS) $(PhysiCell_custom_module_OBJECTS) $(PhysiBo
 
 all: MaBoSS main.cpp $(ALL_OBJECTS)
 	$(COMPILE_COMMAND) $(INC)  -o $(PROGRAM_NAME) $(ALL_OBJECTS) main.cpp $(LIB)
-#	cp $(PROGRAM_NAME) ../bin
+
 # PhysiCell core components	
 
 PhysiCell_phenotype.o: ./core/PhysiCell_phenotype.cpp
@@ -197,7 +197,7 @@ MaBoSS-clean:
 	cd $(MABOSS_DIR)/src && make clean
 	
 # next 2 targets for nanoHUB
-install: all
+install: 
 	. /etc/environ.sh; use -e -r anaconda3-5.1; make all
 	cp $(PROGRAM_NAME) ../bin
 
