@@ -98,6 +98,9 @@ void setup_tissue( void );
 void setup_microenvironment( void ); 
 // custom pathology coloring function 
 std::vector<std::string> my_coloring_function( Cell* );
+std::vector<std::string> ECM_coloring_function( Cell* );
+std::vector<std::string> pMotility_coloring_function( Cell* );
+std::vector<std::string> migration_coloring_function( Cell* );
 
 // custom cell phenotype functions could go here 
 void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, double dt );
@@ -112,5 +115,6 @@ void do_proliferation(Cell* pCell, Phenotype& phenotype, double dt);
 inline float sphere_volume_from_radius(float radius) {return 4.0/3.0 * PhysiCell_constants::pi * std::pow(radius, 3);}
 
 bool touch_ECM(Custom_cell* pCell);
-
+void enough_to_node( Custom_cell* pCell, std::string nody, std::string field );
+void color_node(Custom_cell* pCell);
 #endif

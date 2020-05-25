@@ -65,6 +65,8 @@
 ###############################################################################
 */
 
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "./custom.h"
 #include "../BioFVM/BioFVM.h"  
 #include "../addons/PhysiBoSSa/src/boolean_network.h"
@@ -74,87 +76,69 @@ using namespace BioFVM;
 // declare cell definitions here 
 
 // std::string ecm_file;
-std::vector<bool> nodes;
+std::vector<bool>* nodes;
 
 void create_cell_types( void )
 {
-	// use the same random seed so that future experiments have the 
-	// same initial histogram of oncoprotein, even if threading means 
-	// that future division and other events are still not identical 
-	// for all runs 
+		// set the random seed 
+	SeedRandom( parameters.ints("random_seed") );  
 	
-	SeedRandom( parameters.ints("random_seed") ); // or specify a seed here 
+	/* 
+	   Put any modifications to default cell definition here if you 
+	   want to have "inherited" by other cell types. 
+	   
+	   This is a good place to set default functions. 
+	*/ 
 	
-	// housekeeping 
-	
-	initialize_default_cell_definition();
-	cell_defaults.phenotype.secretion.sync_to_microenvironment( &microenvironment ); 
-	
-	// Name the default cell type 
-	
-	cell_defaults.type = 0; 
-	cell_defaults.name = "tumor cell"; 
-	
-	// set default cell cycle model 
+	cell_defaults.functions.volume_update_function = standard_volume_update_function;
+	cell_defaults.functions.update_velocity = standard_update_cell_velocity;
 
-	cell_defaults.functions.cycle_model = Ki67_advanced; 
+	cell_defaults.functions.update_migration_bias = NULL; 
+	cell_defaults.functions.update_phenotype = NULL; // update_cell_and_death_parameters_O2_based; 
+	cell_defaults.functions.custom_cell_rule = NULL; 
 	
-	// set default_cell_functions; 
+	cell_defaults.functions.add_cell_basement_membrane_interactions = NULL; 
+	cell_defaults.functions.calculate_distance_to_membrane = NULL; 
 	
+	/*
+	   This parses the cell definitions in the XML config file. 
+	*/
+	
+	initialize_cell_definitions_from_pugixml(); 
+	
+	/* 
+	   Put any modifications to individual cell definitions here. 
+	   
+	   This is a good place to set custom functions. 
+	*/ 
+
 	cell_defaults.functions.update_phenotype = tumor_cell_phenotype_with_signaling; 
-	
-	// make sure the defaults are self-consistent. 
-	
-	cell_defaults.phenotype.secretion.sync_to_microenvironment( &microenvironment );
 
-	// add custom data here, if any
-	cell_defaults.custom_data.add_variable("next_physibossa_run", "dimensionless", 12.0);
-	
-	load_ecm_file();
-
-	// set the rate terms in the default phenotype 
-	// first find index for a few key variables. 
-	int apoptosis_model_index = cell_defaults.phenotype.death.find_death_model_index( "Apoptosis" );
-	int necrosis_model_index = cell_defaults.phenotype.death.find_death_model_index( "Necrosis" );
-	int oxygen_substrate_index = microenvironment.find_density_index( "oxygen" ); 
-	int ecm_substrate_index = microenvironment.find_density_index("ecm");
-
-
-	// initially no necrosis 
-	// cell_defaults.phenotype.death.rates[apoptosis_model_index] = 0.0; 
-	cell_defaults.phenotype.death.rates[necrosis_model_index] = 0.0; 
-	cell_defaults.functions.cycle_model.phase_link(0,1).fixed_duration = true; 
 	cell_defaults.functions.cycle_model.phase_link(1,2).arrest_function = Custom_cell::wait_for_nucleus_growth;
-	cell_defaults.functions.cycle_model.transition_rate(0,1) = 1.0/(1*60.0); 
-	cell_defaults.functions.cycle_model.transition_rate(1,2) = std::numeric_limits<double>::infinity();
-	cell_defaults.phenotype.cycle.data.transition_rate(0,1) = 1.0/(1*60.0); 
-	cell_defaults.phenotype.cycle.data.transition_rate(1,2) = std::numeric_limits<double>::infinity();
 
-	cell_defaults.phenotype.death.models[apoptosis_model_index]->phase_link(0,1).fixed_duration = true;
-
-		// Use the deterministic model, where this phase has fixed duration
-
-	// Use an arrest function to put the transition condition to duration OR small cell size
-	cell_defaults.phenotype.death.models[apoptosis_model_index]->transition_rate( 0, 1) = std::numeric_limits<double>::infinity();//1.0 / (8.6 * 60.0); 
+	int apoptosis_model_index = cell_defaults.phenotype.death.find_death_model_index( "Apoptosis" );
 	cell_defaults.phenotype.death.models[apoptosis_model_index]->phase_link(0,1).arrest_function = Custom_cell::waiting_to_remove; 
 	
-
-
-	// set oxygen uptake / secretion parameters for the default cell type 
-	cell_defaults.phenotype.secretion.uptake_rates[oxygen_substrate_index] = 10; 
-	cell_defaults.phenotype.secretion.secretion_rates[oxygen_substrate_index] = 0; 
-	cell_defaults.phenotype.secretion.saturation_densities[oxygen_substrate_index] = 38; 
-
-	//cell_defaults.phenotype.secretion.uptake_rates[ecm_substrate_index] = 10; 
-	//cell_defaults.phenotype.secretion.secretion_rates[ecm_substrate_index] = 0; 
-	//cell_defaults.phenotype.secretion.saturation_densities[ecm_substrate_index] = 38; 
+	/*
+	   This builds the map of cell definitions and summarizes the setup. 
+	*/
+		
+	build_cell_definitions_maps(); 
+	display_cell_definitions( std::cout ); 
 	
-	microenvironment.diffusion_coefficients[ecm_substrate_index] = 1e-85;
-	microenvironment.decay_rates[ecm_substrate_index] = 0;
+	// add custom data here, if any
+	cell_defaults.custom_data.add_variable("next_physibossa_run", "dimensionless", 12.0);
+	cell_defaults.custom_data.add_variable("ecm_contact", "dimensionless", 0.0); //for paraview visualization
+	cell_defaults.custom_data.add_variable(parameters.strings("node_to_visualize"), "dimensionless", 0.0 ); //for paraview visualization
+	load_ecm_file();
 
 	//Setting the custom_create_cell pointer to our create_custom_cell
-	custom_create_cell = Custom_cell::create_custom_cell;
-
+	cell_defaults.functions.instantiate_cell = Custom_cell::create_custom_cell;
+	cell_defaults.functions.custom_cell_rule = Custom_cell::check_passive;
+	cell_defaults.functions.update_velocity = Custom_cell::custom_update_velocity;
+	cell_defaults.functions.custom_adhesion = Custom_cell::custom_adhesion_function;
+	cell_defaults.functions.add_cell_basement_membrane_interactions = Custom_cell::add_cell_basement_membrane_interactions;	
+	cell_defaults.functions.calculate_distance_to_membrane = Custom_cell::distance_to_membrane;
 	return; 
 }
 
@@ -195,7 +179,7 @@ void setup_tissue( void )
 		int phase = cells[i].phase;
 		double elapsed_time = cells[i].elapsed_time;
 
-		pC = static_cast<Custom_cell*>(create_cell());
+		pC = static_cast<Custom_cell*>(create_cell(cell_defaults));
 		pC->assign_position( x, y, z );
 		double volume = sphere_volume_from_radius(radius);
 		pC->set_total_volume(volume);
@@ -211,35 +195,77 @@ void setup_tissue( void )
 		pC->boolean_network = ecm_network;
 		pC->boolean_network.restart_nodes();
 		pC->custom_data["next_physibossa_run"] = pC->boolean_network.get_time_to_update();
+		pC->custom_data["ecm_contact"] = pC->ecm_contact;
+		color_node(pC);
 	}
 	std::cout << "tissue created" << std::endl;
 
 	return; 
 }
 
-std::vector<std::string> my_coloring_function( Cell* pCell )
+std::vector<std::string> ECM_coloring_function( Cell* pCell )
 {
-	Custom_cell* pCustomCell = static_cast<Custom_cell*>(pCell);
 	std::vector< std::string > output( 4 , "black" );
+	Custom_cell* pCustomCell = static_cast<Custom_cell*>(pCell);
 	double ecm_value = pCustomCell->ecm_contact;
-	int color = (int) round( (ecm_value * 255)/ (pCell->phenotype.geometry.radius) );
-	if (color > 255)
-	{
+	int color = (int) round( ecm_value * 255.0 / (pCell->phenotype.geometry.radius)  );
+	if(color > 255){
 		color = 255;
 	}
 	char szTempString [128];
 	sprintf( szTempString , "rgb(%u,0,%u)", color, 255-color );
 	output[0].assign( szTempString );
+	return output;
 
-	//std::vector< std::string > output = false_cell_coloring_live_dead(pCell);
-	return output; 
+}
+
+std::vector<std::string> pMotility_coloring_function( Cell* pCell )
+{
+	std::vector< std::string > output( 4 , "rgb(0,0,0)" );
+	char szTempString [128];
+	Custom_cell* pCustomCell = static_cast<Custom_cell*>(pCell);
+	int color = (int) round(pCustomCell->pmotility * 255);
+	sprintf( szTempString , "rgb(%u,0,%u)", color, 255-color );
+	output[0].assign( szTempString );
+	return output;
+}
+
+std::vector<std::string> migration_coloring_function( Cell* pCell )
+{
+	std::vector< std::string > output( 4 , "rgb(0,0,0)" );
+	if ( pCell->boolean_network.get_node_value( parameters.strings("node_to_visualize") ) == 0 )
+	{
+		output[0] = "rgb(0,0,255)";
+		output[2] = "rgb(0,0,125)";
+		
+	}
+	else{
+		output[0] = "rgb(255,0,0)";
+		output[2] = "rgb(125,0,0)";
+	}
+	
+	return output;
+}
+
+
+std::vector<std::string> my_coloring_function( Cell* pCell )
+{
+	 //Custom_cell* pCustomCell = static_cast<Custom_cell*>(pCell);
+	 int color_number = parameters.ints("color_function");
+
+	 if (color_number == 0)
+	 	return ECM_coloring_function(pCell);
+	 if (color_number == 1)
+	 	return pMotility_coloring_function(pCell);
+	 else 
+	 	return migration_coloring_function( pCell );
 }
 
 void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, double dt )
 {
 	static int o2_index = microenvironment.find_density_index( "oxygen" );
 	double o2 = pCell->nearest_density_vector()[o2_index];
-
+	Custom_cell* pCustomCell = static_cast<Custom_cell*>(pCell);
 	// update_cell_and_death_parameters_O2_based(pCell, phenotype, dt);
 
 	if( phenotype.death.dead == true )
@@ -250,58 +276,53 @@ void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, dou
 
 	if (PhysiCell_globals.current_time >= pCell->custom_data["next_physibossa_run"])
 	{
-		Custom_cell* pCustomCell = static_cast<Custom_cell*>(pCell);
+		
 		set_input_nodes(pCustomCell);
 
-		pCell->boolean_network.run_maboss();
+		pCustomCell->boolean_network.run_maboss();
 		// Get noisy step size
-		double next_run_in = pCell->boolean_network.get_time_to_update();
-		pCell->custom_data["next_physibossa_run"] = PhysiCell_globals.current_time + next_run_in;
+		double next_run_in = pCustomCell->boolean_network.get_time_to_update();
+		pCustomCell->custom_data["next_physibossa_run"] = PhysiCell_globals.current_time + next_run_in;
 		
 		from_nodes_to_cell(pCustomCell, phenotype, dt);
+		color_node(pCustomCell);
 	}
+	pCustomCell->custom_data["ecm_contact"] = pCustomCell->ecm_contact;
+	
 }
 
 void set_input_nodes(Custom_cell* pCell) {
 int ind;
-	nodes = *(pCell->boolean_network.get_nodes());
-	// Oxygen input node O2; Oxygen or Oxy
-	// ind = pCell->boolean_network.get_node_index( "Oxygen" );
-	// if ( ind < 0 )
-	// 	ind = pCell->boolean_network.get_node_index( "Oxy" );
-	// if ( ind < 0 )
-	// 	ind = pCell->boolean_network.get_node_index( "O2" );
-	// if ( ind >= 0 )
+	//nodes = pCell->boolean_network.get_nodes();
+	ind = pCell->boolean_network.get_node_index( "Oxy" );
+	if ( ind >= 0 ){
+		pCell->boolean_network.set_node_value("Oxy", pCell->necrotic_oxygen());
+	}
+
 	// 	nodes[ind] = ( !pCell->necrotic_oxygen() );
-	
 
-	// ind = pCell->boolean_network.get_node_index( "Neighbours" );
-	// if ( ind >= 0 )
-	// 	nodes[ind] = ( pCell->has_neighbor(0) );
-	
-	// ind = pCell->boolean_network.get_node_index( "Nei2" );
-	// if ( ind >= 0 )
-	// 	nodes[ind] = ( pCell->has_neighbor(1) );
+	//enough_to_node( pCell, "TGFbR", "tgfb" );
 
+	ind = pCell->boolean_network.get_node_index( "Neighbours" );
+	if ( ind >= 0 ){
+		pCell->boolean_network.set_node_value("Neighbours", pCell->has_neighbor(0));	
+	}
+	
+	ind = pCell->boolean_network.get_node_index( "Nei2" );
+	if ( ind >= 0 ){
+		pCell->boolean_network.set_node_value("Nei2", pCell->has_neighbor(1));
+	}
 	// // If has enough contact with ecm or not
-	// ind = pCell->boolean_network.get_node_index( "ECM_sensing" );
-	// if ( ind >= 0 )
-	// 	nodes[ind] = ( parameters.ints("contact_cell_ECM_threshold") );
-	// // If has enough contact with ecm or not
-	// ind = pCell->boolean_network.get_node_index( "ECM" );
-	// if ( ind >= 0 )
-	// 	nodes[ind] = ( parameters.ints("contact_cell_ECM_threshold") );
-	// // If has enough contact with ecm or not
-	ind = pCell->boolean_network.get_node_index( "ECMicroenv" );
+	ind = pCell->boolean_network.get_node_index( "ECM_sensing" );
 	if ( ind >= 0 )
-		nodes[ind] = ( touch_ECM(pCell) );
+		pCell->boolean_network.set_node_value("ECM_sensing", touch_ECM(pCell));
 	
 	// If nucleus is deformed, probability of damage
 	// Change to increase proba with deformation ? + put as parameter
 	ind = pCell->boolean_network.get_node_index( "DNAdamage" );
-	//std::cout << mycell->nucleus_deformation() << std::endl;
 	if ( ind >= 0 )
-		nodes[ind] = ( pCell->nucleus_deform > 0.5 ) ? (2*PhysiCell::UniformRandom() < pCell->nucleus_deform) : 0;
+		pCell->boolean_network.set_node_value("DNAdamage", ( pCell->nucleus_deform > 0.5 ) ? (2*PhysiCell::UniformRandom() < pCell->nucleus_deform) : 0);
+		
 	/// example
 }
 
@@ -309,9 +330,8 @@ void from_nodes_to_cell(Custom_cell* pCell, Phenotype& phenotype, double dt)
 {
 	std::vector<bool>* point_to_nodes = pCell->boolean_network.get_nodes();
 	int bn_index;
-
 	bn_index = pCell->boolean_network.get_node_index( "Apoptosis" );
-	if ( bn_index != -1 && (*point_to_nodes)[bn_index] )
+	if ( bn_index != -1 && pCell->boolean_network.get_node_value( "Apoptosis" ) )
 	{
 		int apoptosis_model_index = phenotype.death.find_death_model_index( "Apoptosis" );
 		pCell->start_death(apoptosis_model_index);
@@ -321,31 +341,54 @@ void from_nodes_to_cell(Custom_cell* pCell, Phenotype& phenotype, double dt)
 	bn_index = pCell->boolean_network.get_node_index( "Migration" );
 	if ( bn_index >= 0 )
 	{
-		pCell->evolve_motility_coef( (*point_to_nodes)[bn_index], dt );
+		pCell->evolve_motility_coef( pCell->boolean_network.get_node_value( "Migration" ), dt );
 	}
 
-	// bn_index = pCell->boolean_network.get_node_index( "Survival" );
-	// if ( bn_index >= 0 )
-	// {
-	// 	do_proliferation( pCell, phenotype, dt );
-	// }
-
+	bn_index = pCell->boolean_network.get_node_index( "Cell_growth" );
+	 if ( bn_index >= 0 )
+	 {
+	 	do_proliferation( pCell, phenotype, dt );
+	 }
+/*
 	bn_index = pCell->boolean_network.get_node_index("CCA");
 	if ( bn_index != -1 && (*point_to_nodes)[bn_index] )
 	{
 		pCell->freezing(1);
 	}	
+*/
+	/*bn_index = pCell->boolean_network.get_node_index( "Polarization" );
+	if ( bn_index >= 0 )
+		pCell->evolve_polarity_coef( (*point_to_nodes)[bn_index], dt );
+	*/
 
-	// bn_index = pCell->boolean_network.get_node_index("Matrix_modif");
-	// if ( bn_index != -1 && (*point_to_nodes)[bn_index] )
-	// {
-	// 	pCell->set_mmp( (*point_to_nodes)[bn_index] );
-	// }
+	bn_index = pCell->boolean_network.get_node_index( "Cell_cell" );
+	if ( bn_index >= 0 )
+		pCell->evolve_cellcell_coef( pCell->boolean_network.get_node_value( "Cell_cell" ), dt );
 
-	bn_index = pCell->boolean_network.get_node_index("EMT");
-	if ( bn_index != -1 && (*point_to_nodes)[bn_index] )
+	bn_index = pCell->boolean_network.get_node_index( "Matrix_adhesion" );
+	if ( bn_index >= 0 )
+		pCell->evolve_integrin_coef( pCell->boolean_network.get_node_value( "Matrix_adhesion" ), dt );
+
+	bn_index = pCell->boolean_network.get_node_index("Matrix_modif");
+	if ( bn_index >= 0 )
+	 {
+	 	pCell->set_mmp( pCell->boolean_network.get_node_value("Matrix_modif") );
+	 }
+
+	bn_index = pCell->boolean_network.get_node_index("EMTreg");
+	if ( bn_index != -1 )
 	{
-		pCell->set_mmp( (*point_to_nodes)[bn_index] );
+		pCell->set_mmp( pCell->boolean_network.get_node_value("EMTreg") );
+	}
+
+	pCell->freezing( 0 );
+	bn_index = pCell->boolean_network.get_node_index( "Quiescence" );
+	if ( bn_index >= 0 && pCell->boolean_network.get_node_value( "Quiescence" ) )
+		pCell->freezing(1);
+
+	bn_index = pCell->boolean_network.get_node_index( "Cell_freeze" );
+	if ( bn_index >= 0 ){
+		pCell->freezer(3 * pCell->boolean_network.get_node_value( "Cell_freeze" ));
 	}
 
 	/// example
@@ -456,4 +499,21 @@ return PI4_3 * rad * rad * rad;
 bool touch_ECM(Custom_cell* pCell)
 { 
 	return pCell->contact_ecm() > parameters.doubles("contact_cell_ECM_threshold"); 
+}
+
+void enough_to_node( Custom_cell* pCell, std::string nody, std::string field )
+{
+	int bn_index;
+	bn_index = pCell->boolean_network.get_node_index( nody );;
+	if ( bn_index >= 0 )
+	{
+		int felt = pCell->feel_enough(field, *pCell);
+		if ( felt != -1 )
+			(*nodes)[bn_index] = felt;
+	}
+}
+
+void color_node(Custom_cell* pCell){
+	std::string node_name = parameters.strings("node_to_visualize");
+	pCell->custom_data[node_name] = pCell->boolean_network.get_node_value(node_name);
 }

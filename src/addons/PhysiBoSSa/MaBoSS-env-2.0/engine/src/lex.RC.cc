@@ -512,14 +512,15 @@ char *RCtext;
 */
 
 #include <math.h>
+#include "Utils.h"
 
 //static char *RCtokstr();
 static unsigned int input_lineno = 1;
 static const char* file;
 static const char* expr;
 static void skip_comment(void);
-#line 522 "<stdout>"
 #line 523 "<stdout>"
+#line 524 "<stdout>"
 
 #define INITIAL 0
 
@@ -736,10 +737,10 @@ YY_DECL
 		}
 
 	{
-#line 46 "RunConfigGrammar.l"
+#line 47 "RunConfigGrammar.l"
 
 
-#line 743 "<stdout>"
+#line 744 "<stdout>"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -798,82 +799,82 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 48 "RunConfigGrammar.l"
+#line 49 "RunConfigGrammar.l"
 { }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 49 "RunConfigGrammar.l"
+#line 50 "RunConfigGrammar.l"
 { input_lineno++; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 50 "RunConfigGrammar.l"
+#line 51 "RunConfigGrammar.l"
 { skip_comment(); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 51 "RunConfigGrammar.l"
+#line 52 "RunConfigGrammar.l"
 { }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 52 "RunConfigGrammar.l"
+#line 53 "RunConfigGrammar.l"
 { RClval.l = 1; return INTEGER; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 53 "RunConfigGrammar.l"
+#line 54 "RunConfigGrammar.l"
 { RClval.l = 0; return INTEGER; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 54 "RunConfigGrammar.l"
+#line 55 "RunConfigGrammar.l"
 {
-  RClval.str = strdup(RCtext);
+  RClval.str = maboss_strdup(RCtext);
   return VARIABLE;
 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 58 "RunConfigGrammar.l"
+#line 59 "RunConfigGrammar.l"
 {
-  RClval.str = strdup(RCtext);
+  RClval.str = maboss_strdup(RCtext);
   return SYMBOL;
 }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 62 "RunConfigGrammar.l"
+#line 63 "RunConfigGrammar.l"
 { sscanf(RCtext, "%lld", &RClval.l); return INTEGER; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 63 "RunConfigGrammar.l"
+#line 64 "RunConfigGrammar.l"
 { RClval.d = atof(RCtext); return DOUBLE; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 64 "RunConfigGrammar.l"
+#line 65 "RunConfigGrammar.l"
 { RClval.d = atof(RCtext); return DOUBLE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 65 "RunConfigGrammar.l"
+#line 66 "RunConfigGrammar.l"
 { RClval.d = atof(RCtext); return DOUBLE; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 66 "RunConfigGrammar.l"
+#line 67 "RunConfigGrammar.l"
 { return RCtext[0]; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 68 "RunConfigGrammar.l"
+#line 69 "RunConfigGrammar.l"
 ECHO;
 	YY_BREAK
-#line 877 "<stdout>"
+#line 878 "<stdout>"
 case YY_STATE_EOF(INITIAL):
 	RCterminate();
 
@@ -1878,7 +1879,7 @@ void RCfree (void * ptr )
 
 #define YYTABLES_NAME "RCtables"
 
-#line 68 "RunConfigGrammar.l"
+#line 69 "RunConfigGrammar.l"
 
 
 static void skip_comment(void)

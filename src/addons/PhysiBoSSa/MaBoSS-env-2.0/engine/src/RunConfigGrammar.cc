@@ -100,6 +100,7 @@
      updated to add extended initial conditions: October 2014
 */
 
+#define _POSIX_SOURCE 1
 #include "BooleanNetwork.h"
 #include "RunConfig.h"
 
@@ -111,7 +112,7 @@ static RunConfig* config;
 
 extern std::string RC_error_head();
 
-#line 115 "RunConfigGrammar.tab.c"
+#line 116 "RunConfigGrammar.tab.c"
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
@@ -167,7 +168,7 @@ extern int RCdebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 47 "RunConfigGrammar.y"
+#line 48 "RunConfigGrammar.y"
 
   Expression* expr;
   char* str;
@@ -180,7 +181,7 @@ union YYSTYPE
   ArgumentList* arg_list;
 
 
-#line 184 "RunConfigGrammar.tab.c"
+#line 185 "RunConfigGrammar.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -487,12 +488,12 @@ static const RCtype_uint8 RCtranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const RCtype_uint16 RCrline[] =
 {
-       0,    88,    88,    91,    96,    97,    98,    99,   102,   112,
-     143,   158,   164,   170,   177,   182,   189,   200,   205,   212,
-     222,   226,   230,   235,   241,   246,   254,   258,   263,   271,
-     275,   279,   283,   287,   293,   297,   301,   307,   311,   315,
-     321,   325,   329,   333,   337,   343,   347,   351,   357,   361,
-     367,   371,   377,   381,   385,   391,   395,   401
+       0,    89,    89,    92,    97,    98,    99,   100,   103,   113,
+     144,   159,   165,   171,   178,   183,   190,   201,   206,   213,
+     223,   227,   231,   236,   242,   247,   255,   259,   264,   272,
+     276,   280,   284,   288,   294,   298,   302,   308,   312,   316,
+     322,   326,   330,   334,   338,   344,   348,   352,   358,   362,
+     368,   372,   378,   382,   386,   392,   396,   402
 };
 #endif
 
@@ -1343,21 +1344,21 @@ RCreduce:
   switch (RCn)
     {
   case 2:
-#line 89 "RunConfigGrammar.y"
+#line 90 "RunConfigGrammar.y"
     {
 }
-#line 1350 "RunConfigGrammar.tab.c"
+#line 1351 "RunConfigGrammar.tab.c"
     break;
 
   case 3:
-#line 92 "RunConfigGrammar.y"
+#line 93 "RunConfigGrammar.y"
     {
 }
-#line 1357 "RunConfigGrammar.tab.c"
+#line 1358 "RunConfigGrammar.tab.c"
     break;
 
   case 8:
-#line 103 "RunConfigGrammar.y"
+#line 104 "RunConfigGrammar.y"
     {
   NetworkState network_state;
   double value = (RCvsp[-1].expr)->eval(NULL, network_state);
@@ -1365,11 +1366,11 @@ RCreduce:
   free((RCvsp[-3].str));
   delete (RCvsp[-1].expr);
 }
-#line 1369 "RunConfigGrammar.tab.c"
+#line 1370 "RunConfigGrammar.tab.c"
     break;
 
   case 9:
-#line 113 "RunConfigGrammar.y"
+#line 114 "RunConfigGrammar.y"
     {
   Node* node = network->getNode((RCvsp[-5].str));
   NetworkState network_state;
@@ -1400,11 +1401,11 @@ RCreduce:
   free((RCvsp[-3].str));
   delete (RCvsp[-1].expr);
 }
-#line 1404 "RunConfigGrammar.tab.c"
+#line 1405 "RunConfigGrammar.tab.c"
     break;
 
   case 10:
-#line 144 "RunConfigGrammar.y"
+#line 145 "RunConfigGrammar.y"
     {
   if (strcasecmp((RCvsp[-3].str), "istate")) {
     throw BNException(std::string(RC_error_head() + "invalid node group attribute: ") + (RCvsp[-3].str) + ", valid attribute is istate");
@@ -1417,56 +1418,56 @@ RCreduce:
   
   free((RCvsp[-3].str));
 }
-#line 1421 "RunConfigGrammar.tab.c"
+#line 1422 "RunConfigGrammar.tab.c"
     break;
 
   case 11:
-#line 159 "RunConfigGrammar.y"
+#line 160 "RunConfigGrammar.y"
     {
   (RCval.node_list) = (RCvsp[-1].node_list);
 }
-#line 1429 "RunConfigGrammar.tab.c"
+#line 1430 "RunConfigGrammar.tab.c"
     break;
 
   case 12:
-#line 165 "RunConfigGrammar.y"
+#line 166 "RunConfigGrammar.y"
     {
   (RCval.node_list) = new std::vector<const Node*>();
   (RCval.node_list)->push_back(network->getNode((RCvsp[0].str)));
   free((RCvsp[0].str));
 }
-#line 1439 "RunConfigGrammar.tab.c"
+#line 1440 "RunConfigGrammar.tab.c"
     break;
 
   case 13:
-#line 171 "RunConfigGrammar.y"
+#line 172 "RunConfigGrammar.y"
     {
   (RCval.node_list) = (RCvsp[-2].node_list);
   (RCval.node_list)->push_back(network->getNode((RCvsp[0].str)));
 }
-#line 1448 "RunConfigGrammar.tab.c"
+#line 1449 "RunConfigGrammar.tab.c"
     break;
 
   case 14:
-#line 178 "RunConfigGrammar.y"
+#line 179 "RunConfigGrammar.y"
     {
   (RCval.istate_expr_list) = new std::vector<IStateGroup::ProbaIState*>();
   (RCval.istate_expr_list)->push_back((RCvsp[0].istate_expr));
 }
-#line 1457 "RunConfigGrammar.tab.c"
+#line 1458 "RunConfigGrammar.tab.c"
     break;
 
   case 15:
-#line 183 "RunConfigGrammar.y"
+#line 184 "RunConfigGrammar.y"
     {
   (RCval.istate_expr_list) = (RCvsp[-2].istate_expr_list);
   (RCval.istate_expr_list)->push_back((RCvsp[0].istate_expr));
 }
-#line 1466 "RunConfigGrammar.tab.c"
+#line 1467 "RunConfigGrammar.tab.c"
     break;
 
   case 16:
-#line 190 "RunConfigGrammar.y"
+#line 191 "RunConfigGrammar.y"
     {
   (RCval.istate_expr) = new IStateGroup::ProbaIState((RCvsp[-3].expr), (RCvsp[-1].expr_list));
   delete (RCvsp[-3].expr);
@@ -1475,29 +1476,29 @@ RCreduce:
   }
   delete (RCvsp[-1].expr_list);
 }
-#line 1479 "RunConfigGrammar.tab.c"
+#line 1480 "RunConfigGrammar.tab.c"
     break;
 
   case 17:
-#line 201 "RunConfigGrammar.y"
+#line 202 "RunConfigGrammar.y"
     {
   (RCval.expr_list) = new std::vector<Expression*>();
   (RCval.expr_list)->push_back((RCvsp[0].expr));
 }
-#line 1488 "RunConfigGrammar.tab.c"
+#line 1489 "RunConfigGrammar.tab.c"
     break;
 
   case 18:
-#line 206 "RunConfigGrammar.y"
+#line 207 "RunConfigGrammar.y"
     {
   (RCval.expr_list) = (RCvsp[-2].expr_list);
   (RCval.expr_list)->push_back((RCvsp[0].expr));
 }
-#line 1497 "RunConfigGrammar.tab.c"
+#line 1498 "RunConfigGrammar.tab.c"
     break;
 
   case 19:
-#line 213 "RunConfigGrammar.y"
+#line 214 "RunConfigGrammar.y"
     {
   const Symbol* symbol = network->getSymbolTable()->getOrMakeSymbol((RCvsp[-3].str));
   free((RCvsp[-3].str));
@@ -1505,320 +1506,320 @@ RCreduce:
   network->getSymbolTable()->setSymbolValue(symbol, (RCvsp[-1].expr)->eval(NULL, dummy_state));
   delete (RCvsp[-1].expr);
 }
-#line 1509 "RunConfigGrammar.tab.c"
+#line 1510 "RunConfigGrammar.tab.c"
     break;
 
   case 20:
-#line 223 "RunConfigGrammar.y"
+#line 224 "RunConfigGrammar.y"
     {
   (RCval.expr) = new ConstantExpression((RCvsp[0].l));
 }
-#line 1517 "RunConfigGrammar.tab.c"
+#line 1518 "RunConfigGrammar.tab.c"
     break;
 
   case 21:
-#line 227 "RunConfigGrammar.y"
+#line 228 "RunConfigGrammar.y"
     {
   (RCval.expr) = new ConstantExpression((RCvsp[0].d));
 }
-#line 1525 "RunConfigGrammar.tab.c"
+#line 1526 "RunConfigGrammar.tab.c"
     break;
 
   case 22:
-#line 231 "RunConfigGrammar.y"
+#line 232 "RunConfigGrammar.y"
     {
   (RCval.expr) = new SymbolExpression(network->getSymbolTable(), network->getSymbolTable()->getOrMakeSymbol((RCvsp[0].str)));
   free((RCvsp[0].str));
 }
-#line 1534 "RunConfigGrammar.tab.c"
+#line 1535 "RunConfigGrammar.tab.c"
     break;
 
   case 23:
-#line 236 "RunConfigGrammar.y"
+#line 237 "RunConfigGrammar.y"
     {
   (RCval.expr) = new ParenthesisExpression((RCvsp[-1].expr));
 }
-#line 1542 "RunConfigGrammar.tab.c"
+#line 1543 "RunConfigGrammar.tab.c"
     break;
 
   case 24:
-#line 242 "RunConfigGrammar.y"
+#line 243 "RunConfigGrammar.y"
     {
   (RCval.arg_list) = new ArgumentList();
   (RCval.arg_list)->push_back((RCvsp[0].expr));
 }
-#line 1551 "RunConfigGrammar.tab.c"
+#line 1552 "RunConfigGrammar.tab.c"
     break;
 
   case 25:
-#line 247 "RunConfigGrammar.y"
+#line 248 "RunConfigGrammar.y"
     {
   (RCval.arg_list) = (RCvsp[-2].arg_list);
   (RCval.arg_list)->push_back((RCvsp[0].expr));
 }
-#line 1560 "RunConfigGrammar.tab.c"
+#line 1561 "RunConfigGrammar.tab.c"
     break;
 
   case 26:
-#line 255 "RunConfigGrammar.y"
+#line 256 "RunConfigGrammar.y"
     {
   (RCval.expr) = (RCvsp[0].expr);
 }
-#line 1568 "RunConfigGrammar.tab.c"
+#line 1569 "RunConfigGrammar.tab.c"
     break;
 
   case 27:
-#line 259 "RunConfigGrammar.y"
+#line 260 "RunConfigGrammar.y"
     {
   (RCval.expr) = new FuncCallExpression((RCvsp[-3].str), (RCvsp[-1].arg_list));
   free((RCvsp[-3].str));
 }
-#line 1577 "RunConfigGrammar.tab.c"
+#line 1578 "RunConfigGrammar.tab.c"
     break;
 
   case 28:
-#line 264 "RunConfigGrammar.y"
+#line 265 "RunConfigGrammar.y"
     {
   (RCval.expr) = new FuncCallExpression((RCvsp[-2].str), NULL);
   free((RCvsp[-2].str));
 }
-#line 1586 "RunConfigGrammar.tab.c"
+#line 1587 "RunConfigGrammar.tab.c"
     break;
 
   case 29:
-#line 272 "RunConfigGrammar.y"
+#line 273 "RunConfigGrammar.y"
     {
   (RCval.expr) = (RCvsp[0].expr);
 }
-#line 1594 "RunConfigGrammar.tab.c"
+#line 1595 "RunConfigGrammar.tab.c"
     break;
 
   case 30:
-#line 276 "RunConfigGrammar.y"
+#line 277 "RunConfigGrammar.y"
     {
   (RCval.expr) = (RCvsp[0].expr);
 }
-#line 1602 "RunConfigGrammar.tab.c"
+#line 1603 "RunConfigGrammar.tab.c"
     break;
 
   case 31:
-#line 280 "RunConfigGrammar.y"
+#line 281 "RunConfigGrammar.y"
     {
   (RCval.expr) = new SubExpression(new ConstantExpression(0.0), (RCvsp[0].expr));
 }
-#line 1610 "RunConfigGrammar.tab.c"
+#line 1611 "RunConfigGrammar.tab.c"
     break;
 
   case 32:
-#line 284 "RunConfigGrammar.y"
+#line 285 "RunConfigGrammar.y"
     {
   (RCval.expr) = new NotLogicalExpression((RCvsp[0].expr));
 }
-#line 1618 "RunConfigGrammar.tab.c"
+#line 1619 "RunConfigGrammar.tab.c"
     break;
 
   case 33:
-#line 288 "RunConfigGrammar.y"
+#line 289 "RunConfigGrammar.y"
     {
   (RCval.expr) = new NotLogicalExpression((RCvsp[0].expr));
 }
-#line 1626 "RunConfigGrammar.tab.c"
+#line 1627 "RunConfigGrammar.tab.c"
     break;
 
   case 34:
-#line 294 "RunConfigGrammar.y"
+#line 295 "RunConfigGrammar.y"
     {
   (RCval.expr) = (RCvsp[0].expr);
 }
-#line 1634 "RunConfigGrammar.tab.c"
+#line 1635 "RunConfigGrammar.tab.c"
     break;
 
   case 35:
-#line 298 "RunConfigGrammar.y"
+#line 299 "RunConfigGrammar.y"
     {
   (RCval.expr) = new MulExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1642 "RunConfigGrammar.tab.c"
+#line 1643 "RunConfigGrammar.tab.c"
     break;
 
   case 36:
-#line 302 "RunConfigGrammar.y"
+#line 303 "RunConfigGrammar.y"
     {
   (RCval.expr) = new DivExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1650 "RunConfigGrammar.tab.c"
+#line 1651 "RunConfigGrammar.tab.c"
     break;
 
   case 37:
-#line 308 "RunConfigGrammar.y"
+#line 309 "RunConfigGrammar.y"
     {
   (RCval.expr) = (RCvsp[0].expr);
 }
-#line 1658 "RunConfigGrammar.tab.c"
+#line 1659 "RunConfigGrammar.tab.c"
     break;
 
   case 38:
-#line 312 "RunConfigGrammar.y"
+#line 313 "RunConfigGrammar.y"
     {
   (RCval.expr) = new AddExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1666 "RunConfigGrammar.tab.c"
+#line 1667 "RunConfigGrammar.tab.c"
     break;
 
   case 39:
-#line 316 "RunConfigGrammar.y"
+#line 317 "RunConfigGrammar.y"
     {
   (RCval.expr) = new SubExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1674 "RunConfigGrammar.tab.c"
+#line 1675 "RunConfigGrammar.tab.c"
     break;
 
   case 40:
-#line 322 "RunConfigGrammar.y"
+#line 323 "RunConfigGrammar.y"
     {
   (RCval.expr) = (RCvsp[0].expr);
 }
-#line 1682 "RunConfigGrammar.tab.c"
+#line 1683 "RunConfigGrammar.tab.c"
     break;
 
   case 41:
-#line 326 "RunConfigGrammar.y"
+#line 327 "RunConfigGrammar.y"
     {
   (RCval.expr) = new LetterExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1690 "RunConfigGrammar.tab.c"
+#line 1691 "RunConfigGrammar.tab.c"
     break;
 
   case 42:
-#line 330 "RunConfigGrammar.y"
+#line 331 "RunConfigGrammar.y"
     {
   (RCval.expr) = new GreaterExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1698 "RunConfigGrammar.tab.c"
+#line 1699 "RunConfigGrammar.tab.c"
     break;
 
   case 43:
-#line 334 "RunConfigGrammar.y"
+#line 335 "RunConfigGrammar.y"
     {
   (RCval.expr) = new LetterOrEqualExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1706 "RunConfigGrammar.tab.c"
+#line 1707 "RunConfigGrammar.tab.c"
     break;
 
   case 44:
-#line 338 "RunConfigGrammar.y"
+#line 339 "RunConfigGrammar.y"
     {
   (RCval.expr) = new GreaterOrEqualExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1714 "RunConfigGrammar.tab.c"
+#line 1715 "RunConfigGrammar.tab.c"
     break;
 
   case 45:
-#line 344 "RunConfigGrammar.y"
+#line 345 "RunConfigGrammar.y"
     {
   (RCval.expr) = (RCvsp[0].expr);
 }
-#line 1722 "RunConfigGrammar.tab.c"
+#line 1723 "RunConfigGrammar.tab.c"
     break;
 
   case 46:
-#line 348 "RunConfigGrammar.y"
+#line 349 "RunConfigGrammar.y"
     {
   (RCval.expr) = new EqualExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1730 "RunConfigGrammar.tab.c"
+#line 1731 "RunConfigGrammar.tab.c"
     break;
 
   case 47:
-#line 352 "RunConfigGrammar.y"
+#line 353 "RunConfigGrammar.y"
     {
   (RCval.expr) = new NotEqualExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1738 "RunConfigGrammar.tab.c"
+#line 1739 "RunConfigGrammar.tab.c"
     break;
 
   case 48:
-#line 358 "RunConfigGrammar.y"
+#line 359 "RunConfigGrammar.y"
     {
   (RCval.expr) = (RCvsp[0].expr);
 }
-#line 1746 "RunConfigGrammar.tab.c"
+#line 1747 "RunConfigGrammar.tab.c"
     break;
 
   case 49:
-#line 362 "RunConfigGrammar.y"
+#line 363 "RunConfigGrammar.y"
     {
   (RCval.expr) = new AndLogicalExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1754 "RunConfigGrammar.tab.c"
+#line 1755 "RunConfigGrammar.tab.c"
     break;
 
   case 50:
-#line 368 "RunConfigGrammar.y"
+#line 369 "RunConfigGrammar.y"
     {
   (RCval.expr) = (RCvsp[0].expr);
 }
-#line 1762 "RunConfigGrammar.tab.c"
+#line 1763 "RunConfigGrammar.tab.c"
     break;
 
   case 51:
-#line 372 "RunConfigGrammar.y"
+#line 373 "RunConfigGrammar.y"
     {
   (RCval.expr) = new OrLogicalExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1770 "RunConfigGrammar.tab.c"
+#line 1771 "RunConfigGrammar.tab.c"
     break;
 
   case 52:
-#line 378 "RunConfigGrammar.y"
+#line 379 "RunConfigGrammar.y"
     {
   (RCval.expr) = (RCvsp[0].expr);
 }
-#line 1778 "RunConfigGrammar.tab.c"
+#line 1779 "RunConfigGrammar.tab.c"
     break;
 
   case 53:
-#line 382 "RunConfigGrammar.y"
+#line 383 "RunConfigGrammar.y"
     {
   (RCval.expr) = new XorLogicalExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1786 "RunConfigGrammar.tab.c"
+#line 1787 "RunConfigGrammar.tab.c"
     break;
 
   case 54:
-#line 386 "RunConfigGrammar.y"
+#line 387 "RunConfigGrammar.y"
     {
   (RCval.expr) = new XorLogicalExpression((RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1794 "RunConfigGrammar.tab.c"
+#line 1795 "RunConfigGrammar.tab.c"
     break;
 
   case 55:
-#line 392 "RunConfigGrammar.y"
+#line 393 "RunConfigGrammar.y"
     {
   (RCval.expr) = (RCvsp[0].expr);
 }
-#line 1802 "RunConfigGrammar.tab.c"
+#line 1803 "RunConfigGrammar.tab.c"
     break;
 
   case 56:
-#line 396 "RunConfigGrammar.y"
+#line 397 "RunConfigGrammar.y"
     {
   (RCval.expr) = new CondExpression((RCvsp[-4].expr), (RCvsp[-2].expr), (RCvsp[0].expr));
 }
-#line 1810 "RunConfigGrammar.tab.c"
+#line 1811 "RunConfigGrammar.tab.c"
     break;
 
   case 57:
-#line 402 "RunConfigGrammar.y"
+#line 403 "RunConfigGrammar.y"
     {
   (RCval.expr) = (RCvsp[0].expr);
 }
-#line 1818 "RunConfigGrammar.tab.c"
+#line 1819 "RunConfigGrammar.tab.c"
     break;
 
 
-#line 1822 "RunConfigGrammar.tab.c"
+#line 1823 "RunConfigGrammar.tab.c"
 
       default: break;
     }
@@ -2050,7 +2051,7 @@ RCreturn:
 #endif
   return RCresult;
 }
-#line 407 "RunConfigGrammar.y"
+#line 408 "RunConfigGrammar.y"
 
 
 void runconfig_setNetwork(Network* _network)

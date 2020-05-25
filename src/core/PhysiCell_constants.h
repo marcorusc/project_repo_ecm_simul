@@ -85,12 +85,9 @@ class PhysiCell_constants
 	
 	static const int deterministic_necrosis = 0;
 	static const int stochastic_necrosis = 1;
-
-	static const int oxygen_index = 0; // deprecate
-	static const int glucose_index = 1; // deprecate 
 	
 	static const int TUMOR_TYPE=0; // deprecate 
-	static const int VESSEL_TYPE=1; // deprecate
+	static const int VESSEL_TYPE=1; // deprecate 
 	static const int PASSIVE_TYPE=2; 
 
 	static const int mesh_min_x_index=0;
@@ -157,7 +154,6 @@ class PhysiCell_constants
 	static const int necrotic=103; 
 	static const int debris=104; 
 };
-
 extern std::string time_units;
 extern std::string space_units;
 extern double diffusion_dt; 

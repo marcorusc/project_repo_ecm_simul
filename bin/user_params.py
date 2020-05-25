@@ -78,15 +78,15 @@ class UserTab(object):
         param_name7.style.button_color = 'lightgreen'
 
         self.contact_cell_ECM_threshold = FloatText(
-          value= 0.1 ,
-          step=0.01,
+          value= 0.5 ,
+          step=0.1,
           style=style, layout=widget_layout)
 
         param_name8 = Button(description='contact_cell_cell_threshold', disabled=True, layout=name_button_layout)
         param_name8.style.button_color = 'tan'
 
         self.contact_cell_cell_threshold = FloatText(
-          value= 1 ,
+          value= 0.9 ,
           step=0.1,
           style=style, layout=widget_layout)
 
@@ -178,190 +178,117 @@ class UserTab(object):
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name20 = Button(description='cell_cell_repulsion', disabled=True, layout=name_button_layout)
+        param_name20 = Button(description='cell_radius', disabled=True, layout=name_button_layout)
         param_name20.style.button_color = 'tan'
-
-        self.cell_cell_repulsion = IntText(
-          value= 10 ,
-          step=1,
-          style=style, layout=widget_layout)
-
-        param_name21 = Button(description='oxygen_necrotic', disabled=True, layout=name_button_layout)
-        param_name21.style.button_color = 'lightgreen'
-
-        self.oxygen_necrotic = IntText(
-          value= 4 ,
-          step=0.1,
-          style=style, layout=widget_layout)
-
-        param_name22 = Button(description='oxygen_critical', disabled=True, layout=name_button_layout)
-        param_name22.style.button_color = 'tan'
-
-        self.oxygen_critical = IntText(
-          value= 3 ,
-          step=0.1,
-          style=style, layout=widget_layout)
-
-        param_name23 = Button(description='oxygen_no_proliferation', disabled=True, layout=name_button_layout)
-        param_name23.style.button_color = 'lightgreen'
-
-        self.oxygen_no_proliferation = FloatText(
-          value= 6.5 ,
-          step=0.1,
-          style=style, layout=widget_layout)
-
-        param_name24 = Button(description='oxygen_hypoxic', disabled=True, layout=name_button_layout)
-        param_name24.style.button_color = 'tan'
-
-        self.oxygen_hypoxic = IntText(
-          value= 15 ,
-          step=1,
-          style=style, layout=widget_layout)
-
-        param_name25 = Button(description='oxygen_reference', disabled=True, layout=name_button_layout)
-        param_name25.style.button_color = 'lightgreen'
-
-        self.oxygen_reference = FloatText(
-          value= 0.7 ,
-          step=0.1,
-          style=style, layout=widget_layout)
-
-        param_name26 = Button(description='oxygen_saturation', disabled=True, layout=name_button_layout)
-        param_name26.style.button_color = 'tan'
-
-        self.oxygen_saturation = IntText(
-          value= 38 ,
-          step=1,
-          style=style, layout=widget_layout)
-
-        param_name27 = Button(description='cell_radius', disabled=True, layout=name_button_layout)
-        param_name27.style.button_color = 'lightgreen'
 
         self.cell_radius = FloatText(
           value= 8.413 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name28 = Button(description='nucleus_radius', disabled=True, layout=name_button_layout)
-        param_name28.style.button_color = 'tan'
+        param_name21 = Button(description='nucleus_radius', disabled=True, layout=name_button_layout)
+        param_name21.style.button_color = 'lightgreen'
 
         self.nucleus_radius = FloatText(
           value= 5.052 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name29 = Button(description='fluid_fraction', disabled=True, layout=name_button_layout)
-        param_name29.style.button_color = 'lightgreen'
+        param_name22 = Button(description='fluid_fraction', disabled=True, layout=name_button_layout)
+        param_name22.style.button_color = 'tan'
 
         self.fluid_fraction = FloatText(
           value= 0.75 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name30 = Button(description='solid_nuclear', disabled=True, layout=name_button_layout)
-        param_name30.style.button_color = 'tan'
+        param_name23 = Button(description='solid_nuclear', disabled=True, layout=name_button_layout)
+        param_name23.style.button_color = 'lightgreen'
 
         self.solid_nuclear = IntText(
           value= 135 ,
           step=10,
           style=style, layout=widget_layout)
 
-        param_name31 = Button(description='solid_cytoplasmic', disabled=True, layout=name_button_layout)
-        param_name31.style.button_color = 'lightgreen'
+        param_name24 = Button(description='solid_cytoplasmic', disabled=True, layout=name_button_layout)
+        param_name24.style.button_color = 'tan'
 
         self.solid_cytoplasmic = IntText(
           value= 486 ,
           step=10,
           style=style, layout=widget_layout)
 
-        param_name32 = Button(description='cytoplasmic_nuclear_fraction', disabled=True, layout=name_button_layout)
-        param_name32.style.button_color = 'tan'
-
-        self.cytoplasmic_nuclear_fraction = FloatText(
-          value= 3.6 ,
-          step=0.1,
-          style=style, layout=widget_layout)
-
-        param_name33 = Button(description='initial_uptake_rate', disabled=True, layout=name_button_layout)
-        param_name33.style.button_color = 'lightgreen'
-
-        self.initial_uptake_rate = IntText(
-          value= 20 ,
-          step=1,
-          style=style, layout=widget_layout)
-
-        param_name34 = Button(description='protein_threshold', disabled=True, layout=name_button_layout)
-        param_name34.style.button_color = 'tan'
+        param_name25 = Button(description='protein_threshold', disabled=True, layout=name_button_layout)
+        param_name25.style.button_color = 'lightgreen'
 
         self.protein_threshold = IntText(
           value= 1 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name35 = Button(description='phenotype_number', disabled=True, layout=name_button_layout)
-        param_name35.style.button_color = 'lightgreen'
-
-        self.phenotype_number = IntText(
-          value= 0 ,
-          step=1,
-          style=style, layout=widget_layout)
-
-        param_name36 = Button(description='secretion_rate', disabled=True, layout=name_button_layout)
-        param_name36.style.button_color = 'tan'
-
-        self.secretion_rate = IntText(
-          value= 0 ,
-          step=1,
-          style=style, layout=widget_layout)
-
-        param_name37 = Button(description='bnd_file', disabled=True, layout=name_button_layout)
-        param_name37.style.button_color = 'lightgreen'
+        param_name26 = Button(description='bnd_file', disabled=True, layout=name_button_layout)
+        param_name26.style.button_color = 'tan'
 
         self.bnd_file = Text(
-          value='./config/boolean_network/bn_nodes.bnd',
+          value='./config/boolean_network/CCM_mod4_1.bnd',
           style=style, layout=widget_layout)
 
-        param_name38 = Button(description='cfg_file', disabled=True, layout=name_button_layout)
-        param_name38.style.button_color = 'tan'
+        param_name27 = Button(description='cfg_file', disabled=True, layout=name_button_layout)
+        param_name27.style.button_color = 'lightgreen'
 
         self.cfg_file = Text(
-          value='./config/boolean_network/bn_conf.cfg',
+          value='./config/boolean_network/CCM_mod4_1.cfg',
           style=style, layout=widget_layout)
 
-        param_name39 = Button(description='init_cells_filename', disabled=True, layout=name_button_layout)
-        param_name39.style.button_color = 'lightgreen'
+        param_name28 = Button(description='init_cells_filename', disabled=True, layout=name_button_layout)
+        param_name28.style.button_color = 'tan'
 
         self.init_cells_filename = Text(
           value='./config/init.txt',
           style=style, layout=widget_layout)
 
-        param_name40 = Button(description='init_ecm_filename', disabled=True, layout=name_button_layout)
-        param_name40.style.button_color = 'tan'
+        param_name29 = Button(description='init_ecm_filename', disabled=True, layout=name_button_layout)
+        param_name29.style.button_color = 'lightgreen'
 
         self.init_ecm_filename = Text(
           value='./config/ecm.txt',
           style=style, layout=widget_layout)
 
-        param_name41 = Button(description='x_threshold', disabled=True, layout=name_button_layout)
-        param_name41.style.button_color = 'lightgreen'
+        param_name30 = Button(description='tgfb_threshold', disabled=True, layout=name_button_layout)
+        param_name30.style.button_color = 'tan'
 
-        self.x_threshold = FloatText(
+        self.tgfb_threshold = FloatText(
           value=1.,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name42 = Button(description='membrane_shape', disabled=True, layout=name_button_layout)
-        param_name42.style.button_color = 'tan'
+        param_name31 = Button(description='membrane_shape', disabled=True, layout=name_button_layout)
+        param_name31.style.button_color = 'lightgreen'
 
         self.membrane_shape = Text(
-          value=' sheet ',
+          value='sphere',
           style=style, layout=widget_layout)
 
-        param_name43 = Button(description='membrane_length', disabled=True, layout=name_button_layout)
-        param_name43.style.button_color = 'lightgreen'
+        param_name32 = Button(description='membrane_length', disabled=True, layout=name_button_layout)
+        param_name32.style.button_color = 'tan'
 
         self.membrane_length = FloatText(
           value= 10 ,
+          step=1,
+          style=style, layout=widget_layout)
+
+        param_name33 = Button(description='node_to_visualize', disabled=True, layout=name_button_layout)
+        param_name33.style.button_color = 'lightgreen'
+
+        self.node_to_visualize = Text(
+          value='Cell_cell',
+          style=style, layout=widget_layout)
+
+        param_name34 = Button(description='color_function', disabled=True, layout=name_button_layout)
+        param_name34.style.button_color = 'tan'
+
+        self.color_function = IntText(
+          value=0,
           step=1,
           style=style, layout=widget_layout)
 
@@ -433,24 +360,6 @@ class UserTab(object):
         units_button33.style.button_color = 'lightgreen'
         units_button34 = Button(description='', disabled=True, layout=units_button_layout) 
         units_button34.style.button_color = 'tan'
-        units_button35 = Button(description='', disabled=True, layout=units_button_layout) 
-        units_button35.style.button_color = 'lightgreen'
-        units_button36 = Button(description='', disabled=True, layout=units_button_layout) 
-        units_button36.style.button_color = 'tan'
-        units_button37 = Button(description='', disabled=True, layout=units_button_layout) 
-        units_button37.style.button_color = 'lightgreen'
-        units_button38 = Button(description='', disabled=True, layout=units_button_layout) 
-        units_button38.style.button_color = 'tan'
-        units_button39 = Button(description='', disabled=True, layout=units_button_layout) 
-        units_button39.style.button_color = 'lightgreen'
-        units_button40 = Button(description='', disabled=True, layout=units_button_layout) 
-        units_button40.style.button_color = 'tan'
-        units_button41 = Button(description='', disabled=True, layout=units_button_layout) 
-        units_button41.style.button_color = 'lightgreen'
-        units_button42 = Button(description='', disabled=True, layout=units_button_layout) 
-        units_button42.style.button_color = 'tan'
-        units_button43 = Button(description='', disabled=True, layout=units_button_layout) 
-        units_button43.style.button_color = 'lightgreen'
 
         desc_button1 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
         desc_button1.style.button_color = 'lightgreen'
@@ -520,24 +429,6 @@ class UserTab(object):
         desc_button33.style.button_color = 'lightgreen'
         desc_button34 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
         desc_button34.style.button_color = 'tan'
-        desc_button35 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
-        desc_button35.style.button_color = 'lightgreen'
-        desc_button36 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
-        desc_button36.style.button_color = 'tan'
-        desc_button37 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
-        desc_button37.style.button_color = 'lightgreen'
-        desc_button38 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
-        desc_button38.style.button_color = 'tan'
-        desc_button39 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
-        desc_button39.style.button_color = 'lightgreen'
-        desc_button40 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
-        desc_button40.style.button_color = 'tan'
-        desc_button41 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
-        desc_button41.style.button_color = 'lightgreen'
-        desc_button42 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
-        desc_button42.style.button_color = 'tan'
-        desc_button43 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
-        desc_button43.style.button_color = 'lightgreen'
 
         row1 = [param_name1, self.random_seed, units_button1, desc_button1] 
         row2 = [param_name2, self.polarity_coefficient, units_button2, desc_button2] 
@@ -558,30 +449,21 @@ class UserTab(object):
         row17 = [param_name17, self.cell_ecm_repulsion, units_button17, desc_button17] 
         row18 = [param_name18, self.ecm_degradation, units_button18, desc_button18] 
         row19 = [param_name19, self.max_interaction_factor, units_button19, desc_button19] 
-        row20 = [param_name20, self.cell_cell_repulsion, units_button20, desc_button20] 
-        row21 = [param_name21, self.oxygen_necrotic, units_button21, desc_button21] 
-        row22 = [param_name22, self.oxygen_critical, units_button22, desc_button22] 
-        row23 = [param_name23, self.oxygen_no_proliferation, units_button23, desc_button23] 
-        row24 = [param_name24, self.oxygen_hypoxic, units_button24, desc_button24] 
-        row25 = [param_name25, self.oxygen_reference, units_button25, desc_button25] 
-        row26 = [param_name26, self.oxygen_saturation, units_button26, desc_button26] 
-        row27 = [param_name27, self.cell_radius, units_button27, desc_button27] 
-        row28 = [param_name28, self.nucleus_radius, units_button28, desc_button28] 
-        row29 = [param_name29, self.fluid_fraction, units_button29, desc_button29] 
-        row30 = [param_name30, self.solid_nuclear, units_button30, desc_button30] 
-        row31 = [param_name31, self.solid_cytoplasmic, units_button31, desc_button31] 
-        row32 = [param_name32, self.cytoplasmic_nuclear_fraction, units_button32, desc_button32] 
-        row33 = [param_name33, self.initial_uptake_rate, units_button33, desc_button33] 
-        row34 = [param_name34, self.protein_threshold, units_button34, desc_button34] 
-        row35 = [param_name35, self.phenotype_number, units_button35, desc_button35] 
-        row36 = [param_name36, self.secretion_rate, units_button36, desc_button36] 
-        row37 = [param_name37, self.bnd_file, units_button37, desc_button37] 
-        row38 = [param_name38, self.cfg_file, units_button38, desc_button38] 
-        row39 = [param_name39, self.init_cells_filename, units_button39, desc_button39] 
-        row40 = [param_name40, self.init_ecm_filename, units_button40, desc_button40] 
-        row41 = [param_name41, self.x_threshold, units_button41, desc_button41] 
-        row42 = [param_name42, self.membrane_shape, units_button42, desc_button42] 
-        row43 = [param_name43, self.membrane_length, units_button43, desc_button43] 
+        row20 = [param_name20, self.cell_radius, units_button20, desc_button20] 
+        row21 = [param_name21, self.nucleus_radius, units_button21, desc_button21] 
+        row22 = [param_name22, self.fluid_fraction, units_button22, desc_button22] 
+        row23 = [param_name23, self.solid_nuclear, units_button23, desc_button23] 
+        row24 = [param_name24, self.solid_cytoplasmic, units_button24, desc_button24] 
+        row25 = [param_name25, self.protein_threshold, units_button25, desc_button25] 
+        row26 = [param_name26, self.bnd_file, units_button26, desc_button26] 
+        row27 = [param_name27, self.cfg_file, units_button27, desc_button27] 
+        row28 = [param_name28, self.init_cells_filename, units_button28, desc_button28] 
+        row29 = [param_name29, self.init_ecm_filename, units_button29, desc_button29] 
+        row30 = [param_name30, self.tgfb_threshold, units_button30, desc_button30] 
+        row31 = [param_name31, self.membrane_shape, units_button31, desc_button31] 
+        row32 = [param_name32, self.membrane_length, units_button32, desc_button32] 
+        row33 = [param_name33, self.node_to_visualize, units_button33, desc_button33] 
+        row34 = [param_name34, self.color_function, units_button34, desc_button34] 
 
         box_layout = Layout(display='flex', flex_flow='row', align_items='stretch', width='100%')
         box1 = Box(children=row1, layout=box_layout)
@@ -618,15 +500,6 @@ class UserTab(object):
         box32 = Box(children=row32, layout=box_layout)
         box33 = Box(children=row33, layout=box_layout)
         box34 = Box(children=row34, layout=box_layout)
-        box35 = Box(children=row35, layout=box_layout)
-        box36 = Box(children=row36, layout=box_layout)
-        box37 = Box(children=row37, layout=box_layout)
-        box38 = Box(children=row38, layout=box_layout)
-        box39 = Box(children=row39, layout=box_layout)
-        box40 = Box(children=row40, layout=box_layout)
-        box41 = Box(children=row41, layout=box_layout)
-        box42 = Box(children=row42, layout=box_layout)
-        box43 = Box(children=row43, layout=box_layout)
 
         self.tab = VBox([
           box1,
@@ -663,15 +536,6 @@ class UserTab(object):
           box32,
           box33,
           box34,
-          box35,
-          box36,
-          box37,
-          box38,
-          box39,
-          box40,
-          box41,
-          box42,
-          box43,
         ])
 
     # Populate the GUI widgets with values from the XML
@@ -702,30 +566,21 @@ class UserTab(object):
         self.cell_ecm_repulsion.value = float(uep.find('.//cell_ecm_repulsion').text)
         self.ecm_degradation.value = int(uep.find('.//ecm_degradation').text)
         self.max_interaction_factor.value = float(uep.find('.//max_interaction_factor').text)
-        self.cell_cell_repulsion.value = int(uep.find('.//cell_cell_repulsion').text)
-        self.oxygen_necrotic.value = int(uep.find('.//oxygen_necrotic').text)
-        self.oxygen_critical.value = int(uep.find('.//oxygen_critical').text)
-        self.oxygen_no_proliferation.value = float(uep.find('.//oxygen_no_proliferation').text)
-        self.oxygen_hypoxic.value = int(uep.find('.//oxygen_hypoxic').text)
-        self.oxygen_reference.value = float(uep.find('.//oxygen_reference').text)
-        self.oxygen_saturation.value = int(uep.find('.//oxygen_saturation').text)
         self.cell_radius.value = float(uep.find('.//cell_radius').text)
         self.nucleus_radius.value = float(uep.find('.//nucleus_radius').text)
         self.fluid_fraction.value = float(uep.find('.//fluid_fraction').text)
         self.solid_nuclear.value = int(uep.find('.//solid_nuclear').text)
         self.solid_cytoplasmic.value = int(uep.find('.//solid_cytoplasmic').text)
-        self.cytoplasmic_nuclear_fraction.value = float(uep.find('.//cytoplasmic_nuclear_fraction').text)
-        self.initial_uptake_rate.value = int(uep.find('.//initial_uptake_rate').text)
         self.protein_threshold.value = int(uep.find('.//protein_threshold').text)
-        self.phenotype_number.value = int(uep.find('.//phenotype_number').text)
-        self.secretion_rate.value = int(uep.find('.//secretion_rate').text)
         self.bnd_file.value = (uep.find('.//bnd_file').text)
         self.cfg_file.value = (uep.find('.//cfg_file').text)
         self.init_cells_filename.value = (uep.find('.//init_cells_filename').text)
         self.init_ecm_filename.value = (uep.find('.//init_ecm_filename').text)
-        self.x_threshold.value = float(uep.find('.//x_threshold').text)
+        self.tgfb_threshold.value = float(uep.find('.//tgfb_threshold').text)
         self.membrane_shape.value = (uep.find('.//membrane_shape').text)
         self.membrane_length.value = float(uep.find('.//membrane_length').text)
+        self.node_to_visualize.value = (uep.find('.//node_to_visualize').text)
+        self.color_function.value = int(uep.find('.//color_function').text)
 
 
     # Read values from the GUI widgets to enable editing XML
@@ -756,27 +611,18 @@ class UserTab(object):
         uep.find('.//cell_ecm_repulsion').text = str(self.cell_ecm_repulsion.value)
         uep.find('.//ecm_degradation').text = str(self.ecm_degradation.value)
         uep.find('.//max_interaction_factor').text = str(self.max_interaction_factor.value)
-        uep.find('.//cell_cell_repulsion').text = str(self.cell_cell_repulsion.value)
-        uep.find('.//oxygen_necrotic').text = str(self.oxygen_necrotic.value)
-        uep.find('.//oxygen_critical').text = str(self.oxygen_critical.value)
-        uep.find('.//oxygen_no_proliferation').text = str(self.oxygen_no_proliferation.value)
-        uep.find('.//oxygen_hypoxic').text = str(self.oxygen_hypoxic.value)
-        uep.find('.//oxygen_reference').text = str(self.oxygen_reference.value)
-        uep.find('.//oxygen_saturation').text = str(self.oxygen_saturation.value)
         uep.find('.//cell_radius').text = str(self.cell_radius.value)
         uep.find('.//nucleus_radius').text = str(self.nucleus_radius.value)
         uep.find('.//fluid_fraction').text = str(self.fluid_fraction.value)
         uep.find('.//solid_nuclear').text = str(self.solid_nuclear.value)
         uep.find('.//solid_cytoplasmic').text = str(self.solid_cytoplasmic.value)
-        uep.find('.//cytoplasmic_nuclear_fraction').text = str(self.cytoplasmic_nuclear_fraction.value)
-        uep.find('.//initial_uptake_rate').text = str(self.initial_uptake_rate.value)
         uep.find('.//protein_threshold').text = str(self.protein_threshold.value)
-        uep.find('.//phenotype_number').text = str(self.phenotype_number.value)
-        uep.find('.//secretion_rate').text = str(self.secretion_rate.value)
         uep.find('.//bnd_file').text = str(self.bnd_file.value)
         uep.find('.//cfg_file').text = str(self.cfg_file.value)
         uep.find('.//init_cells_filename').text = str(self.init_cells_filename.value)
         uep.find('.//init_ecm_filename').text = str(self.init_ecm_filename.value)
-        uep.find('.//x_threshold').text = str(self.x_threshold.value)
+        uep.find('.//tgfb_threshold').text = str(self.tgfb_threshold.value)
         uep.find('.//membrane_shape').text = str(self.membrane_shape.value)
         uep.find('.//membrane_length').text = str(self.membrane_length.value)
+        uep.find('.//node_to_visualize').text = str(self.node_to_visualize.value)
+        uep.find('.//color_function').text = str(self.color_function.value)

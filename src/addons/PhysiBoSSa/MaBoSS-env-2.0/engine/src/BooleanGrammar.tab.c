@@ -99,13 +99,14 @@
      January-March 2011
 */
 
+#define _POSIX_SOURCE 1
 #include "BooleanGrammar.h"
 
 extern int yylex();
 static void yyerror(const char *s);
 static Network* current_network;
 
-#line 109 "BooleanGrammar.tab.c"
+#line 110 "BooleanGrammar.tab.c"
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
@@ -162,7 +163,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 41 "BooleanGrammar.y"
+#line 42 "BooleanGrammar.y"
 
   std::vector<NodeDecl*>* node_decl_list;
   NodeDecl* node_decl;
@@ -174,7 +175,7 @@ union YYSTYPE
   double d;
   long long l;
 
-#line 178 "BooleanGrammar.tab.c"
+#line 179 "BooleanGrammar.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -481,12 +482,12 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    80,    80,    83,    88,    98,   104,   120,   122,   126,
-     131,   138,   143,   150,   156,   161,   166,   170,   174,   180,
-     184,   189,   196,   201,   208,   212,   216,   220,   224,   230,
-     234,   238,   244,   248,   252,   258,   262,   266,   270,   274,
-     280,   284,   288,   294,   298,   304,   308,   314,   318,   322,
-     328,   332,   338,   344,   345
+       0,    81,    81,    84,    89,    99,   105,   121,   123,   127,
+     132,   139,   144,   151,   157,   162,   167,   171,   175,   181,
+     185,   190,   197,   202,   209,   213,   217,   221,   225,   231,
+     235,   239,   245,   249,   253,   259,   263,   267,   271,   275,
+     281,   285,   289,   295,   299,   305,   309,   315,   319,   323,
+     329,   333,   339,   345,   346
 };
 #endif
 
@@ -1329,21 +1330,21 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 81 "BooleanGrammar.y"
+#line 82 "BooleanGrammar.y"
     {
 }
-#line 1336 "BooleanGrammar.tab.c"
+#line 1337 "BooleanGrammar.tab.c"
     break;
 
   case 3:
-#line 84 "BooleanGrammar.y"
+#line 85 "BooleanGrammar.y"
     {
 }
-#line 1343 "BooleanGrammar.tab.c"
+#line 1344 "BooleanGrammar.tab.c"
     break;
 
   case 4:
-#line 89 "BooleanGrammar.y"
+#line 90 "BooleanGrammar.y"
     {
   NodeDecl* truc = new NodeDecl((yyvsp[-3].str), (yyvsp[-1].node_decl_item_list));
   free((yyvsp[-3].str));
@@ -1353,21 +1354,21 @@ yyreduce:
   delete (yyvsp[-1].node_decl_item_list);
   delete truc;
 }
-#line 1357 "BooleanGrammar.tab.c"
+#line 1358 "BooleanGrammar.tab.c"
     break;
 
   case 5:
-#line 99 "BooleanGrammar.y"
+#line 100 "BooleanGrammar.y"
     {
   NodeDecl* truc = new NodeDecl((yyvsp[-2].str), NULL);
   free((yyvsp[-2].str));
   delete truc;
 }
-#line 1367 "BooleanGrammar.tab.c"
+#line 1368 "BooleanGrammar.tab.c"
     break;
 
   case 6:
-#line 105 "BooleanGrammar.y"
+#line 106 "BooleanGrammar.y"
     {
   NodeDeclItem* decl_item = new NodeDeclItem("logic", (yyvsp[-1].expr));
   std::vector<NodeDeclItem*>* decl_item_v = new std::vector<NodeDeclItem*>();
@@ -1381,387 +1382,387 @@ yyreduce:
   delete decl_item_v;
   delete truc;
 }
-#line 1385 "BooleanGrammar.tab.c"
+#line 1386 "BooleanGrammar.tab.c"
     break;
 
   case 7:
-#line 121 "BooleanGrammar.y"
+#line 122 "BooleanGrammar.y"
     {}
-#line 1391 "BooleanGrammar.tab.c"
+#line 1392 "BooleanGrammar.tab.c"
     break;
 
   case 8:
-#line 123 "BooleanGrammar.y"
+#line 124 "BooleanGrammar.y"
     {}
-#line 1397 "BooleanGrammar.tab.c"
+#line 1398 "BooleanGrammar.tab.c"
     break;
 
   case 9:
-#line 127 "BooleanGrammar.y"
+#line 128 "BooleanGrammar.y"
     {
   (yyval.node_decl_item_list) = new std::vector<NodeDeclItem*>();
   (yyval.node_decl_item_list)->push_back((yyvsp[0].node_decl_item));
 }
-#line 1406 "BooleanGrammar.tab.c"
+#line 1407 "BooleanGrammar.tab.c"
     break;
 
   case 10:
-#line 132 "BooleanGrammar.y"
+#line 133 "BooleanGrammar.y"
     {
   (yyvsp[-1].node_decl_item_list)->push_back((yyvsp[0].node_decl_item));
   (yyval.node_decl_item_list) = (yyvsp[-1].node_decl_item_list);
 }
-#line 1415 "BooleanGrammar.tab.c"
+#line 1416 "BooleanGrammar.tab.c"
     break;
 
   case 11:
-#line 139 "BooleanGrammar.y"
+#line 140 "BooleanGrammar.y"
     {
   (yyval.node_decl_item) = new NodeDeclItem((yyvsp[-3].str), (yyvsp[-1].expr));
   free((yyvsp[-3].str));
 }
-#line 1424 "BooleanGrammar.tab.c"
+#line 1425 "BooleanGrammar.tab.c"
     break;
 
   case 12:
-#line 144 "BooleanGrammar.y"
+#line 145 "BooleanGrammar.y"
     {
   (yyval.node_decl_item) = new NodeDeclItem((yyvsp[-3].str), (yyvsp[-1].str));
   free((yyvsp[-3].str));
 }
-#line 1433 "BooleanGrammar.tab.c"
+#line 1434 "BooleanGrammar.tab.c"
     break;
 
   case 13:
-#line 151 "BooleanGrammar.y"
+#line 152 "BooleanGrammar.y"
     {
   Node* node = current_network->getOrMakeNode((yyvsp[0].str));
   (yyval.expr) = new NodeExpression(node);
   free((yyvsp[0].str));
 }
-#line 1443 "BooleanGrammar.tab.c"
+#line 1444 "BooleanGrammar.tab.c"
     break;
 
   case 14:
-#line 157 "BooleanGrammar.y"
+#line 158 "BooleanGrammar.y"
     {
   (yyval.expr) = new AliasExpression((yyvsp[0].str));
   free((yyvsp[0].str));
 }
-#line 1452 "BooleanGrammar.tab.c"
+#line 1453 "BooleanGrammar.tab.c"
     break;
 
   case 15:
-#line 162 "BooleanGrammar.y"
+#line 163 "BooleanGrammar.y"
     {
   (yyval.expr) = new SymbolExpression(current_network->getSymbolTable(), current_network->getSymbolTable()->getOrMakeSymbol((yyvsp[0].str)));
   free((yyvsp[0].str));
 }
-#line 1461 "BooleanGrammar.tab.c"
+#line 1462 "BooleanGrammar.tab.c"
     break;
 
   case 16:
-#line 167 "BooleanGrammar.y"
+#line 168 "BooleanGrammar.y"
     {
   (yyval.expr) = new ConstantExpression((yyvsp[0].l));
 }
-#line 1469 "BooleanGrammar.tab.c"
+#line 1470 "BooleanGrammar.tab.c"
     break;
 
   case 17:
-#line 171 "BooleanGrammar.y"
+#line 172 "BooleanGrammar.y"
     {
   (yyval.expr) = new ConstantExpression((yyvsp[0].d));
 }
-#line 1477 "BooleanGrammar.tab.c"
+#line 1478 "BooleanGrammar.tab.c"
     break;
 
   case 18:
-#line 175 "BooleanGrammar.y"
+#line 176 "BooleanGrammar.y"
     {
   (yyval.expr) = new ParenthesisExpression((yyvsp[-1].expr));
 }
-#line 1485 "BooleanGrammar.tab.c"
+#line 1486 "BooleanGrammar.tab.c"
     break;
 
   case 19:
-#line 181 "BooleanGrammar.y"
+#line 182 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1493 "BooleanGrammar.tab.c"
+#line 1494 "BooleanGrammar.tab.c"
     break;
 
   case 20:
-#line 185 "BooleanGrammar.y"
+#line 186 "BooleanGrammar.y"
     {
   (yyval.expr) = new FuncCallExpression((yyvsp[-3].str), (yyvsp[-1].arg_list));
   free((yyvsp[-3].str));
 }
-#line 1502 "BooleanGrammar.tab.c"
+#line 1503 "BooleanGrammar.tab.c"
     break;
 
   case 21:
-#line 190 "BooleanGrammar.y"
+#line 191 "BooleanGrammar.y"
     {
   (yyval.expr) = new FuncCallExpression((yyvsp[-2].str), NULL);
   free((yyvsp[-2].str));
 }
-#line 1511 "BooleanGrammar.tab.c"
+#line 1512 "BooleanGrammar.tab.c"
     break;
 
   case 22:
-#line 197 "BooleanGrammar.y"
+#line 198 "BooleanGrammar.y"
     {
   (yyval.arg_list) = new ArgumentList();
   (yyval.arg_list)->push_back((yyvsp[0].expr));
 }
-#line 1520 "BooleanGrammar.tab.c"
+#line 1521 "BooleanGrammar.tab.c"
     break;
 
   case 23:
-#line 202 "BooleanGrammar.y"
+#line 203 "BooleanGrammar.y"
     {
   (yyval.arg_list) = (yyvsp[-2].arg_list);
   (yyval.arg_list)->push_back((yyvsp[0].expr));
 }
-#line 1529 "BooleanGrammar.tab.c"
+#line 1530 "BooleanGrammar.tab.c"
     break;
 
   case 24:
-#line 209 "BooleanGrammar.y"
+#line 210 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1537 "BooleanGrammar.tab.c"
+#line 1538 "BooleanGrammar.tab.c"
     break;
 
   case 25:
-#line 213 "BooleanGrammar.y"
+#line 214 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1545 "BooleanGrammar.tab.c"
+#line 1546 "BooleanGrammar.tab.c"
     break;
 
   case 26:
-#line 217 "BooleanGrammar.y"
+#line 218 "BooleanGrammar.y"
     {
   (yyval.expr) = new SubExpression(new ConstantExpression(0.0), (yyvsp[0].expr));
 }
-#line 1553 "BooleanGrammar.tab.c"
+#line 1554 "BooleanGrammar.tab.c"
     break;
 
   case 27:
-#line 221 "BooleanGrammar.y"
+#line 222 "BooleanGrammar.y"
     {
   (yyval.expr) = new NotLogicalExpression((yyvsp[0].expr));
 }
-#line 1561 "BooleanGrammar.tab.c"
+#line 1562 "BooleanGrammar.tab.c"
     break;
 
   case 28:
-#line 225 "BooleanGrammar.y"
+#line 226 "BooleanGrammar.y"
     {
   (yyval.expr) = new NotLogicalExpression((yyvsp[0].expr));
 }
-#line 1569 "BooleanGrammar.tab.c"
+#line 1570 "BooleanGrammar.tab.c"
     break;
 
   case 29:
-#line 231 "BooleanGrammar.y"
+#line 232 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1577 "BooleanGrammar.tab.c"
+#line 1578 "BooleanGrammar.tab.c"
     break;
 
   case 30:
-#line 235 "BooleanGrammar.y"
+#line 236 "BooleanGrammar.y"
     {
   (yyval.expr) = new MulExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1585 "BooleanGrammar.tab.c"
+#line 1586 "BooleanGrammar.tab.c"
     break;
 
   case 31:
-#line 239 "BooleanGrammar.y"
+#line 240 "BooleanGrammar.y"
     {
   (yyval.expr) = new DivExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1593 "BooleanGrammar.tab.c"
+#line 1594 "BooleanGrammar.tab.c"
     break;
 
   case 32:
-#line 245 "BooleanGrammar.y"
+#line 246 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1601 "BooleanGrammar.tab.c"
+#line 1602 "BooleanGrammar.tab.c"
     break;
 
   case 33:
-#line 249 "BooleanGrammar.y"
+#line 250 "BooleanGrammar.y"
     {
   (yyval.expr) = new AddExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1609 "BooleanGrammar.tab.c"
+#line 1610 "BooleanGrammar.tab.c"
     break;
 
   case 34:
-#line 253 "BooleanGrammar.y"
+#line 254 "BooleanGrammar.y"
     {
   (yyval.expr) = new SubExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1617 "BooleanGrammar.tab.c"
+#line 1618 "BooleanGrammar.tab.c"
     break;
 
   case 35:
-#line 259 "BooleanGrammar.y"
+#line 260 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1625 "BooleanGrammar.tab.c"
+#line 1626 "BooleanGrammar.tab.c"
     break;
 
   case 36:
-#line 263 "BooleanGrammar.y"
+#line 264 "BooleanGrammar.y"
     {
   (yyval.expr) = new LetterExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1633 "BooleanGrammar.tab.c"
+#line 1634 "BooleanGrammar.tab.c"
     break;
 
   case 37:
-#line 267 "BooleanGrammar.y"
+#line 268 "BooleanGrammar.y"
     {
   (yyval.expr) = new GreaterExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1641 "BooleanGrammar.tab.c"
+#line 1642 "BooleanGrammar.tab.c"
     break;
 
   case 38:
-#line 271 "BooleanGrammar.y"
+#line 272 "BooleanGrammar.y"
     {
   (yyval.expr) = new LetterOrEqualExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1649 "BooleanGrammar.tab.c"
+#line 1650 "BooleanGrammar.tab.c"
     break;
 
   case 39:
-#line 275 "BooleanGrammar.y"
+#line 276 "BooleanGrammar.y"
     {
   (yyval.expr) = new GreaterOrEqualExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1657 "BooleanGrammar.tab.c"
+#line 1658 "BooleanGrammar.tab.c"
     break;
 
   case 40:
-#line 281 "BooleanGrammar.y"
+#line 282 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1665 "BooleanGrammar.tab.c"
+#line 1666 "BooleanGrammar.tab.c"
     break;
 
   case 41:
-#line 285 "BooleanGrammar.y"
+#line 286 "BooleanGrammar.y"
     {
   (yyval.expr) = new EqualExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1673 "BooleanGrammar.tab.c"
+#line 1674 "BooleanGrammar.tab.c"
     break;
 
   case 42:
-#line 289 "BooleanGrammar.y"
+#line 290 "BooleanGrammar.y"
     {
   (yyval.expr) = new NotEqualExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1681 "BooleanGrammar.tab.c"
+#line 1682 "BooleanGrammar.tab.c"
     break;
 
   case 43:
-#line 295 "BooleanGrammar.y"
+#line 296 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1689 "BooleanGrammar.tab.c"
+#line 1690 "BooleanGrammar.tab.c"
     break;
 
   case 44:
-#line 299 "BooleanGrammar.y"
+#line 300 "BooleanGrammar.y"
     {
   (yyval.expr) = new AndLogicalExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1697 "BooleanGrammar.tab.c"
+#line 1698 "BooleanGrammar.tab.c"
     break;
 
   case 45:
-#line 305 "BooleanGrammar.y"
+#line 306 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1705 "BooleanGrammar.tab.c"
+#line 1706 "BooleanGrammar.tab.c"
     break;
 
   case 46:
-#line 309 "BooleanGrammar.y"
+#line 310 "BooleanGrammar.y"
     {
   (yyval.expr) = new OrLogicalExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1713 "BooleanGrammar.tab.c"
+#line 1714 "BooleanGrammar.tab.c"
     break;
 
   case 47:
-#line 315 "BooleanGrammar.y"
+#line 316 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1721 "BooleanGrammar.tab.c"
+#line 1722 "BooleanGrammar.tab.c"
     break;
 
   case 48:
-#line 319 "BooleanGrammar.y"
+#line 320 "BooleanGrammar.y"
     {
   (yyval.expr) = new XorLogicalExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1729 "BooleanGrammar.tab.c"
+#line 1730 "BooleanGrammar.tab.c"
     break;
 
   case 49:
-#line 323 "BooleanGrammar.y"
+#line 324 "BooleanGrammar.y"
     {
   (yyval.expr) = new XorLogicalExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1737 "BooleanGrammar.tab.c"
+#line 1738 "BooleanGrammar.tab.c"
     break;
 
   case 50:
-#line 329 "BooleanGrammar.y"
+#line 330 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1745 "BooleanGrammar.tab.c"
+#line 1746 "BooleanGrammar.tab.c"
     break;
 
   case 51:
-#line 333 "BooleanGrammar.y"
+#line 334 "BooleanGrammar.y"
     {
   (yyval.expr) = new CondExpression((yyvsp[-4].expr), (yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1753 "BooleanGrammar.tab.c"
+#line 1754 "BooleanGrammar.tab.c"
     break;
 
   case 52:
-#line 339 "BooleanGrammar.y"
+#line 340 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1761 "BooleanGrammar.tab.c"
+#line 1762 "BooleanGrammar.tab.c"
     break;
 
 
-#line 1765 "BooleanGrammar.tab.c"
+#line 1766 "BooleanGrammar.tab.c"
 
       default: break;
     }
@@ -1993,7 +1994,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 348 "BooleanGrammar.y"
+#line 349 "BooleanGrammar.y"
 
 
 #include "lex.CTBNDL.cc"

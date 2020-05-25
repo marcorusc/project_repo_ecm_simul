@@ -4,6 +4,8 @@
 /* custom class for simulation that use cells that interact with extra cellular matrix
 */
 
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "../core/PhysiCell_cell.h" 
 #include "../core/PhysiCell_constants.h"
 #include "custom_main.h"
@@ -19,7 +21,6 @@ protected:
 	
 public:
 	inline bool passive() { return type == PhysiCell_constants::PASSIVE_TYPE; };
-	
     std::vector<double> motility;
 	double pintegrin;
 	double pmotility;
@@ -44,7 +45,12 @@ public:
 	/** \brief (De)-Activate ECM degradation by the cell */
 	inline void set_mmp( int activate )
 	{ mmped = activate; };
-
+	/** \brief Change the current value of integrin percent coeff, increase or decrease according to up value */
+	inline void evolve_integrin_coef( int up, double dt )
+	{ evolve_coef( up, &pintegrin, dt ); };
+	/** \brief Change the current value of cell cell adhesion percent coeff, increase or decrease according to up value */
+	inline void evolve_cellcell_coef( int up, double dt )
+	{ evolve_coef( up, &padhesion, dt ); };
     /** \brief Return amount of contact with other cells */
 	inline double contact_cell()
 	{ return cell_contact / phenotype.geometry.radius ; };
@@ -63,7 +69,6 @@ public:
 	/** \brief Get the current value of motility coefficient */
 	inline double get_motility_amplitude( double percent )
 	{ return current_value( motility_magnitude[0], motility_magnitude[1], percent ); };
-    
     bool has_neighbor(int);
 	double adhesion(Cell* other_cell);
 	double get_adhesion();
@@ -107,6 +112,22 @@ public:
 	{ return ecm_contact / phenotype.geometry.radius ; };
 	/** \brief Update cell cycle state */
 	void update_cycle( double cycle_dt, double time_since_last, double t );
+	inline std::string get_shape()
+	{return PhysiCell::parameters.strings("membrane_shape");}
+	static void add_cell_basement_membrane_interactions( Cell* pCell, Phenotype& phenotype, double dt );
+	/** \brief Calculate agent distance to BM if defined */
+	static double distance_to_membrane( Cell* pCell, Phenotype& phenotype, double l);
+	double distance_to_membrane_duct( double l);
+	/** \brief Distance of agent to BA for sphere geometry */
+	double distance_to_membrane_sphere( double l);
+	/** \brief Distance to membrane Sheet
+	 * Basement membrane is a sheet of height 2*BM_radius 
+	 * Z value is in between -BM_radius and +BM_radius
+	 */
+	double distance_to_membrane_sheet(double length);
+	int feel_enough(std::string field, Custom_cell pCell);
+	bool necrotic_oxygen();
+	
 };
 
 #endif

@@ -497,12 +497,13 @@ char *CTBNDLtext;
 */
 
 #include <math.h>
+#include "Utils.h"
 
 static char *CTBNDLtokstr();
 static unsigned int input_lineno = 1;
 static void skip_comment(void);
-#line 505 "<stdout>"
 #line 506 "<stdout>"
+#line 507 "<stdout>"
 
 #define INITIAL 0
 
@@ -719,10 +720,10 @@ YY_DECL
 		}
 
 	{
-#line 44 "BooleanGrammar.l"
+#line 45 "BooleanGrammar.l"
 
 
-#line 726 "<stdout>"
+#line 727 "<stdout>"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -781,28 +782,28 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 46 "BooleanGrammar.l"
+#line 47 "BooleanGrammar.l"
 { }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 47 "BooleanGrammar.l"
+#line 48 "BooleanGrammar.l"
 { input_lineno++; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 48 "BooleanGrammar.l"
+#line 49 "BooleanGrammar.l"
 { skip_comment(); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 49 "BooleanGrammar.l"
+#line 50 "BooleanGrammar.l"
 { }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 50 "BooleanGrammar.l"
+#line 51 "BooleanGrammar.l"
 {
   if (!strcasecmp(CTBNDLtext, "NOT")) {
      return LOGNOT;
@@ -819,21 +820,21 @@ YY_RULE_SETUP
   if (!strcasecmp(CTBNDLtext, "NODE")) {
      return NODE;
   }
-  CTBNDLlval.str = strdup(CTBNDLtext);
+  CTBNDLlval.str = maboss_strdup(CTBNDLtext);
   return IDENTIFIER;
 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 69 "BooleanGrammar.l"
+#line 70 "BooleanGrammar.l"
 {
-  CTBNDLlval.str = strdup(CTBNDLtext);
+  CTBNDLlval.str = maboss_strdup(CTBNDLtext);
   return VARIABLE;
 }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 73 "BooleanGrammar.l"
+#line 74 "BooleanGrammar.l"
 {
   CTBNDLlval.str = CTBNDLtokstr();
   return STRING;
@@ -841,65 +842,65 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 77 "BooleanGrammar.l"
+#line 78 "BooleanGrammar.l"
 { return EQUAL; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 78 "BooleanGrammar.l"
+#line 79 "BooleanGrammar.l"
 { return NOT_EQUAL; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 79 "BooleanGrammar.l"
+#line 80 "BooleanGrammar.l"
 { return LTEQ; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 80 "BooleanGrammar.l"
+#line 81 "BooleanGrammar.l"
 { return GTEQ; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 81 "BooleanGrammar.l"
+#line 82 "BooleanGrammar.l"
 { return LOGAND; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 82 "BooleanGrammar.l"
+#line 83 "BooleanGrammar.l"
 { return LOGOR; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 83 "BooleanGrammar.l"
+#line 84 "BooleanGrammar.l"
 { return LOGNOT; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 84 "BooleanGrammar.l"
+#line 85 "BooleanGrammar.l"
 { sscanf(CTBNDLtext, "%lld", &CTBNDLlval.l); return INTEGER; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 85 "BooleanGrammar.l"
+#line 86 "BooleanGrammar.l"
 { CTBNDLlval.d = atof(CTBNDLtext); return DOUBLE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 86 "BooleanGrammar.l"
+#line 87 "BooleanGrammar.l"
 { CTBNDLlval.d = atof(CTBNDLtext); return DOUBLE; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 87 "BooleanGrammar.l"
+#line 88 "BooleanGrammar.l"
 { return CTBNDLtext[0]; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 89 "BooleanGrammar.l"
+#line 90 "BooleanGrammar.l"
 ECHO;
 	YY_BREAK
-#line 903 "<stdout>"
+#line 904 "<stdout>"
 case YY_STATE_EOF(INITIAL):
 	CTBNDLterminate();
 
@@ -1904,7 +1905,7 @@ void CTBNDLfree (void * ptr )
 
 #define YYTABLES_NAME "CTBNDLtables"
 
-#line 89 "BooleanGrammar.l"
+#line 90 "BooleanGrammar.l"
 
 
 #define _ESC_(X, Y) case X: *p++ = Y; break
