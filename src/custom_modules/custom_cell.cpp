@@ -126,13 +126,10 @@ bool Custom_cell::has_neighbor(int level)
 /* Calculate adhesion coefficient with other cell */
 double Custom_cell::adhesion( Cell* other_cell )
 {
-    Custom_cell* custom_other_cell = static_cast<Custom_cell*>(other_cell);
-	Ccca_heterotypic[0] = PhysiCell::parameters.doubles("heterotypic_adhesion_min");
-	Ccca_heterotypic[1] = PhysiCell::parameters.doubles("heterotypic_adhesion_max");
-	Ccca_homotypic[0] = PhysiCell::parameters.doubles("homotypic_adhesion_min");
-	Ccca_homotypic[1] = PhysiCell::parameters.doubles("homotypic_adhesion_max");
+  Custom_cell* custom_other_cell = static_cast<Custom_cell*>(other_cell);
+	
 	double adh = 0;
-	if ( &(Cell::phenotype) == &(other_cell->Cell::phenotype) )
+	if ( this->type == other_cell->type )
 		adh = std::min( get_homotypic_strength(padhesion), custom_other_cell->get_homotypic_strength(padhesion) );
 	else
 		adh = std::min( get_heterotypic_strength(padhesion), custom_other_cell->get_heterotypic_strength(padhesion) );
@@ -151,8 +148,6 @@ double Custom_cell::get_adhesion()
 void Custom_cell::set_3D_random_motility( double dt )
 {
     double probability = UniformRandom();
-    motility_magnitude[0] = PhysiCell::parameters.doubles("motility_amplitude_min");
-    motility_magnitude[1] = PhysiCell::parameters.doubles("motility_amplitude_max");
     if ( probability < dt / PhysiCell::parameters.doubles("persistence") )
     {
         std::vector<double> tmp;

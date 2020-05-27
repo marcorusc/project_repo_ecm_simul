@@ -28,7 +28,6 @@ public:
 	double nucleus_deform;
 	double ecm_contact;
 	double Cecm[2];
-	double motility_magnitude[2];
 	double Ccca_homotypic[2];
 	double Ccca_heterotypic[2];
 	int mmped;
@@ -68,7 +67,7 @@ public:
 	{ return current_value( Cecm[0], Cecm[1], percent ); };
 	/** \brief Get the current value of motility coefficient */
 	inline double get_motility_amplitude( double percent )
-	{ return current_value( motility_magnitude[0], motility_magnitude[1], percent ); };
+	{ return current_value( PhysiCell::parameters.doubles("motility_amplitude_min"), PhysiCell::parameters.doubles("motility_amplitude_max"), percent ); };
     bool has_neighbor(int);
 	double adhesion(Cell* other_cell);
 	double get_adhesion();
