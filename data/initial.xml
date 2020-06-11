@@ -11,9 +11,9 @@
 		</software>
 		<citation />
 		<current_time units="min">0.000000</current_time>
-		<current_runtime units="sec">0.105614</current_runtime>
-		<created>2020-05-25T09:41:26Z</created>
-		<last_modified>2020-05-25T09:41:26Z</last_modified>
+		<current_runtime units="sec">0.435785</current_runtime>
+		<created>2020-06-09T09:16:59Z</created>
+		<last_modified>2020-06-09T09:16:59Z</last_modified>
 	</metadata>
 	<microenvironment>
 		<domain name="microenvironment">
@@ -75,9 +75,8 @@
 							<label index="22" size="3">motility_bias_direction</label>
 							<label index="25" size="1">persistence_time</label>
 							<label index="26" size="1">motility_reserved</label>
-							<label index="27" size="1">next_physibossa_run</label>
-							<label index="28" size="1">ecm_contact</label>
-							<label index="29" size="1">Cell_cell</label>
+							<label index="27" size="1">ecm_contact</label>
+							<label index="28" size="1">Cell_cell</label>
 						</labels>
 						<filename>initial_cells_physicell.mat</filename>
 					</simplified_data>

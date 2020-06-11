@@ -453,6 +453,7 @@ class Cell_Functions
 	void (*contact_function)(Cell* pMyself, Phenotype& my_phenotype, 
 		Cell* pOther, Phenotype& other_phenotype, double dt ); 
 		
+	double (*custom_repulsion)(Cell* pCell, Cell* otherCell);
 	double (*custom_adhesion)(Cell* pCell, Cell* otherCell, double distance);
 	/* prototyping / beta in 1.5.0 */ 
 /*	
@@ -542,6 +543,44 @@ class Molecular
 		
 };
 
+class Intracellular
+{
+ private:
+ public:
+    std::string type;
+	
+	// This function parse the xml cell definition
+	virtual void initialize_intracellular_from_pugixml(pugi::xml_node& node) = 0;
+	
+	// This function initialize the model, needs to be called on each cell once created
+	virtual void start() = 0;
+	
+	// This function update the model for the time_step defined in the xml definition
+	virtual void update() = 0;
+	
+	// This function checks if it's time to update the model
+	virtual bool need_update() = 0;
+	
+	// This function checks if a node exists
+	virtual bool has_node(std::string name) = 0; 
+	
+	// Access value for boolean model
+	virtual bool get_boolean_node_value(std::string name) = 0;
+	
+	// Set value for boolean model
+	virtual void set_boolean_node_value(std::string name, bool value) = 0;
+	
+	// Get value for maboss model parameter
+	virtual double get_parameter_value(std::string name) = 0;
+	
+	// Set value for maboss model parameter
+	virtual void set_parameter_value(std::string name, double value) = 0;
+	
+	virtual std::string get_state() = 0;
+	
+	virtual Intracellular* clone() = 0;
+};
+
 class Phenotype
 {
  private:
@@ -559,8 +598,14 @@ class Phenotype
 	
 	Molecular molecular; 
 	
+	// We need it to be a pointer to allow polymorphism
+	// then this object could be a MaBoSSIntracellular, or a SBMLIntracellular
+	Intracellular* intracellular;
+	
 	Phenotype(); // done 
 	
+	void operator=(const Phenotype &p );
+	void operator=(Phenotype &p );
 	void sync_to_functions( Cell_Functions& functions ); // done 
 	
 	void sync_to_microenvironment( Microenvironment* pMicroenvironment ); 

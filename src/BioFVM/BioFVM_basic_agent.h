@@ -73,11 +73,13 @@ class Basic_Agent
 	std::vector<double> cell_source_sink_solver_temp_export1; 
 	std::vector<double> cell_source_sink_solver_temp_export2; 	
 	std::vector<double> previous_velocity; 
-	bool is_active;
+//	bool is_active;
 	
 	std::vector<double> total_extracellular_substrate_change; 
 	
  public:
+	bool is_active;
+
 	std::vector<double> * secretion_rates; 
 	std::vector<double> * saturation_densities; 
 	std::vector<double> * uptake_rates;  
@@ -109,7 +111,7 @@ class Basic_Agent
 	void update_position( double dt );
 	
 	Basic_Agent(); 
-
+	~Basic_Agent() {}
 	// simulate secretion and uptake at the nearest voxel at the indicated microenvironment.
 	// if no microenvironment indicated, use the currently selected microenvironment. 
 	void simulate_secretion_and_uptake( Microenvironment* M, double dt ); 

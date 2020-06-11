@@ -465,32 +465,50 @@ int CTBNDL_flex_debug = 0;
 char *CTBNDLtext;
 #line 1 "BooleanGrammar.l"
 #line 3 "BooleanGrammar.l"
-/* 
-   MaBoSS (Markov Boolean Stochastic Simulator)
-   Copyright (C) 2011 Institut Curie, 26 rue d'Ulm, Paris, France
-   
-   MaBoSS is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-   
-   MaBoSS is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA 
-*/
-
 /*
+#############################################################################
+#                                                                           #
+# BSD 3-Clause License (see https://opensource.org/licenses/BSD-3-Clause)   #
+#                                                                           #
+# Copyright (c) 2011-2020 Institut Curie, 26 rue d'Ulm, Paris, France       #
+# All rights reserved.                                                      #
+#                                                                           #
+# Redistribution and use in source and binary forms, with or without        #
+# modification, are permitted provided that the following conditions are    #
+# met:                                                                      #
+#                                                                           #
+# 1. Redistributions of source code must retain the above copyright notice, #
+# this list of conditions and the following disclaimer.                     #
+#                                                                           #
+# 2. Redistributions in binary form must reproduce the above copyright      #
+# notice, this list of conditions and the following disclaimer in the       #
+# documentation and/or other materials provided with the distribution.      #
+#                                                                           #
+# 3. Neither the name of the copyright holder nor the names of its          #
+# contributors may be used to endorse or promote products derived from this #
+# software without specific prior written permission.                       #
+#                                                                           #
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS       #
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED #
+# TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A           #
+# PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER #
+# OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  #
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,       #
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR        #
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF    #
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING      #
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS        #
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.              #
+#                                                                           #
+#############################################################################
+
    Module:
      BooleanGrammar.l
 
    Authors:
      Eric Viara <viara@sysra.com>
      Gautier Stoll <gautier.stoll@curie.fr>
+     Vincent Noël <vincent.noel@curie.fr>
  
    Date:
      January-March 2011
@@ -502,8 +520,8 @@ char *CTBNDLtext;
 static char *CTBNDLtokstr();
 static unsigned int input_lineno = 1;
 static void skip_comment(void);
-#line 506 "<stdout>"
-#line 507 "<stdout>"
+#line 524 "<stdout>"
+#line 525 "<stdout>"
 
 #define INITIAL 0
 
@@ -720,10 +738,10 @@ YY_DECL
 		}
 
 	{
-#line 45 "BooleanGrammar.l"
+#line 63 "BooleanGrammar.l"
 
 
-#line 727 "<stdout>"
+#line 745 "<stdout>"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -782,28 +800,28 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 47 "BooleanGrammar.l"
+#line 65 "BooleanGrammar.l"
 { }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 48 "BooleanGrammar.l"
+#line 66 "BooleanGrammar.l"
 { input_lineno++; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 49 "BooleanGrammar.l"
+#line 67 "BooleanGrammar.l"
 { skip_comment(); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 50 "BooleanGrammar.l"
+#line 68 "BooleanGrammar.l"
 { }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 51 "BooleanGrammar.l"
+#line 69 "BooleanGrammar.l"
 {
   if (!strcasecmp(CTBNDLtext, "NOT")) {
      return LOGNOT;
@@ -826,7 +844,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 70 "BooleanGrammar.l"
+#line 88 "BooleanGrammar.l"
 {
   CTBNDLlval.str = maboss_strdup(CTBNDLtext);
   return VARIABLE;
@@ -834,7 +852,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 74 "BooleanGrammar.l"
+#line 92 "BooleanGrammar.l"
 {
   CTBNDLlval.str = CTBNDLtokstr();
   return STRING;
@@ -842,65 +860,65 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 78 "BooleanGrammar.l"
+#line 96 "BooleanGrammar.l"
 { return EQUAL; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 79 "BooleanGrammar.l"
+#line 97 "BooleanGrammar.l"
 { return NOT_EQUAL; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 80 "BooleanGrammar.l"
+#line 98 "BooleanGrammar.l"
 { return LTEQ; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 81 "BooleanGrammar.l"
+#line 99 "BooleanGrammar.l"
 { return GTEQ; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 82 "BooleanGrammar.l"
+#line 100 "BooleanGrammar.l"
 { return LOGAND; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 83 "BooleanGrammar.l"
+#line 101 "BooleanGrammar.l"
 { return LOGOR; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 84 "BooleanGrammar.l"
+#line 102 "BooleanGrammar.l"
 { return LOGNOT; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 85 "BooleanGrammar.l"
+#line 103 "BooleanGrammar.l"
 { sscanf(CTBNDLtext, "%lld", &CTBNDLlval.l); return INTEGER; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 86 "BooleanGrammar.l"
+#line 104 "BooleanGrammar.l"
 { CTBNDLlval.d = atof(CTBNDLtext); return DOUBLE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 87 "BooleanGrammar.l"
+#line 105 "BooleanGrammar.l"
 { CTBNDLlval.d = atof(CTBNDLtext); return DOUBLE; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 88 "BooleanGrammar.l"
+#line 106 "BooleanGrammar.l"
 { return CTBNDLtext[0]; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 90 "BooleanGrammar.l"
+#line 108 "BooleanGrammar.l"
 ECHO;
 	YY_BREAK
-#line 904 "<stdout>"
+#line 922 "<stdout>"
 case YY_STATE_EOF(INITIAL):
 	CTBNDLterminate();
 
@@ -1905,7 +1923,7 @@ void CTBNDLfree (void * ptr )
 
 #define YYTABLES_NAME "CTBNDLtables"
 
-#line 90 "BooleanGrammar.l"
+#line 108 "BooleanGrammar.l"
 
 
 #define _ESC_(X, Y) case X: *p++ = Y; break

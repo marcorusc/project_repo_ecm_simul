@@ -30,12 +30,12 @@
 		<folder>.</folder>  
 
 		<full_data>
-			<interval units="min">30</interval>
+			<interval units="min">30.0</interval>
 			<enable>True</enable>
 		</full_data>
 		
 		<SVG>
-			<interval units="min">30</interval>
+			<interval units="min">30.0</interval>
 			<enable>True</enable>
 		</SVG>
 		
@@ -86,7 +86,7 @@
 						
 						<rate end_index="1" fixed_duration="true" start_index="0">0.016666667</rate>
 						
-						<rate end_index="2" fixed_duration="true" start_index="1">Infinity</rate>
+						<rate end_index="2" fixed_duration="true" start_index="1">1e30</rate>
 						
 						<rate end_index="0" fixed_duration="true" start_index="2">0.006666667</rate>
 					</transition_rates>
@@ -94,14 +94,14 @@
 				
 				<death>  
 					<model code="100" name="apoptosis"> 
-						<rate units="1/min">5.31667e-05</rate>
+						<death_rate units="1/min">5.31667e-05</death_rate>
 						<transition_rates units="1/min">
-							<rate end_index="1" fixed_duration="true" start_index="0">Infinity</rate>
+							<rate end_index="1" fixed_duration="true" start_index="0">1e30</rate>
 						</transition_rates>
 					</model> 
 
 					<model code="101" name="necrosis">
-						<rate units="1/min">0.0</rate>
+						<death_rate units="1/min">0.0</death_rate>
 						<transition_rates units="1/min">
 							<rate end_index="1" fixed_duration="false" start_index="0">9e9</rate>
 							<rate end_index="2" fixed_duration="true" start_index="1">1.15741e-5</rate>
@@ -120,7 +120,18 @@
 					</options>
 				</motility>
 
-				<molecular />
+				<intracellular type="maboss">
+					<bnd_filename>../data/boolean_network/CCM_mod4_1.bnd</bnd_filename>
+					<cfg_filename>../data/boolean_network/CCM_mod4_1.cfg</cfg_filename>
+					<time_step units="min">12</time_step>
+					<initial_values>
+						<initial_value node="ECM_sensing" units="dimensionless">0.5</initial_value>
+						<initial_value node="Apoptosis" units="dimensionless">0.01</initial_value>
+					</initial_values>
+					<mutations>
+						<mutation node="Hypoxia" units="dimensionless">1.0</mutation>
+					</mutations>
+				</intracellular>			
 			</phenotype>
 			<custom_data />
 		</cell_definition>
@@ -153,8 +164,6 @@
 		<solid_nuclear type="int" units="">135</solid_nuclear>
 		<solid_cytoplasmic type="int" units="">486</solid_cytoplasmic>
 		<protein_threshold type="int" units="">1</protein_threshold>
-		<bnd_file type="string" units="">../data/boolean_network/CCM_mod4_1.bnd</bnd_file>
-		<cfg_file type="string" units="">../data/boolean_network/CCM_mod4_1.cfg</cfg_file>
 		<init_cells_filename type="string" units="">../data/init.txt</init_cells_filename>
 		<init_ecm_filename type="string" units="">../data/ecm.txt</init_ecm_filename>
 		<tgfb_threshold type="double" units="dimensionless">1.0</tgfb_threshold>

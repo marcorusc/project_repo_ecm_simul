@@ -1018,6 +1018,8 @@ void Molecular::advance( Basic_Agent* pCell, Phenotype& phenotype , double dt )
 
 Cell_Functions::Cell_Functions()
 {
+	instantiate_cell = NULL;
+	
 	volume_update_function = NULL; 
 	update_migration_bias = NULL; 
 	
@@ -1031,6 +1033,9 @@ Cell_Functions::Cell_Functions()
 	set_orientation = NULL; 
 	
 	contact_function = NULL; 
+	
+	custom_adhesion = NULL;
+	custom_repulsion = NULL;
 
 /*	
 	internal_substrate_function = NULL; 
@@ -1052,8 +1057,47 @@ Phenotype::Phenotype()
 	flagged_for_removal = false; 
 	
 	// sync the molecular stuff here automatically? 
+	intracellular = NULL;
 	
 	return; 
+}
+
+void Phenotype::operator=(const Phenotype &p ) { 
+		
+	flagged_for_division = p.flagged_for_division;
+	flagged_for_removal = p.flagged_for_removal;
+	
+	cycle = p.cycle;
+	death = p.death;
+	volume = p.volume;
+	geometry = p.geometry;
+	mechanics = p.mechanics;
+	motility = p.motility;
+	secretion = p.secretion;
+	
+	molecular = p.molecular;
+	
+	if (p.intracellular != NULL)
+		intracellular = p.intracellular->clone();
+}
+	
+void Phenotype::operator=(Phenotype &p ) { 
+	
+	flagged_for_division = p.flagged_for_division;
+	flagged_for_removal = p.flagged_for_removal;
+	
+	cycle = p.cycle;
+	death = p.death;
+	volume = p.volume;
+	geometry = p.geometry;
+	mechanics = p.mechanics;
+	motility = p.motility;
+	secretion = p.secretion;
+	
+	molecular = p.molecular;
+	
+	if (p.intracellular != NULL)
+		intracellular = p.intracellular->clone();
 }
 
 /*

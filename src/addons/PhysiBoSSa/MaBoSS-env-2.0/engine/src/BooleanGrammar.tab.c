@@ -68,33 +68,50 @@
 /* First part of user prologue.  */
 #line 2 "BooleanGrammar.y"
 
-/* 
-   MaBoSS (Markov Boolean Stochastic Simulator)
-   Copyright (C) 2011 Institut Curie, 26 rue d'Ulm, Paris, France
-   
-   MaBoSS is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-   
-   MaBoSS is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA 
-*/
-
 /*
+#############################################################################
+#                                                                           #
+# BSD 3-Clause License (see https://opensource.org/licenses/BSD-3-Clause)   #
+#                                                                           #
+# Copyright (c) 2011-2020 Institut Curie, 26 rue d'Ulm, Paris, France       #
+# All rights reserved.                                                      #
+#                                                                           #
+# Redistribution and use in source and binary forms, with or without        #
+# modification, are permitted provided that the following conditions are    #
+# met:                                                                      #
+#                                                                           #
+# 1. Redistributions of source code must retain the above copyright notice, #
+# this list of conditions and the following disclaimer.                     #
+#                                                                           #
+# 2. Redistributions in binary form must reproduce the above copyright      #
+# notice, this list of conditions and the following disclaimer in the       #
+# documentation and/or other materials provided with the distribution.      #
+#                                                                           #
+# 3. Neither the name of the copyright holder nor the names of its          #
+# contributors may be used to endorse or promote products derived from this #
+# software without specific prior written permission.                       #
+#                                                                           #
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS       #
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED #
+# TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A           #
+# PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER #
+# OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  #
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,       #
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR        #
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF    #
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING      #
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS        #
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.              #
+#                                                                           #
+#############################################################################
+
    Module:
      BooleanGrammar.y
 
    Authors:
      Eric Viara <viara@sysra.com>
      Gautier Stoll <gautier.stoll@curie.fr>
- 
+     Vincent Noël <vincent.noel@curie.fr> 
    Date:
      January-March 2011
 */
@@ -106,7 +123,7 @@ extern int yylex();
 static void yyerror(const char *s);
 static Network* current_network;
 
-#line 110 "BooleanGrammar.tab.c"
+#line 127 "BooleanGrammar.tab.c"
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
@@ -163,7 +180,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 42 "BooleanGrammar.y"
+#line 59 "BooleanGrammar.y"
 
   std::vector<NodeDecl*>* node_decl_list;
   NodeDecl* node_decl;
@@ -175,7 +192,7 @@ union YYSTYPE
   double d;
   long long l;
 
-#line 179 "BooleanGrammar.tab.c"
+#line 196 "BooleanGrammar.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -482,12 +499,12 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    81,    81,    84,    89,    99,   105,   121,   123,   127,
-     132,   139,   144,   151,   157,   162,   167,   171,   175,   181,
-     185,   190,   197,   202,   209,   213,   217,   221,   225,   231,
-     235,   239,   245,   249,   253,   259,   263,   267,   271,   275,
-     281,   285,   289,   295,   299,   305,   309,   315,   319,   323,
-     329,   333,   339,   345,   346
+       0,    98,    98,   101,   106,   116,   122,   138,   140,   144,
+     149,   156,   161,   168,   174,   179,   184,   188,   192,   198,
+     202,   207,   214,   219,   226,   230,   234,   238,   242,   248,
+     252,   256,   262,   266,   270,   276,   280,   284,   288,   292,
+     298,   302,   306,   312,   316,   322,   326,   332,   336,   340,
+     346,   350,   356,   362,   363
 };
 #endif
 
@@ -1330,21 +1347,21 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 82 "BooleanGrammar.y"
+#line 99 "BooleanGrammar.y"
     {
 }
-#line 1337 "BooleanGrammar.tab.c"
+#line 1354 "BooleanGrammar.tab.c"
     break;
 
   case 3:
-#line 85 "BooleanGrammar.y"
+#line 102 "BooleanGrammar.y"
     {
 }
-#line 1344 "BooleanGrammar.tab.c"
+#line 1361 "BooleanGrammar.tab.c"
     break;
 
   case 4:
-#line 90 "BooleanGrammar.y"
+#line 107 "BooleanGrammar.y"
     {
   NodeDecl* truc = new NodeDecl((yyvsp[-3].str), (yyvsp[-1].node_decl_item_list));
   free((yyvsp[-3].str));
@@ -1354,21 +1371,21 @@ yyreduce:
   delete (yyvsp[-1].node_decl_item_list);
   delete truc;
 }
-#line 1358 "BooleanGrammar.tab.c"
+#line 1375 "BooleanGrammar.tab.c"
     break;
 
   case 5:
-#line 100 "BooleanGrammar.y"
+#line 117 "BooleanGrammar.y"
     {
   NodeDecl* truc = new NodeDecl((yyvsp[-2].str), NULL);
   free((yyvsp[-2].str));
   delete truc;
 }
-#line 1368 "BooleanGrammar.tab.c"
+#line 1385 "BooleanGrammar.tab.c"
     break;
 
   case 6:
-#line 106 "BooleanGrammar.y"
+#line 123 "BooleanGrammar.y"
     {
   NodeDeclItem* decl_item = new NodeDeclItem("logic", (yyvsp[-1].expr));
   std::vector<NodeDeclItem*>* decl_item_v = new std::vector<NodeDeclItem*>();
@@ -1382,387 +1399,387 @@ yyreduce:
   delete decl_item_v;
   delete truc;
 }
-#line 1386 "BooleanGrammar.tab.c"
+#line 1403 "BooleanGrammar.tab.c"
     break;
 
   case 7:
-#line 122 "BooleanGrammar.y"
+#line 139 "BooleanGrammar.y"
     {}
-#line 1392 "BooleanGrammar.tab.c"
+#line 1409 "BooleanGrammar.tab.c"
     break;
 
   case 8:
-#line 124 "BooleanGrammar.y"
+#line 141 "BooleanGrammar.y"
     {}
-#line 1398 "BooleanGrammar.tab.c"
+#line 1415 "BooleanGrammar.tab.c"
     break;
 
   case 9:
-#line 128 "BooleanGrammar.y"
+#line 145 "BooleanGrammar.y"
     {
   (yyval.node_decl_item_list) = new std::vector<NodeDeclItem*>();
   (yyval.node_decl_item_list)->push_back((yyvsp[0].node_decl_item));
 }
-#line 1407 "BooleanGrammar.tab.c"
+#line 1424 "BooleanGrammar.tab.c"
     break;
 
   case 10:
-#line 133 "BooleanGrammar.y"
+#line 150 "BooleanGrammar.y"
     {
   (yyvsp[-1].node_decl_item_list)->push_back((yyvsp[0].node_decl_item));
   (yyval.node_decl_item_list) = (yyvsp[-1].node_decl_item_list);
 }
-#line 1416 "BooleanGrammar.tab.c"
+#line 1433 "BooleanGrammar.tab.c"
     break;
 
   case 11:
-#line 140 "BooleanGrammar.y"
+#line 157 "BooleanGrammar.y"
     {
   (yyval.node_decl_item) = new NodeDeclItem((yyvsp[-3].str), (yyvsp[-1].expr));
   free((yyvsp[-3].str));
 }
-#line 1425 "BooleanGrammar.tab.c"
+#line 1442 "BooleanGrammar.tab.c"
     break;
 
   case 12:
-#line 145 "BooleanGrammar.y"
+#line 162 "BooleanGrammar.y"
     {
   (yyval.node_decl_item) = new NodeDeclItem((yyvsp[-3].str), (yyvsp[-1].str));
   free((yyvsp[-3].str));
 }
-#line 1434 "BooleanGrammar.tab.c"
+#line 1451 "BooleanGrammar.tab.c"
     break;
 
   case 13:
-#line 152 "BooleanGrammar.y"
+#line 169 "BooleanGrammar.y"
     {
   Node* node = current_network->getOrMakeNode((yyvsp[0].str));
   (yyval.expr) = new NodeExpression(node);
   free((yyvsp[0].str));
 }
-#line 1444 "BooleanGrammar.tab.c"
+#line 1461 "BooleanGrammar.tab.c"
     break;
 
   case 14:
-#line 158 "BooleanGrammar.y"
+#line 175 "BooleanGrammar.y"
     {
   (yyval.expr) = new AliasExpression((yyvsp[0].str));
   free((yyvsp[0].str));
 }
-#line 1453 "BooleanGrammar.tab.c"
+#line 1470 "BooleanGrammar.tab.c"
     break;
 
   case 15:
-#line 163 "BooleanGrammar.y"
+#line 180 "BooleanGrammar.y"
     {
   (yyval.expr) = new SymbolExpression(current_network->getSymbolTable(), current_network->getSymbolTable()->getOrMakeSymbol((yyvsp[0].str)));
   free((yyvsp[0].str));
 }
-#line 1462 "BooleanGrammar.tab.c"
+#line 1479 "BooleanGrammar.tab.c"
     break;
 
   case 16:
-#line 168 "BooleanGrammar.y"
+#line 185 "BooleanGrammar.y"
     {
   (yyval.expr) = new ConstantExpression((yyvsp[0].l));
 }
-#line 1470 "BooleanGrammar.tab.c"
+#line 1487 "BooleanGrammar.tab.c"
     break;
 
   case 17:
-#line 172 "BooleanGrammar.y"
+#line 189 "BooleanGrammar.y"
     {
   (yyval.expr) = new ConstantExpression((yyvsp[0].d));
 }
-#line 1478 "BooleanGrammar.tab.c"
+#line 1495 "BooleanGrammar.tab.c"
     break;
 
   case 18:
-#line 176 "BooleanGrammar.y"
+#line 193 "BooleanGrammar.y"
     {
   (yyval.expr) = new ParenthesisExpression((yyvsp[-1].expr));
-}
-#line 1486 "BooleanGrammar.tab.c"
-    break;
-
-  case 19:
-#line 182 "BooleanGrammar.y"
-    {
-  (yyval.expr) = (yyvsp[0].expr);
-}
-#line 1494 "BooleanGrammar.tab.c"
-    break;
-
-  case 20:
-#line 186 "BooleanGrammar.y"
-    {
-  (yyval.expr) = new FuncCallExpression((yyvsp[-3].str), (yyvsp[-1].arg_list));
-  free((yyvsp[-3].str));
 }
 #line 1503 "BooleanGrammar.tab.c"
     break;
 
+  case 19:
+#line 199 "BooleanGrammar.y"
+    {
+  (yyval.expr) = (yyvsp[0].expr);
+}
+#line 1511 "BooleanGrammar.tab.c"
+    break;
+
+  case 20:
+#line 203 "BooleanGrammar.y"
+    {
+  (yyval.expr) = new FuncCallExpression((yyvsp[-3].str), (yyvsp[-1].arg_list));
+  free((yyvsp[-3].str));
+}
+#line 1520 "BooleanGrammar.tab.c"
+    break;
+
   case 21:
-#line 191 "BooleanGrammar.y"
+#line 208 "BooleanGrammar.y"
     {
   (yyval.expr) = new FuncCallExpression((yyvsp[-2].str), NULL);
   free((yyvsp[-2].str));
 }
-#line 1512 "BooleanGrammar.tab.c"
+#line 1529 "BooleanGrammar.tab.c"
     break;
 
   case 22:
-#line 198 "BooleanGrammar.y"
+#line 215 "BooleanGrammar.y"
     {
   (yyval.arg_list) = new ArgumentList();
   (yyval.arg_list)->push_back((yyvsp[0].expr));
 }
-#line 1521 "BooleanGrammar.tab.c"
+#line 1538 "BooleanGrammar.tab.c"
     break;
 
   case 23:
-#line 203 "BooleanGrammar.y"
+#line 220 "BooleanGrammar.y"
     {
   (yyval.arg_list) = (yyvsp[-2].arg_list);
   (yyval.arg_list)->push_back((yyvsp[0].expr));
 }
-#line 1530 "BooleanGrammar.tab.c"
+#line 1547 "BooleanGrammar.tab.c"
     break;
 
   case 24:
-#line 210 "BooleanGrammar.y"
+#line 227 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1538 "BooleanGrammar.tab.c"
+#line 1555 "BooleanGrammar.tab.c"
     break;
 
   case 25:
-#line 214 "BooleanGrammar.y"
+#line 231 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1546 "BooleanGrammar.tab.c"
+#line 1563 "BooleanGrammar.tab.c"
     break;
 
   case 26:
-#line 218 "BooleanGrammar.y"
+#line 235 "BooleanGrammar.y"
     {
   (yyval.expr) = new SubExpression(new ConstantExpression(0.0), (yyvsp[0].expr));
 }
-#line 1554 "BooleanGrammar.tab.c"
+#line 1571 "BooleanGrammar.tab.c"
     break;
 
   case 27:
-#line 222 "BooleanGrammar.y"
+#line 239 "BooleanGrammar.y"
     {
   (yyval.expr) = new NotLogicalExpression((yyvsp[0].expr));
 }
-#line 1562 "BooleanGrammar.tab.c"
+#line 1579 "BooleanGrammar.tab.c"
     break;
 
   case 28:
-#line 226 "BooleanGrammar.y"
+#line 243 "BooleanGrammar.y"
     {
   (yyval.expr) = new NotLogicalExpression((yyvsp[0].expr));
 }
-#line 1570 "BooleanGrammar.tab.c"
+#line 1587 "BooleanGrammar.tab.c"
     break;
 
   case 29:
-#line 232 "BooleanGrammar.y"
+#line 249 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1578 "BooleanGrammar.tab.c"
+#line 1595 "BooleanGrammar.tab.c"
     break;
 
   case 30:
-#line 236 "BooleanGrammar.y"
+#line 253 "BooleanGrammar.y"
     {
   (yyval.expr) = new MulExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1586 "BooleanGrammar.tab.c"
+#line 1603 "BooleanGrammar.tab.c"
     break;
 
   case 31:
-#line 240 "BooleanGrammar.y"
+#line 257 "BooleanGrammar.y"
     {
   (yyval.expr) = new DivExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1594 "BooleanGrammar.tab.c"
+#line 1611 "BooleanGrammar.tab.c"
     break;
 
   case 32:
-#line 246 "BooleanGrammar.y"
+#line 263 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1602 "BooleanGrammar.tab.c"
+#line 1619 "BooleanGrammar.tab.c"
     break;
 
   case 33:
-#line 250 "BooleanGrammar.y"
+#line 267 "BooleanGrammar.y"
     {
   (yyval.expr) = new AddExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1610 "BooleanGrammar.tab.c"
+#line 1627 "BooleanGrammar.tab.c"
     break;
 
   case 34:
-#line 254 "BooleanGrammar.y"
+#line 271 "BooleanGrammar.y"
     {
   (yyval.expr) = new SubExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1618 "BooleanGrammar.tab.c"
+#line 1635 "BooleanGrammar.tab.c"
     break;
 
   case 35:
-#line 260 "BooleanGrammar.y"
+#line 277 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1626 "BooleanGrammar.tab.c"
+#line 1643 "BooleanGrammar.tab.c"
     break;
 
   case 36:
-#line 264 "BooleanGrammar.y"
+#line 281 "BooleanGrammar.y"
     {
   (yyval.expr) = new LetterExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1634 "BooleanGrammar.tab.c"
+#line 1651 "BooleanGrammar.tab.c"
     break;
 
   case 37:
-#line 268 "BooleanGrammar.y"
+#line 285 "BooleanGrammar.y"
     {
   (yyval.expr) = new GreaterExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1642 "BooleanGrammar.tab.c"
+#line 1659 "BooleanGrammar.tab.c"
     break;
 
   case 38:
-#line 272 "BooleanGrammar.y"
+#line 289 "BooleanGrammar.y"
     {
   (yyval.expr) = new LetterOrEqualExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1650 "BooleanGrammar.tab.c"
+#line 1667 "BooleanGrammar.tab.c"
     break;
 
   case 39:
-#line 276 "BooleanGrammar.y"
+#line 293 "BooleanGrammar.y"
     {
   (yyval.expr) = new GreaterOrEqualExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1658 "BooleanGrammar.tab.c"
+#line 1675 "BooleanGrammar.tab.c"
     break;
 
   case 40:
-#line 282 "BooleanGrammar.y"
+#line 299 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1666 "BooleanGrammar.tab.c"
+#line 1683 "BooleanGrammar.tab.c"
     break;
 
   case 41:
-#line 286 "BooleanGrammar.y"
+#line 303 "BooleanGrammar.y"
     {
   (yyval.expr) = new EqualExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1674 "BooleanGrammar.tab.c"
+#line 1691 "BooleanGrammar.tab.c"
     break;
 
   case 42:
-#line 290 "BooleanGrammar.y"
+#line 307 "BooleanGrammar.y"
     {
   (yyval.expr) = new NotEqualExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1682 "BooleanGrammar.tab.c"
+#line 1699 "BooleanGrammar.tab.c"
     break;
 
   case 43:
-#line 296 "BooleanGrammar.y"
+#line 313 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1690 "BooleanGrammar.tab.c"
+#line 1707 "BooleanGrammar.tab.c"
     break;
 
   case 44:
-#line 300 "BooleanGrammar.y"
+#line 317 "BooleanGrammar.y"
     {
   (yyval.expr) = new AndLogicalExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1698 "BooleanGrammar.tab.c"
+#line 1715 "BooleanGrammar.tab.c"
     break;
 
   case 45:
-#line 306 "BooleanGrammar.y"
+#line 323 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1706 "BooleanGrammar.tab.c"
+#line 1723 "BooleanGrammar.tab.c"
     break;
 
   case 46:
-#line 310 "BooleanGrammar.y"
+#line 327 "BooleanGrammar.y"
     {
   (yyval.expr) = new OrLogicalExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1714 "BooleanGrammar.tab.c"
+#line 1731 "BooleanGrammar.tab.c"
     break;
 
   case 47:
-#line 316 "BooleanGrammar.y"
+#line 333 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1722 "BooleanGrammar.tab.c"
+#line 1739 "BooleanGrammar.tab.c"
     break;
 
   case 48:
-#line 320 "BooleanGrammar.y"
+#line 337 "BooleanGrammar.y"
     {
   (yyval.expr) = new XorLogicalExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1730 "BooleanGrammar.tab.c"
+#line 1747 "BooleanGrammar.tab.c"
     break;
 
   case 49:
-#line 324 "BooleanGrammar.y"
+#line 341 "BooleanGrammar.y"
     {
   (yyval.expr) = new XorLogicalExpression((yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1738 "BooleanGrammar.tab.c"
+#line 1755 "BooleanGrammar.tab.c"
     break;
 
   case 50:
-#line 330 "BooleanGrammar.y"
+#line 347 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1746 "BooleanGrammar.tab.c"
+#line 1763 "BooleanGrammar.tab.c"
     break;
 
   case 51:
-#line 334 "BooleanGrammar.y"
+#line 351 "BooleanGrammar.y"
     {
   (yyval.expr) = new CondExpression((yyvsp[-4].expr), (yyvsp[-2].expr), (yyvsp[0].expr));
 }
-#line 1754 "BooleanGrammar.tab.c"
+#line 1771 "BooleanGrammar.tab.c"
     break;
 
   case 52:
-#line 340 "BooleanGrammar.y"
+#line 357 "BooleanGrammar.y"
     {
   (yyval.expr) = (yyvsp[0].expr);
 }
-#line 1762 "BooleanGrammar.tab.c"
+#line 1779 "BooleanGrammar.tab.c"
     break;
 
 
-#line 1766 "BooleanGrammar.tab.c"
+#line 1783 "BooleanGrammar.tab.c"
 
       default: break;
     }
@@ -1994,7 +2011,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 349 "BooleanGrammar.y"
+#line 366 "BooleanGrammar.y"
 
 
 #include "lex.CTBNDL.cc"

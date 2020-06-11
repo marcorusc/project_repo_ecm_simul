@@ -70,6 +70,11 @@
 #include "PhysiCell_utilities.h"
 #include "PhysiCell_constants.h"
 #include "../BioFVM/BioFVM_vector.h" 
+
+#ifdef ADDON_PHYSIBOSS
+#include "../addons/PhysiBoSSa/src/maboss_intracellular.h"
+#endif
+
 #include<limits.h>
 
 #include <signal.h>  // for segfault
@@ -82,6 +87,10 @@ std::vector<Cell_Definition*> cell_definitions_by_index;
 
 Cell* standard_instantiate_cell()
 { return new Cell; }
+
+// function pointer on how to choose cell orientation at division
+// in case you want the legacy method 
+std::vector<double> (*cell_division_orientation)(void) = UniformOnUnitSphere; // LegacyRandomOnUnitSphere; 
 
 Cell_Parameters::Cell_Parameters()
 {
@@ -125,7 +134,7 @@ Cell_Definition::Cell_Definition()
 		// the default Custom_Cell_Data constructor should take care of this
 		
 	// set up the default functions 
-	functions.instantiate_cell = standard_instantiate_cell;
+	functions.instantiate_cell = NULL;
 	functions.volume_update_function = NULL; // standard_volume_update_function;
 	functions.update_migration_bias = NULL; 
 	
@@ -410,6 +419,8 @@ void Cell::assign_orientation()
 	return; 
 }
 
+
+
 Cell* Cell::divide( )
 {
 	// phenotype.flagged_for_division = false; 
@@ -431,6 +442,10 @@ Cell* Cell::divide( )
 	// randomly place the new agent close to me, accounting for orientation and 
 	// polarity (if assigned)
 		
+	// May 30, 2020: 
+	// Set cell_division_orientation = LegacyRandomOnUnitSphere to 
+	// reproduce this code 
+	/*
 	double temp_angle = 6.28318530717959*UniformRandom();
 	double temp_phi = 3.1415926535897932384626433832795*UniformRandom();
 	
@@ -440,6 +455,7 @@ Cell* Cell::divide( )
 	rand_vec[0]= cos( temp_angle ) * sin( temp_phi );
 	rand_vec[1]= sin( temp_angle ) * sin( temp_phi );
 	rand_vec[2]= cos( temp_phi );
+	
 	rand_vec = rand_vec- phenotype.geometry.polarity*(rand_vec[0]*state.orientation[0]+ 
 		rand_vec[1]*state.orientation[1]+rand_vec[2]*state.orientation[2])*state.orientation;
 	
@@ -448,20 +464,27 @@ Cell* Cell::divide( )
 		std::cout<<"************ERROR********************"<<std::endl;
 	}
 	normalize( &rand_vec ); 
-	// rand_vec/= norm(rand_vec);
-	child->assign_position(position[0] + 0.5 * radius*rand_vec[0],
-						 position[1] + 0.5 * radius*rand_vec[1],
-						 position[2] + 0.5 * radius*rand_vec[2]);
-	//change my position to keep the center of mass intact and then see if I need to update my voxel index
-	static double negative_one_half = -0.5; 
-	naxpy( &position, negative_one_half , rand_vec );// position = position - 0.5*rand_vec; 
-	// position[0] -= 0.5*radius*rand_vec[0];
-	// position[1] -= 0.5*radius*rand_vec[1]; 
-	// position[2] -= 0.5*radius*rand_vec[2]; 
+	rand_vec *= radius; // multiply direction times the displacement 
+	*/
 	
+	std::vector<double> rand_vec = cell_division_orientation(); 
+	rand_vec = rand_vec- phenotype.geometry.polarity*(rand_vec[0]*state.orientation[0]+ 
+		rand_vec[1]*state.orientation[1]+rand_vec[2]*state.orientation[2])*state.orientation;	
+	rand_vec *= phenotype.geometry.radius;
+
+	child->assign_position(position[0] + rand_vec[0],
+						   position[1] + rand_vec[1],
+						   position[2] + rand_vec[2]);
+						 
+	//change my position to keep the center of mass intact 
+	// and then see if I need to update my voxel index
+	static double negative_one_half = -0.5; 
+	axpy( &position, negative_one_half , rand_vec ); // position = position - 0.5*rand_vec; 
+
 	//If this cell has been moved outside of the boundaries, mark it as such.
 	//(If the child cell is outside of the boundaries, that has been taken care of in the assign_position function.)
-	if( !get_container()->underlying_mesh.is_position_valid(position[0], position[1], position[2])){
+	if( !get_container()->underlying_mesh.is_position_valid(position[0], position[1], position[2]))
+	{
 		is_out_of_domain = true;
 		is_active = false;
 		is_movable = false;
@@ -475,11 +498,7 @@ Cell* Cell::divide( )
 	
 	// child->set_phenotype( phenotype ); 
 	child->phenotype = phenotype; 
-
-#ifdef ADDON_PHYSIBOSS
-	child->boolean_network = this->boolean_network;
-#endif
-
+	
 	return child;
 }
 
@@ -507,6 +526,15 @@ bool Cell::assign_position(double x, double y, double z)
 	update_voxel_index();
 	// update current_mechanics_voxel_index
 	current_mechanics_voxel_index= get_container()->underlying_mesh.nearest_voxel_index( position );
+	updated_current_mechanics_voxel_index = current_mechanics_voxel_index;
+	if( get_container()->max_cell_interactive_distance_in_voxel[get_current_mechanics_voxel_index()] < 
+		phenotype.geometry.radius * phenotype.mechanics.relative_maximum_adhesion_distance )
+	{
+		// get_container()->max_cell_interactive_distance_in_voxel[get_current_mechanics_voxel_index()]= phenotype.geometry.radius*parameters.max_interaction_distance_factor;
+		get_container()->max_cell_interactive_distance_in_voxel[get_current_mechanics_voxel_index()] = phenotype.geometry.radius
+			* phenotype.mechanics.relative_maximum_adhesion_distance;
+	}
+
 	get_container()->register_agent(this);
 	
 	if( !get_container()->underlying_mesh.is_position_valid(x,y,z) )
@@ -540,12 +568,17 @@ void Cell::set_total_volume(double volume)
 	// phenotype.update_radius();
 	//if( get_container()->max_cell_interactive_distance_in_voxel[get_current_mechanics_voxel_index()] < 
 	//	phenotype.geometry.radius * parameters.max_interaction_distance_factor )
-	if( get_container()->max_cell_interactive_distance_in_voxel[get_current_mechanics_voxel_index()] < 
-		phenotype.geometry.radius * phenotype.mechanics.relative_maximum_adhesion_distance )
-	{
-		// get_container()->max_cell_interactive_distance_in_voxel[get_current_mechanics_voxel_index()]= phenotype.geometry.radius*parameters.max_interaction_distance_factor;
-		get_container()->max_cell_interactive_distance_in_voxel[get_current_mechanics_voxel_index()] = phenotype.geometry.radius
-			* phenotype.mechanics.relative_maximum_adhesion_distance;
+	
+	// Here the current mechanics voxel index may not be initialized, when position is still unknown. 
+	// Se we also do it when we assign the position
+	if (get_current_mechanics_voxel_index() >= 0){
+		if( get_container()->max_cell_interactive_distance_in_voxel[get_current_mechanics_voxel_index()] < 
+			phenotype.geometry.radius * phenotype.mechanics.relative_maximum_adhesion_distance )
+		{
+			// get_container()->max_cell_interactive_distance_in_voxel[get_current_mechanics_voxel_index()]= phenotype.geometry.radius*parameters.max_interaction_distance_factor;
+			get_container()->max_cell_interactive_distance_in_voxel[get_current_mechanics_voxel_index()] = phenotype.geometry.radius
+				* phenotype.mechanics.relative_maximum_adhesion_distance;
+		}
 	}
 	
 	return; 
@@ -710,16 +743,15 @@ void Cell::update_voxel_in_container()
 	// int temp_current_voxel_index;
 	// Check to see if we need to remove agents that are pushed out of boundary
 	// if(!get_container()->underlying_mesh.is_position_valid(position[0],position[1],position[2]))	
-		
 	if(updated_current_mechanics_voxel_index==-1)// updated_current_mechanics_voxel_index is updated in update_position
 	{
 		// check if this agent has a valid voxel index, if so, remove it from previous voxel
 		if( get_current_mechanics_voxel_index() >= 0)
 		{
-			// #pragma omp critical
+			#pragma omp critical
 			{get_container()->remove_agent_from_voxel(this, get_current_mechanics_voxel_index());}
 		}
-		// #pragma omp critical
+		#pragma omp critical
 		{get_container()->add_agent_to_outer_voxel(this);}
 		// std::cout<<"cell out of boundary..."<< __LINE__<<" "<<ID<<std::endl;
 		current_mechanics_voxel_index=-1;
@@ -734,7 +766,7 @@ void Cell::update_voxel_in_container()
 	// update mesh indices (if needed)
 	if(updated_current_mechanics_voxel_index!= get_current_mechanics_voxel_index())
 	{
-		// #pragma omp critical
+		#pragma omp critical
 		{
 			container->remove_agent_from_voxel(this, get_current_mechanics_voxel_index());
 			container->add_agent_to_voxel(this, updated_current_mechanics_voxel_index);
@@ -817,7 +849,13 @@ void Cell::add_potentials(Cell* other_agent)
 	}
 	
 	// August 2017 - back to the original if both have same coefficient 
-	double effective_repulsion = sqrt( phenotype.mechanics.cell_cell_repulsion_strength * other_agent->phenotype.mechanics.cell_cell_repulsion_strength ); 
+	double effective_repulsion;
+	if (functions.custom_repulsion) {
+		effective_repulsion = functions.custom_repulsion(this, other_agent);
+	} else {
+		effective_repulsion = sqrt( phenotype.mechanics.cell_cell_repulsion_strength * other_agent->phenotype.mechanics.cell_cell_repulsion_strength ); 
+	}
+	
 	temp_r *= effective_repulsion; 
 	
 	// temp_r *= phenotype.mechanics.cell_cell_repulsion_strength; // original 
@@ -865,7 +903,12 @@ void Cell::add_potentials(Cell* other_agent)
 Cell* create_cell( Cell* (*custom_instantiate)())
 {
 	Cell* pNew; 
-	pNew = custom_instantiate();
+	
+	if (custom_instantiate) {
+		pNew = custom_instantiate();
+	} else {
+		pNew = standard_instantiate_cell();
+	}
 	
 	(*all_cells).push_back( pNew ); 
 	pNew->index=(*all_cells).size()-1;
@@ -899,7 +942,7 @@ Cell* create_cell( Cell_Definition& cd )
 	pNew->parameters = cd.parameters; 
 	pNew->functions = cd.functions; 
 	
-	pNew->phenotype = cd.phenotype; 
+	pNew->phenotype = cd.phenotype;	
 	pNew->is_movable = true;
 	pNew->is_out_of_domain = false;
 	pNew->displacement.resize(3,0.0); // state? 
@@ -1209,6 +1252,27 @@ void display_cell_definitions( std::ostream& os )
 			os << "\t\t" << k << " : " << pCD->phenotype.death.models[k]->name 
 			<< " (code=" << pCD->phenotype.death.models[k]->code << ")" 
 			<< " with rate " << pCD->phenotype.death.rates[k] << " 1/min" << std::endl; 
+
+			Cycle_Model* pCM = (pCD->phenotype.death.models[k] ); 
+			Cycle_Data* pCMD = &(pCD->phenotype.death.models[k]->data ); 
+
+			
+			os << "\t\tdeath phase transitions: " << std::endl 
+			   << "\t\t------------------------" << std::endl; 
+			for( int n=0 ; n < pCM->phase_links.size() ; n++ )
+			{
+				for( int k=0; k < pCM->phase_links[n].size() ; k++ )
+				{
+					int start = pCM->phase_links[n][k].start_phase_index;
+					int end = pCM->phase_links[n][k].end_phase_index; 
+					os << "\t\t" << pCM->phases[start].name << " --> " 
+						<< pCM->phases[end].name << " w mean duration " 
+						<< 1.0 / pCMD->transition_rate( start,end) << " min" << std::endl; 
+				}
+			}			
+			
+			
+			
 		}
 		
 		// summarize functions 
@@ -1491,8 +1555,15 @@ Cell_Definition* initialize_cell_definition_from_pugixml( pugi::xml_node cd_node
 			}
 		}
 		
-		// set the rates 
-		node = node.child( "transition_rates" );
+		// set the transition rates 
+		if( node.child( "phase_transition_rates" ) )
+		{ node = node.child( "phase_transition_rates" ); }
+		if( node.child( "transition_rates" ) )
+		{
+			node = node.child( "transition_rates" ); 
+			std::cout << "Warning: " << node.name() << " is deprecated. Use cycle.phase_transition_rates." 
+				<< std::endl; 
+		}
 		if( node )
 		{
 			node = node.child( "rate");
@@ -1515,9 +1586,42 @@ Cell_Definition* initialize_cell_definition_from_pugixml( pugi::xml_node cd_node
 				
 				node = node.next_sibling( "rate" ); 
 			}
+		}
+		
+		node = cd_node.child( "phenotype" );
+		node = node.child( "cycle" ); 
+		// Check for phase durations (as an alternative to transition rates)
+		if( node.child( "phase_durations" ) )
+		{ node = node.child( "phase_durations" ); }
+		if( node )
+		{
+			node = node.child( "duration");
+			while( node )
+			{
+				// which duration? 
+				int start = node.attribute("index").as_int(); 
+				// fixed duration? 
+				bool fixed = false; 
+				if( node.attribute( "fixed_duration" ) )
+				{ fixed = node.attribute("fixed_duration").as_bool(); }
+				// actual value of the duration 
+				double value = xml_get_my_double_value( node ); 
+				
+				// set the transition rate 
+				pCD->phenotype.cycle.data.exit_rate(start) = 1.0 / (value+1e-16); 
+				// set it to fixed / non-fixed 
+				pCD->phenotype.cycle.model().phase_links[start][0].fixed_duration = fixed; 
+				
+				node = node.next_sibling( "duration" ); 
+			}
 			
 		}
+
+		
+		
 	}
+
+
 	
 	// here's what it ***should*** do: 
 	// parse the model, get its code 
@@ -1526,7 +1630,7 @@ Cell_Definition* initialize_cell_definition_from_pugixml( pugi::xml_node cd_node
 	// otherwise, modify properties of that model 
 	
 	// set up the death models 
-	int death_model_index = 0; 
+//	int death_model_index = 0; 
 	node = cd_node.child( "phenotype" );
 	node = node.child( "death" ); 
 	if( node )
@@ -1535,7 +1639,6 @@ Cell_Definition* initialize_cell_definition_from_pugixml( pugi::xml_node cd_node
 		while( node )
 		{
 			int model = node.attribute("code").as_int() ; 
-			std::cout << "death model: " << model << std::endl; 
 			
 			// check: is that death model already there? 
 			
@@ -1549,8 +1652,19 @@ Cell_Definition* initialize_cell_definition_from_pugixml( pugi::xml_node cd_node
 			}
 			
 			// add the death model and its death rate 
-	
-			double rate = xml_get_double_value(node,"rate");
+
+			if( node.child( "death_rate" ) )
+			{
+				node = node.child( "death_rate" ); 
+			}
+			if( node.child( "rate" ) )
+			{
+				node = node.child( "rate" ); 
+				std::cout << "Warning: " << node.name() << " is deprecated. Use death.model.death_rate." 
+					<< std::endl; 
+			}
+			double rate = xml_get_my_double_value(node);
+			node = node.parent();
 			
 			// get death model parameters 
 			
@@ -1561,43 +1675,46 @@ Cell_Definition* initialize_cell_definition_from_pugixml( pugi::xml_node cd_node
 			{
 				death_params = pParent->phenotype.death.parameters[death_index]; 
 			}
+
+			if( node.child("parameters" ) )
+			{
+				node = node.child( "parameters" );
 			
-			node = node.child( "parameters" );
+				// only read these parameters if they are specified. 
+				
+				pugi::xml_node node_temp = node.child( "unlysed_fluid_change_rate" );
+				if( node_temp )
+				{ death_params.unlysed_fluid_change_rate = xml_get_my_double_value( node_temp ); }
+
+				node_temp = node.child( "lysed_fluid_change_rate" );
+				if( node_temp )
+				{ death_params.lysed_fluid_change_rate = xml_get_my_double_value( node_temp ); }
 			
-			// only read these parameters if they are specified. 
-			
-			pugi::xml_node node_temp = node.child( "unlysed_fluid_change_rate" );
-			if( node_temp )
-			{ death_params.unlysed_fluid_change_rate = xml_get_my_double_value( node_temp ); }
+				node_temp = node.child( "cytoplasmic_biomass_change_rate" );
+				if( node_temp )
+				{ death_params.cytoplasmic_biomass_change_rate = xml_get_my_double_value( node_temp ); }
 
-			node_temp = node.child( "lysed_fluid_change_rate" );
-			if( node_temp )
-			{ death_params.lysed_fluid_change_rate = xml_get_my_double_value( node_temp ); }
-		
-			node_temp = node.child( "cytoplasmic_biomass_change_rate" );
-			if( node_temp )
-			{ death_params.cytoplasmic_biomass_change_rate = xml_get_my_double_value( node_temp ); }
+				node_temp = node.child( "nuclear_biomass_change_rate" );
+				if( node_temp )
+				{ death_params.nuclear_biomass_change_rate = xml_get_my_double_value( node_temp ); }
 
-			node_temp = node.child( "nuclear_biomass_change_rate" );
-			if( node_temp )
-			{ death_params.nuclear_biomass_change_rate = xml_get_my_double_value( node_temp ); }
+				node_temp = node.child( "calcification_rate" );
+				if( node_temp )
+				{ death_params.calcification_rate = xml_get_my_double_value( node_temp ); }
 
-			node_temp = node.child( "calcification_rate" );
-			if( node_temp )
-			{ death_params.calcification_rate = xml_get_my_double_value( node_temp ); }
+				node_temp = node.child( "relative_rupture_volume" );
+				if( node_temp )
+				{ death_params.relative_rupture_volume = xml_get_my_double_value( node_temp ); }
 
-			node_temp = node.child( "relative_rupture_volume" );
-			if( node_temp )
-			{ death_params.relative_rupture_volume = xml_get_my_double_value( node_temp ); }
+				node_temp = node.child( "lysed_fluid_change_rate" );
+				if( node_temp )
+				{ death_params.lysed_fluid_change_rate = xml_get_my_double_value( node_temp ); }
 
-			node_temp = node.child( "lysed_fluid_change_rate" );
-			if( node_temp )
-			{ death_params.lysed_fluid_change_rate = xml_get_my_double_value( node_temp ); }
-
-//			death_params.time_units = 
-//				get_string_attribute_value( node, "unlysed_fluid_change_rate", "units" ); 
-			
-			node = node.parent(); 
+	//			death_params.time_units = 
+	//				get_string_attribute_value( node, "unlysed_fluid_change_rate", "units" ); 
+				
+				node = node.parent(); 
+			}
 					
 			// set the model 
 			// if the model already exists, just overwrite the parameters 
@@ -1606,25 +1723,29 @@ Cell_Definition* initialize_cell_definition_from_pugixml( pugi::xml_node cd_node
 				case PhysiCell_constants::apoptosis_death_model: 
 //					pCD->phenotype.death.add_death_model( rate , &apoptosis , apoptosis_parameters );
 					if( death_model_already_exists == false )
-					{ pCD->phenotype.death.add_death_model( rate , &apoptosis , death_params ); }
+					{
+						pCD->phenotype.death.add_death_model( rate , &apoptosis , death_params ); 
+						death_index = pD->find_death_model_index( model );
+					}
 					else
 					{
 						pCD->phenotype.death.parameters[death_index] = death_params; 
 						pCD->phenotype.death.rates[death_index] = rate; 
 					}
-					std::cout << "apoptosis " << " " << std::endl; 
 					break; 
 				case PhysiCell_constants::necrosis_death_model: 
 					// set necrosis parameters 
 //					pCD->phenotype.death.add_death_model( rate , &necrosis , necrosis_parameters );
 					if( death_model_already_exists == false )
-					{ pCD->phenotype.death.add_death_model( rate , &necrosis , death_params ); }
+					{
+						pCD->phenotype.death.add_death_model( rate , &necrosis , death_params ); 
+						death_index = pD->find_death_model_index( model );
+					}
 					else
 					{
 						pCD->phenotype.death.parameters[death_index] = death_params; 
 						pCD->phenotype.death.rates[death_index] = rate; 						
 					}
-					std::cout << "necrosis " << " "  << std::endl; 
 					break; 
 				case PhysiCell_constants::autophagy_death_model: 
 					std::cout << "Warning: autophagy_death_model not yet supported." << std::endl		
@@ -1638,10 +1759,22 @@ Cell_Definition* initialize_cell_definition_from_pugixml( pugi::xml_node cd_node
 			
 			// now get transition rates within the death model 
 			// set the rates 
-			node = node.child( "transition_rates" );
-			if( node )
+			// node = node.child( "transition_rates" );
+			
+			
+			pugi::xml_node node_death_transitions = node.child( "phase_transition_rates" ); 
+			if( node.child( "transition_rates" ) )
 			{
-				pugi::xml_node node1 = node.child( "rate");
+				node_death_transitions = node.child("transition_rates");
+				std::cout << "Warning: " << node_death_transitions.name() 
+					<< " is deprecated. Use death.model.phase_transition_rates." 
+					<< std::endl; 				
+			}
+			
+			
+			if( node_death_transitions )
+			{
+				pugi::xml_node node1 = node_death_transitions.child( "rate");
 				while( node1 )
 				{
 					// which rate 
@@ -1655,17 +1788,78 @@ Cell_Definition* initialize_cell_definition_from_pugixml( pugi::xml_node cd_node
 					double value = xml_get_my_double_value( node1 ); 
 					
 					// set the transition rate 
-					pCD->phenotype.death.models[death_model_index]->transition_rate(start,end) = value; 
+					pCD->phenotype.death.models[death_index]->transition_rate(start,end) = value; 
 					// set it to fixed / non-fixed 
-					pCD->phenotype.death.models[death_model_index]->phase_link(start,end).fixed_duration = fixed; 
+					pCD->phenotype.death.models[death_index]->phase_link(start,end).fixed_duration = fixed; 
 					
 					node1 = node1.next_sibling( "rate" ); 
 				}
 			}	
-			node = node.parent(); 
+
+			if( node.child( "phase_durations" ) )
+			{
+				node = node.child("phase_durations"); // phase durations
+				node = node.child( "duration" ); // duration
+				while( node )
+				{
+					// which duration? 
+					int start = node.attribute("index").as_int(); 
+					// fixed duration? 
+					bool fixed = false; 
+					if( node.attribute( "fixed_duration" ) )
+					{ fixed = node.attribute("fixed_duration").as_bool(); }
+					// actual value of the duration 
+					double value = xml_get_my_double_value( node ); 
+					
+					// set the transition rate 
+					pCD->phenotype.death.models[death_index]->data.exit_rate(start) 
+						= 1.0 / (value+1e-16); 
+					// set it to fixed / non-fixed 
+					pCD->phenotype.death.models[death_index]->phase_links[start][0].fixed_duration 
+						= fixed; 
+					
+					node = node.next_sibling( "duration" ); 
+				}
+				
+				
+/*
+		if( node.child( "phase_durations" ) )
+		{ node = node.child( "phase_durations" ); }
+		if( node )
+		{
+			node = node.child( "duration");
+			while( node )
+			{
+				// which duration? 
+				int start = node.attribute("index").as_int(); 
+				// fixed duration? 
+				bool fixed = false; 
+				if( node.attribute( "fixed_duration" ) )
+				{ fixed = node.attribute("fixed_duration").as_bool(); }
+				// actual value of the duration 
+				double value = xml_get_my_double_value( node ); 
+				
+				// set the transition rate 
+				pCD->phenotype.cycle.data.exit_rate(start) = 1.0 / (value+1e-16); 
+				// set it to fixed / non-fixed 
+				pCD->phenotype.cycle.model().phase_links[start][0].fixed_duration = fixed; 
+				
+				node = node.next_sibling( "duration" ); 
+			}
+			
+		}
+
+*/				
+				
+				
+				node = node.parent(); // phase_durations 
+				node = node.parent(); // model 
+			}				
+			
+			// node = node.parent(); 
 			
 			node = node.next_sibling( "model" ); 
-			death_model_index++; 
+//			death_model_index++; 
 		}
 		
 	}
@@ -1832,6 +2026,11 @@ Cell_Definition* initialize_cell_definition_from_pugixml( pugi::xml_node cd_node
 				
 				std::string substrate_name = xml_get_string_value( node_mot1 , "substrate" ); 
 				pMot->chemotaxis_index = microenvironment.find_density_index( substrate_name ); 
+				if( pMot->chemotaxis_index < 0)
+				{
+					std::cout << __FUNCTION__ << ": Error: parsing phenotype:motility:options:chemotaxis:  invalid substrate" << std::endl << std::endl; 
+					exit(-1); 
+				}
 				
 				std::string actual_name = microenvironment.density_names[ pMot->chemotaxis_index ]; 
 				
@@ -1905,6 +2104,28 @@ Cell_Definition* initialize_cell_definition_from_pugixml( pugi::xml_node cd_node
 		}
 	}	
 
+	// intracellular
+	
+	node = cd_node.child( "phenotype" );
+	node = node.child( "intracellular" ); 
+	if( node )
+	{
+		std::string model_type = node.attribute( "type" ).value(); 
+		
+#ifdef ADDON_PHYSIBOSS
+		if (model_type == "maboss") {
+			// If it has already be copied
+			if (pParent != NULL && pParent->phenotype.intracellular != NULL) {
+				pCD->phenotype.intracellular->initialize_intracellular_from_pugixml(node);
+				
+			// Otherwise we need to create a new one
+			} else {
+				MaBoSSIntracellular* pIntra = new MaBoSSIntracellular(node);
+				pCD->phenotype.intracellular = pIntra->getIntracellularModel();
+			}
+		}
+#endif
+	}	
 	
 	// set up custom data 
 	node = cd_node.child( "custom_data" );

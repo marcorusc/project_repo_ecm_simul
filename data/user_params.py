@@ -226,66 +226,52 @@ class UserTab(object):
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name26 = Button(description='bnd_file', disabled=True, layout=name_button_layout)
+        param_name26 = Button(description='init_cells_filename', disabled=True, layout=name_button_layout)
         param_name26.style.button_color = 'tan'
 
-        self.bnd_file = Text(
-          value='./config/boolean_network/CCM_mod4_1.bnd',
+        self.init_cells_filename = Text(
+          value='../data/init.txt',
           style=style, layout=widget_layout)
 
-        param_name27 = Button(description='cfg_file', disabled=True, layout=name_button_layout)
+        param_name27 = Button(description='init_ecm_filename', disabled=True, layout=name_button_layout)
         param_name27.style.button_color = 'lightgreen'
 
-        self.cfg_file = Text(
-          value='./config/boolean_network/CCM_mod4_1.cfg',
-          style=style, layout=widget_layout)
-
-        param_name28 = Button(description='init_cells_filename', disabled=True, layout=name_button_layout)
-        param_name28.style.button_color = 'tan'
-
-        self.init_cells_filename = Text(
-          value='./config/init.txt',
-          style=style, layout=widget_layout)
-
-        param_name29 = Button(description='init_ecm_filename', disabled=True, layout=name_button_layout)
-        param_name29.style.button_color = 'lightgreen'
-
         self.init_ecm_filename = Text(
-          value='./config/ecm.txt',
+          value='../data/ecm.txt',
           style=style, layout=widget_layout)
 
-        param_name30 = Button(description='tgfb_threshold', disabled=True, layout=name_button_layout)
-        param_name30.style.button_color = 'tan'
+        param_name28 = Button(description='tgfb_threshold', disabled=True, layout=name_button_layout)
+        param_name28.style.button_color = 'tan'
 
         self.tgfb_threshold = FloatText(
           value=1.,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name31 = Button(description='membrane_shape', disabled=True, layout=name_button_layout)
-        param_name31.style.button_color = 'lightgreen'
+        param_name29 = Button(description='membrane_shape', disabled=True, layout=name_button_layout)
+        param_name29.style.button_color = 'lightgreen'
 
         self.membrane_shape = Text(
           value='sphere',
           style=style, layout=widget_layout)
 
-        param_name32 = Button(description='membrane_length', disabled=True, layout=name_button_layout)
-        param_name32.style.button_color = 'tan'
+        param_name30 = Button(description='membrane_length', disabled=True, layout=name_button_layout)
+        param_name30.style.button_color = 'tan'
 
         self.membrane_length = FloatText(
           value= 10 ,
           step=1,
           style=style, layout=widget_layout)
 
-        param_name33 = Button(description='node_to_visualize', disabled=True, layout=name_button_layout)
-        param_name33.style.button_color = 'lightgreen'
+        param_name31 = Button(description='node_to_visualize', disabled=True, layout=name_button_layout)
+        param_name31.style.button_color = 'lightgreen'
 
         self.node_to_visualize = Text(
           value='Cell_cell',
           style=style, layout=widget_layout)
 
-        param_name34 = Button(description='color_function', disabled=True, layout=name_button_layout)
-        param_name34.style.button_color = 'tan'
+        param_name32 = Button(description='color_function', disabled=True, layout=name_button_layout)
+        param_name32.style.button_color = 'tan'
 
         self.color_function = IntText(
           value=0,
@@ -356,10 +342,6 @@ class UserTab(object):
         units_button31.style.button_color = 'lightgreen'
         units_button32 = Button(description='', disabled=True, layout=units_button_layout) 
         units_button32.style.button_color = 'tan'
-        units_button33 = Button(description='', disabled=True, layout=units_button_layout) 
-        units_button33.style.button_color = 'lightgreen'
-        units_button34 = Button(description='', disabled=True, layout=units_button_layout) 
-        units_button34.style.button_color = 'tan'
 
         desc_button1 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
         desc_button1.style.button_color = 'lightgreen'
@@ -425,10 +407,6 @@ class UserTab(object):
         desc_button31.style.button_color = 'lightgreen'
         desc_button32 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
         desc_button32.style.button_color = 'tan'
-        desc_button33 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
-        desc_button33.style.button_color = 'lightgreen'
-        desc_button34 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
-        desc_button34.style.button_color = 'tan'
 
         row1 = [param_name1, self.random_seed, units_button1, desc_button1] 
         row2 = [param_name2, self.polarity_coefficient, units_button2, desc_button2] 
@@ -455,15 +433,13 @@ class UserTab(object):
         row23 = [param_name23, self.solid_nuclear, units_button23, desc_button23] 
         row24 = [param_name24, self.solid_cytoplasmic, units_button24, desc_button24] 
         row25 = [param_name25, self.protein_threshold, units_button25, desc_button25] 
-        row26 = [param_name26, self.bnd_file, units_button26, desc_button26] 
-        row27 = [param_name27, self.cfg_file, units_button27, desc_button27] 
-        row28 = [param_name28, self.init_cells_filename, units_button28, desc_button28] 
-        row29 = [param_name29, self.init_ecm_filename, units_button29, desc_button29] 
-        row30 = [param_name30, self.tgfb_threshold, units_button30, desc_button30] 
-        row31 = [param_name31, self.membrane_shape, units_button31, desc_button31] 
-        row32 = [param_name32, self.membrane_length, units_button32, desc_button32] 
-        row33 = [param_name33, self.node_to_visualize, units_button33, desc_button33] 
-        row34 = [param_name34, self.color_function, units_button34, desc_button34] 
+        row26 = [param_name26, self.init_cells_filename, units_button26, desc_button26] 
+        row27 = [param_name27, self.init_ecm_filename, units_button27, desc_button27] 
+        row28 = [param_name28, self.tgfb_threshold, units_button28, desc_button28] 
+        row29 = [param_name29, self.membrane_shape, units_button29, desc_button29] 
+        row30 = [param_name30, self.membrane_length, units_button30, desc_button30] 
+        row31 = [param_name31, self.node_to_visualize, units_button31, desc_button31] 
+        row32 = [param_name32, self.color_function, units_button32, desc_button32] 
 
         box_layout = Layout(display='flex', flex_flow='row', align_items='stretch', width='100%')
         box1 = Box(children=row1, layout=box_layout)
@@ -498,8 +474,6 @@ class UserTab(object):
         box30 = Box(children=row30, layout=box_layout)
         box31 = Box(children=row31, layout=box_layout)
         box32 = Box(children=row32, layout=box_layout)
-        box33 = Box(children=row33, layout=box_layout)
-        box34 = Box(children=row34, layout=box_layout)
 
         self.tab = VBox([
           box1,
@@ -534,8 +508,6 @@ class UserTab(object):
           box30,
           box31,
           box32,
-          box33,
-          box34,
         ])
 
     # Populate the GUI widgets with values from the XML
@@ -572,8 +544,6 @@ class UserTab(object):
         self.solid_nuclear.value = int(uep.find('.//solid_nuclear').text)
         self.solid_cytoplasmic.value = int(uep.find('.//solid_cytoplasmic').text)
         self.protein_threshold.value = int(uep.find('.//protein_threshold').text)
-        self.bnd_file.value = (uep.find('.//bnd_file').text)
-        self.cfg_file.value = (uep.find('.//cfg_file').text)
         self.init_cells_filename.value = (uep.find('.//init_cells_filename').text)
         self.init_ecm_filename.value = (uep.find('.//init_ecm_filename').text)
         self.tgfb_threshold.value = float(uep.find('.//tgfb_threshold').text)
@@ -617,8 +587,6 @@ class UserTab(object):
         uep.find('.//solid_nuclear').text = str(self.solid_nuclear.value)
         uep.find('.//solid_cytoplasmic').text = str(self.solid_cytoplasmic.value)
         uep.find('.//protein_threshold').text = str(self.protein_threshold.value)
-        uep.find('.//bnd_file').text = str(self.bnd_file.value)
-        uep.find('.//cfg_file').text = str(self.cfg_file.value)
         uep.find('.//init_cells_filename').text = str(self.init_cells_filename.value)
         uep.find('.//init_ecm_filename').text = str(self.init_ecm_filename.value)
         uep.find('.//tgfb_threshold').text = str(self.tgfb_threshold.value)

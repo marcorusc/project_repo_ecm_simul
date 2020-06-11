@@ -10,9 +10,15 @@ from about import AboutTab
 from config import ConfigTab
 from microenv_params import MicroenvTab
 from user_params import UserTab
+try:
+    from cell_types import CellTypesTab
+except:
+    # print("cell_types.py does not exist due to no <cell_definitions>")
+    pass
 # from svg import SVGTab
 from substrates import SubstrateTab
 from animate_tab import AnimateTab
+from physiboss import PhysiBoSSTab
 from pathlib import Path
 import platform
 import subprocess
@@ -42,10 +48,16 @@ full_xml_filename = os.path.abspath(xml_file)
 
 tree = ET.parse(full_xml_filename)  # this file cannot be overwritten; part of tool distro
 xml_root = tree.getroot()
+
 microenv_tab = MicroenvTab()
 user_tab = UserTab()
+
+if xml_root.find('.//cell_definitions'):
+    cell_types_tab = CellTypesTab()
+
 # svg = SVGTab()
 sub = SubstrateTab()
+physiboss = PhysiBoSSTab()
 animate_tab = AnimateTab()
 
 nanoHUB_flag = False
@@ -235,6 +247,7 @@ def run_done_func(s, rdir):
     # and update visualizations
     # svg.update(rdir)
     sub.update(rdir)
+    physiboss.update(rdir)
 
     animate_tab.gen_button.disabled = False
 
@@ -285,7 +298,7 @@ def run_sim_func(s):
     # svg.update(tdir)
     # sub.update_params(config_tab)
     sub.update(tdir)
-    animate_tab.update(tdir)
+    # animate_tab.update(tdir)
 
     if nanoHUB_flag:
         if remote_cb.value:
@@ -313,6 +326,7 @@ def outcb(s):
         # sub.update('')
         # sub.update_params(config_tab)
         sub.update()
+        physiboss.update()
     return s
 
 
@@ -385,8 +399,15 @@ if nanoHUB_flag or hublib_flag:
 
 tab_height = 'auto'
 tab_layout = widgets.Layout(width='auto',height=tab_height, overflow_y='scroll',)   # border='2px solid black',
-titles = ['About', 'Config Basics', 'Microenvironment', 'User Params', 'Out: Plots', 'Animate']
-tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, microenv_tab.tab, user_tab.tab, sub.tab, animate_tab.tab],
+
+if xml_root.find('.//cell_definitions'):
+    titles = ['About', 'Config Basics', 'Microenvironment', 'User Params', 'Cell Types', 'Out: Plots', 'Out: PhysiBoSS', 'Animate']
+    tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, microenv_tab.tab, user_tab.tab, cell_types_tab.tab, sub.tab, physiboss.tab, animate_tab.tab],
+                   _titles={i: t for i, t in enumerate(titles)},
+                   layout=tab_layout)
+else:
+    titles = ['About', 'Config Basics', 'Microenvironment', 'User Params', 'Out: Plots', 'Out: PhysiBoSS', 'Animate']
+    tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, microenv_tab.tab, user_tab.tab, sub.tab, physiboss.tab, animate_tab.tab],
                    _titles={i: t for i, t in enumerate(titles)},
                    layout=tab_layout)
 
@@ -411,7 +432,7 @@ output_dir = "tmpdir"
 # svg.update(output_dir)
 
 sub.update_dropdown_fields("data")   # WARNING: generates multiple "<Figure size...>" stdout!
-animate_tab.update_dropdown_fields("data")   
+# animate_tab.update_dropdown_fields("data")   
 
 # print('config_tab.svg_interval.value= ',config_tab.svg_interval.value )
 # print('config_tab.mcds_interval.value= ',config_tab.mcds_interval.value )

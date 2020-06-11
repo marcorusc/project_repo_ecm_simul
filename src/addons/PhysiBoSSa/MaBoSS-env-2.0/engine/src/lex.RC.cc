@@ -480,32 +480,50 @@ int RC_flex_debug = 0;
 char *RCtext;
 #line 1 "RunConfigGrammar.l"
 #line 3 "RunConfigGrammar.l"
-/* 
-   MaBoSS (Markov Boolean Stochastic Simulator)
-   Copyright (C) 2011 Institut Curie, 26 rue d'Ulm, Paris, France
-   
-   MaBoSS is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-   
-   MaBoSS is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA 
-*/
-
 /*
+#############################################################################
+#                                                                           #
+# BSD 3-Clause License (see https://opensource.org/licenses/BSD-3-Clause)   #
+#                                                                           #
+# Copyright (c) 2011-2020 Institut Curie, 26 rue d'Ulm, Paris, France       #
+# All rights reserved.                                                      #
+#                                                                           #
+# Redistribution and use in source and binary forms, with or without        #
+# modification, are permitted provided that the following conditions are    #
+# met:                                                                      #
+#                                                                           #
+# 1. Redistributions of source code must retain the above copyright notice, #
+# this list of conditions and the following disclaimer.                     #
+#                                                                           #
+# 2. Redistributions in binary form must reproduce the above copyright      #
+# notice, this list of conditions and the following disclaimer in the       #
+# documentation and/or other materials provided with the distribution.      #
+#                                                                           #
+# 3. Neither the name of the copyright holder nor the names of its          #
+# contributors may be used to endorse or promote products derived from this #
+# software without specific prior written permission.                       #
+#                                                                           #
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS       #
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED #
+# TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A           #
+# PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER #
+# OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  #
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,       #
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR        #
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF    #
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING      #
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS        #
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.              #
+#                                                                           #
+#############################################################################
+
    Module:
      RunConfigGrammar.l
 
    Authors:
      Eric Viara <viara@sysra.com>
      Gautier Stoll <gautier.stoll@curie.fr>
+     Vincent Noël <vincent.noel@curie.fr>
  
    Date:
      January-March 2011
@@ -519,8 +537,8 @@ static unsigned int input_lineno = 1;
 static const char* file;
 static const char* expr;
 static void skip_comment(void);
-#line 523 "<stdout>"
-#line 524 "<stdout>"
+#line 541 "<stdout>"
+#line 542 "<stdout>"
 
 #define INITIAL 0
 
@@ -737,10 +755,10 @@ YY_DECL
 		}
 
 	{
-#line 47 "RunConfigGrammar.l"
+#line 65 "RunConfigGrammar.l"
 
 
-#line 744 "<stdout>"
+#line 762 "<stdout>"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -799,38 +817,38 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 49 "RunConfigGrammar.l"
+#line 67 "RunConfigGrammar.l"
 { }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 50 "RunConfigGrammar.l"
+#line 68 "RunConfigGrammar.l"
 { input_lineno++; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 51 "RunConfigGrammar.l"
+#line 69 "RunConfigGrammar.l"
 { skip_comment(); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 52 "RunConfigGrammar.l"
+#line 70 "RunConfigGrammar.l"
 { }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 53 "RunConfigGrammar.l"
+#line 71 "RunConfigGrammar.l"
 { RClval.l = 1; return INTEGER; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 54 "RunConfigGrammar.l"
+#line 72 "RunConfigGrammar.l"
 { RClval.l = 0; return INTEGER; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 55 "RunConfigGrammar.l"
+#line 73 "RunConfigGrammar.l"
 {
   RClval.str = maboss_strdup(RCtext);
   return VARIABLE;
@@ -838,7 +856,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 59 "RunConfigGrammar.l"
+#line 77 "RunConfigGrammar.l"
 {
   RClval.str = maboss_strdup(RCtext);
   return SYMBOL;
@@ -846,35 +864,35 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 63 "RunConfigGrammar.l"
+#line 81 "RunConfigGrammar.l"
 { sscanf(RCtext, "%lld", &RClval.l); return INTEGER; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 64 "RunConfigGrammar.l"
+#line 82 "RunConfigGrammar.l"
 { RClval.d = atof(RCtext); return DOUBLE; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 65 "RunConfigGrammar.l"
+#line 83 "RunConfigGrammar.l"
 { RClval.d = atof(RCtext); return DOUBLE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 66 "RunConfigGrammar.l"
+#line 84 "RunConfigGrammar.l"
 { RClval.d = atof(RCtext); return DOUBLE; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 67 "RunConfigGrammar.l"
+#line 85 "RunConfigGrammar.l"
 { return RCtext[0]; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 69 "RunConfigGrammar.l"
+#line 87 "RunConfigGrammar.l"
 ECHO;
 	YY_BREAK
-#line 878 "<stdout>"
+#line 896 "<stdout>"
 case YY_STATE_EOF(INITIAL):
 	RCterminate();
 
@@ -1879,7 +1897,7 @@ void RCfree (void * ptr )
 
 #define YYTABLES_NAME "RCtables"
 
-#line 69 "RunConfigGrammar.l"
+#line 87 "RunConfigGrammar.l"
 
 
 static void skip_comment(void)
