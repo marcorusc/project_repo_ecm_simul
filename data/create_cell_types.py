@@ -407,6 +407,8 @@ main_vbox_str += indent2 + "self.cell_type_parent_row, \n"
 
 
 cells_tab_header += ndent + "self.cell_def_vboxes = []\n" 
+cells_tab_header += ndent + "self.bnd_filenames = [None]*" + str(len(uep.findall('cell_definition'))) + "\n" 
+cells_tab_header += ndent + "self.cfg_filenames = [None]*" + str(len(uep.findall('cell_definition'))) + "\n" 
 
 motility_count = 0
 cell_def_count = 0
@@ -998,7 +1000,7 @@ for cell_def in uep.findall('cell_definition'):
             subpath1 = subpath0  + "//" + child.tag
             
             
-            for elm in child:
+            for elm in child:    
                 if elm.tag == 'bnd_filename':
                     subpath2 = subpath1  + "//" + elm.tag
                     # row_name = "secretion_substrate" + str(substrate_count)
@@ -1012,7 +1014,7 @@ for cell_def in uep.findall('cell_definition'):
                     color_idx = 1 - color_idx
                     cells_tab_header += color_str
                     
-                    bnd_filename_name = "self.bnd_filename"
+                    bnd_filename_name = "self.bnd_filenames[" + cell_def.attrib["ID"] + "]"
                     bnd_filename_text_str = indent + bnd_filename_name + " = Text(value='" + elm.text + "', style=style, layout=widget_layout)\n"
                     cells_tab_header += bnd_filename_text_str
                     
@@ -1039,7 +1041,7 @@ for cell_def in uep.findall('cell_definition'):
                     color_idx = 1 - color_idx
                     cells_tab_header += color_str
                     
-                    cfg_filename_name = "self.cfg_filename"
+                    cfg_filename_name = "self.cfg_filenames[" + cell_def.attrib["ID"] + "]"
                     cfg_filename_text_str = indent + cfg_filename_name + " = Text(value='" + elm.text + "', style=style, layout=widget_layout)\n"
                     cells_tab_header += cfg_filename_text_str
 

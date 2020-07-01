@@ -82,99 +82,99 @@ class UserTab(object):
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name8 = Button(description='contact_cell_cell_threshold', disabled=True, layout=name_button_layout)
+        param_name8 = Button(description='ECM_TGFbeta_ratio', disabled=True, layout=name_button_layout)
         param_name8.style.button_color = 'tan'
+
+        self.ECM_TGFbeta_ratio = FloatText(
+          value=0.5,
+          step=0.1,
+          style=style, layout=widget_layout)
+
+        param_name9 = Button(description='contact_cell_cell_threshold', disabled=True, layout=name_button_layout)
+        param_name9.style.button_color = 'lightgreen'
 
         self.contact_cell_cell_threshold = FloatText(
           value= 0.9 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name9 = Button(description='homotypic_adhesion_min', disabled=True, layout=name_button_layout)
-        param_name9.style.button_color = 'lightgreen'
+        param_name10 = Button(description='homotypic_adhesion_min', disabled=True, layout=name_button_layout)
+        param_name10.style.button_color = 'tan'
 
         self.homotypic_adhesion_min = FloatText(
           value= 0.2 ,
           step=0.01,
           style=style, layout=widget_layout)
 
-        param_name10 = Button(description='homotypic_adhesion_max', disabled=True, layout=name_button_layout)
-        param_name10.style.button_color = 'tan'
+        param_name11 = Button(description='homotypic_adhesion_max', disabled=True, layout=name_button_layout)
+        param_name11.style.button_color = 'lightgreen'
 
         self.homotypic_adhesion_max = FloatText(
           value= 0.8 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name11 = Button(description='heterotypic_adhesion_min', disabled=True, layout=name_button_layout)
-        param_name11.style.button_color = 'lightgreen'
+        param_name12 = Button(description='heterotypic_adhesion_min', disabled=True, layout=name_button_layout)
+        param_name12.style.button_color = 'tan'
 
         self.heterotypic_adhesion_min = FloatText(
           value= 0.2 ,
           step=0.01,
           style=style, layout=widget_layout)
 
-        param_name12 = Button(description='heterotypic_adhesion_max', disabled=True, layout=name_button_layout)
-        param_name12.style.button_color = 'tan'
+        param_name13 = Button(description='heterotypic_adhesion_max', disabled=True, layout=name_button_layout)
+        param_name13.style.button_color = 'lightgreen'
 
         self.heterotypic_adhesion_max = FloatText(
           value= 0.8 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name13 = Button(description='cell_basement_membrane_repulsion', disabled=True, layout=name_button_layout)
-        param_name13.style.button_color = 'lightgreen'
+        param_name14 = Button(description='cell_basement_membrane_repulsion', disabled=True, layout=name_button_layout)
+        param_name14.style.button_color = 'tan'
 
         self.cell_basement_membrane_repulsion = FloatText(
           value=10.0,
           step=1,
           style=style, layout=widget_layout)
 
-        param_name14 = Button(description='cell_basement_membrane_adhesion', disabled=True, layout=name_button_layout)
-        param_name14.style.button_color = 'tan'
+        param_name15 = Button(description='cell_basement_membrane_adhesion', disabled=True, layout=name_button_layout)
+        param_name15.style.button_color = 'lightgreen'
 
         self.cell_basement_membrane_adhesion = FloatText(
           value=1.70577155519015,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name15 = Button(description='ecm_adhesion_min', disabled=True, layout=name_button_layout)
-        param_name15.style.button_color = 'lightgreen'
+        param_name16 = Button(description='ecm_adhesion_min', disabled=True, layout=name_button_layout)
+        param_name16.style.button_color = 'tan'
 
-        self.ecm_adhesion_min = IntText(
+        self.ecm_adhesion_min = FloatText(
           value= 1 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name16 = Button(description='ecm_adhesion_max', disabled=True, layout=name_button_layout)
-        param_name16.style.button_color = 'tan'
+        param_name17 = Button(description='ecm_adhesion_max', disabled=True, layout=name_button_layout)
+        param_name17.style.button_color = 'lightgreen'
 
-        self.ecm_adhesion_max = IntText(
+        self.ecm_adhesion_max = FloatText(
           value= 2 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name17 = Button(description='cell_ecm_repulsion', disabled=True, layout=name_button_layout)
-        param_name17.style.button_color = 'lightgreen'
+        param_name18 = Button(description='cell_ecm_repulsion', disabled=True, layout=name_button_layout)
+        param_name18.style.button_color = 'tan'
 
         self.cell_ecm_repulsion = FloatText(
           value= 10.0 ,
           step=1,
           style=style, layout=widget_layout)
 
-        param_name18 = Button(description='ecm_degradation', disabled=True, layout=name_button_layout)
-        param_name18.style.button_color = 'tan'
-
-        self.ecm_degradation = IntText(
-          value= 5 ,
-          step=0.1,
-          style=style, layout=widget_layout)
-
-        param_name19 = Button(description='max_interaction_factor', disabled=True, layout=name_button_layout)
+        param_name19 = Button(description='ecm_degradation', disabled=True, layout=name_button_layout)
         param_name19.style.button_color = 'lightgreen'
 
-        self.max_interaction_factor = FloatText(
-          value= 1.3 ,
+        self.ecm_degradation = FloatText(
+          value= 0.5 ,
           step=0.1,
           style=style, layout=widget_layout)
 
@@ -186,92 +186,124 @@ class UserTab(object):
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name21 = Button(description='nucleus_radius', disabled=True, layout=name_button_layout)
+        param_name21 = Button(description='migration_bias', disabled=True, layout=name_button_layout)
         param_name21.style.button_color = 'lightgreen'
+
+        self.migration_bias = FloatText(
+          value=0.9,
+          step=0.1,
+          style=style, layout=widget_layout)
+
+        param_name22 = Button(description='max_interaction_factor', disabled=True, layout=name_button_layout)
+        param_name22.style.button_color = 'tan'
+
+        self.max_interaction_factor = FloatText(
+          value= 1.3 ,
+          step=0.1,
+          style=style, layout=widget_layout)
+
+        param_name23 = Button(description='migration_speed', disabled=True, layout=name_button_layout)
+        param_name23.style.button_color = 'lightgreen'
+
+        self.migration_speed = FloatText(
+          value=0.5,
+          step=0.1,
+          style=style, layout=widget_layout)
+
+        param_name24 = Button(description='nucleus_radius', disabled=True, layout=name_button_layout)
+        param_name24.style.button_color = 'tan'
 
         self.nucleus_radius = FloatText(
           value= 5.052 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name22 = Button(description='fluid_fraction', disabled=True, layout=name_button_layout)
-        param_name22.style.button_color = 'tan'
+        param_name25 = Button(description='fluid_fraction', disabled=True, layout=name_button_layout)
+        param_name25.style.button_color = 'lightgreen'
 
         self.fluid_fraction = FloatText(
           value= 0.75 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name23 = Button(description='solid_nuclear', disabled=True, layout=name_button_layout)
-        param_name23.style.button_color = 'lightgreen'
+        param_name26 = Button(description='solid_nuclear', disabled=True, layout=name_button_layout)
+        param_name26.style.button_color = 'tan'
 
-        self.solid_nuclear = IntText(
+        self.solid_nuclear = FloatText(
           value= 135 ,
           step=10,
           style=style, layout=widget_layout)
 
-        param_name24 = Button(description='solid_cytoplasmic', disabled=True, layout=name_button_layout)
-        param_name24.style.button_color = 'tan'
+        param_name27 = Button(description='solid_cytoplasmic', disabled=True, layout=name_button_layout)
+        param_name27.style.button_color = 'lightgreen'
 
-        self.solid_cytoplasmic = IntText(
+        self.solid_cytoplasmic = FloatText(
           value= 486 ,
           step=10,
           style=style, layout=widget_layout)
 
-        param_name25 = Button(description='protein_threshold', disabled=True, layout=name_button_layout)
-        param_name25.style.button_color = 'lightgreen'
+        param_name28 = Button(description='protein_threshold', disabled=True, layout=name_button_layout)
+        param_name28.style.button_color = 'tan'
 
         self.protein_threshold = IntText(
           value= 1 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name26 = Button(description='init_cells_filename', disabled=True, layout=name_button_layout)
-        param_name26.style.button_color = 'tan'
+        param_name29 = Button(description='init_cells_filename', disabled=True, layout=name_button_layout)
+        param_name29.style.button_color = 'lightgreen'
 
         self.init_cells_filename = Text(
           value='../data/init.txt',
           style=style, layout=widget_layout)
 
-        param_name27 = Button(description='init_ecm_filename', disabled=True, layout=name_button_layout)
-        param_name27.style.button_color = 'lightgreen'
+        param_name30 = Button(description='init_ecm_filename', disabled=True, layout=name_button_layout)
+        param_name30.style.button_color = 'tan'
 
         self.init_ecm_filename = Text(
           value='../data/ecm.txt',
           style=style, layout=widget_layout)
 
-        param_name28 = Button(description='tgfb_threshold', disabled=True, layout=name_button_layout)
-        param_name28.style.button_color = 'tan'
+        param_name31 = Button(description='tgfb_threshold', disabled=True, layout=name_button_layout)
+        param_name31.style.button_color = 'lightgreen'
 
         self.tgfb_threshold = FloatText(
           value=1.,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name29 = Button(description='membrane_shape', disabled=True, layout=name_button_layout)
-        param_name29.style.button_color = 'lightgreen'
+        param_name32 = Button(description='membrane_shape', disabled=True, layout=name_button_layout)
+        param_name32.style.button_color = 'tan'
 
         self.membrane_shape = Text(
           value='sphere',
           style=style, layout=widget_layout)
 
-        param_name30 = Button(description='membrane_length', disabled=True, layout=name_button_layout)
-        param_name30.style.button_color = 'tan'
+        param_name33 = Button(description='membrane_length', disabled=True, layout=name_button_layout)
+        param_name33.style.button_color = 'lightgreen'
 
         self.membrane_length = FloatText(
           value= 10 ,
           step=1,
           style=style, layout=widget_layout)
 
-        param_name31 = Button(description='node_to_visualize', disabled=True, layout=name_button_layout)
-        param_name31.style.button_color = 'lightgreen'
+        param_name34 = Button(description='config_radius', disabled=True, layout=name_button_layout)
+        param_name34.style.button_color = 'tan'
+
+        self.config_radius = FloatText(
+          value=100,
+          step=10,
+          style=style, layout=widget_layout)
+
+        param_name35 = Button(description='node_to_visualize', disabled=True, layout=name_button_layout)
+        param_name35.style.button_color = 'lightgreen'
 
         self.node_to_visualize = Text(
           value='Cell_cell',
           style=style, layout=widget_layout)
 
-        param_name32 = Button(description='color_function', disabled=True, layout=name_button_layout)
-        param_name32.style.button_color = 'tan'
+        param_name36 = Button(description='color_function', disabled=True, layout=name_button_layout)
+        param_name36.style.button_color = 'tan'
 
         self.color_function = IntText(
           value=0,
@@ -342,6 +374,14 @@ class UserTab(object):
         units_button31.style.button_color = 'lightgreen'
         units_button32 = Button(description='', disabled=True, layout=units_button_layout) 
         units_button32.style.button_color = 'tan'
+        units_button33 = Button(description='', disabled=True, layout=units_button_layout) 
+        units_button33.style.button_color = 'lightgreen'
+        units_button34 = Button(description='', disabled=True, layout=units_button_layout) 
+        units_button34.style.button_color = 'tan'
+        units_button35 = Button(description='', disabled=True, layout=units_button_layout) 
+        units_button35.style.button_color = 'lightgreen'
+        units_button36 = Button(description='', disabled=True, layout=units_button_layout) 
+        units_button36.style.button_color = 'tan'
 
         desc_button1 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
         desc_button1.style.button_color = 'lightgreen'
@@ -407,6 +447,14 @@ class UserTab(object):
         desc_button31.style.button_color = 'lightgreen'
         desc_button32 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
         desc_button32.style.button_color = 'tan'
+        desc_button33 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
+        desc_button33.style.button_color = 'lightgreen'
+        desc_button34 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
+        desc_button34.style.button_color = 'tan'
+        desc_button35 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
+        desc_button35.style.button_color = 'lightgreen'
+        desc_button36 = Button(description='' , tooltip='', disabled=True, layout=desc_button_layout) 
+        desc_button36.style.button_color = 'tan'
 
         row1 = [param_name1, self.random_seed, units_button1, desc_button1] 
         row2 = [param_name2, self.polarity_coefficient, units_button2, desc_button2] 
@@ -415,31 +463,35 @@ class UserTab(object):
         row5 = [param_name5, self.motility_amplitude_max, units_button5, desc_button5] 
         row6 = [param_name6, self.mode_motility, units_button6, desc_button6] 
         row7 = [param_name7, self.contact_cell_ECM_threshold, units_button7, desc_button7] 
-        row8 = [param_name8, self.contact_cell_cell_threshold, units_button8, desc_button8] 
-        row9 = [param_name9, self.homotypic_adhesion_min, units_button9, desc_button9] 
-        row10 = [param_name10, self.homotypic_adhesion_max, units_button10, desc_button10] 
-        row11 = [param_name11, self.heterotypic_adhesion_min, units_button11, desc_button11] 
-        row12 = [param_name12, self.heterotypic_adhesion_max, units_button12, desc_button12] 
-        row13 = [param_name13, self.cell_basement_membrane_repulsion, units_button13, desc_button13] 
-        row14 = [param_name14, self.cell_basement_membrane_adhesion, units_button14, desc_button14] 
-        row15 = [param_name15, self.ecm_adhesion_min, units_button15, desc_button15] 
-        row16 = [param_name16, self.ecm_adhesion_max, units_button16, desc_button16] 
-        row17 = [param_name17, self.cell_ecm_repulsion, units_button17, desc_button17] 
-        row18 = [param_name18, self.ecm_degradation, units_button18, desc_button18] 
-        row19 = [param_name19, self.max_interaction_factor, units_button19, desc_button19] 
+        row8 = [param_name8, self.ECM_TGFbeta_ratio, units_button8, desc_button8] 
+        row9 = [param_name9, self.contact_cell_cell_threshold, units_button9, desc_button9] 
+        row10 = [param_name10, self.homotypic_adhesion_min, units_button10, desc_button10] 
+        row11 = [param_name11, self.homotypic_adhesion_max, units_button11, desc_button11] 
+        row12 = [param_name12, self.heterotypic_adhesion_min, units_button12, desc_button12] 
+        row13 = [param_name13, self.heterotypic_adhesion_max, units_button13, desc_button13] 
+        row14 = [param_name14, self.cell_basement_membrane_repulsion, units_button14, desc_button14] 
+        row15 = [param_name15, self.cell_basement_membrane_adhesion, units_button15, desc_button15] 
+        row16 = [param_name16, self.ecm_adhesion_min, units_button16, desc_button16] 
+        row17 = [param_name17, self.ecm_adhesion_max, units_button17, desc_button17] 
+        row18 = [param_name18, self.cell_ecm_repulsion, units_button18, desc_button18] 
+        row19 = [param_name19, self.ecm_degradation, units_button19, desc_button19] 
         row20 = [param_name20, self.cell_radius, units_button20, desc_button20] 
-        row21 = [param_name21, self.nucleus_radius, units_button21, desc_button21] 
-        row22 = [param_name22, self.fluid_fraction, units_button22, desc_button22] 
-        row23 = [param_name23, self.solid_nuclear, units_button23, desc_button23] 
-        row24 = [param_name24, self.solid_cytoplasmic, units_button24, desc_button24] 
-        row25 = [param_name25, self.protein_threshold, units_button25, desc_button25] 
-        row26 = [param_name26, self.init_cells_filename, units_button26, desc_button26] 
-        row27 = [param_name27, self.init_ecm_filename, units_button27, desc_button27] 
-        row28 = [param_name28, self.tgfb_threshold, units_button28, desc_button28] 
-        row29 = [param_name29, self.membrane_shape, units_button29, desc_button29] 
-        row30 = [param_name30, self.membrane_length, units_button30, desc_button30] 
-        row31 = [param_name31, self.node_to_visualize, units_button31, desc_button31] 
-        row32 = [param_name32, self.color_function, units_button32, desc_button32] 
+        row21 = [param_name21, self.migration_bias, units_button21, desc_button21] 
+        row22 = [param_name22, self.max_interaction_factor, units_button22, desc_button22] 
+        row23 = [param_name23, self.migration_speed, units_button23, desc_button23] 
+        row24 = [param_name24, self.nucleus_radius, units_button24, desc_button24] 
+        row25 = [param_name25, self.fluid_fraction, units_button25, desc_button25] 
+        row26 = [param_name26, self.solid_nuclear, units_button26, desc_button26] 
+        row27 = [param_name27, self.solid_cytoplasmic, units_button27, desc_button27] 
+        row28 = [param_name28, self.protein_threshold, units_button28, desc_button28] 
+        row29 = [param_name29, self.init_cells_filename, units_button29, desc_button29] 
+        row30 = [param_name30, self.init_ecm_filename, units_button30, desc_button30] 
+        row31 = [param_name31, self.tgfb_threshold, units_button31, desc_button31] 
+        row32 = [param_name32, self.membrane_shape, units_button32, desc_button32] 
+        row33 = [param_name33, self.membrane_length, units_button33, desc_button33] 
+        row34 = [param_name34, self.config_radius, units_button34, desc_button34] 
+        row35 = [param_name35, self.node_to_visualize, units_button35, desc_button35] 
+        row36 = [param_name36, self.color_function, units_button36, desc_button36] 
 
         box_layout = Layout(display='flex', flex_flow='row', align_items='stretch', width='100%')
         box1 = Box(children=row1, layout=box_layout)
@@ -474,6 +526,10 @@ class UserTab(object):
         box30 = Box(children=row30, layout=box_layout)
         box31 = Box(children=row31, layout=box_layout)
         box32 = Box(children=row32, layout=box_layout)
+        box33 = Box(children=row33, layout=box_layout)
+        box34 = Box(children=row34, layout=box_layout)
+        box35 = Box(children=row35, layout=box_layout)
+        box36 = Box(children=row36, layout=box_layout)
 
         self.tab = VBox([
           box1,
@@ -508,6 +564,10 @@ class UserTab(object):
           box30,
           box31,
           box32,
+          box33,
+          box34,
+          box35,
+          box36,
         ])
 
     # Populate the GUI widgets with values from the XML
@@ -526,6 +586,7 @@ class UserTab(object):
         self.motility_amplitude_max.value = float(uep.find('.//motility_amplitude_max').text)
         self.mode_motility.value = int(uep.find('.//mode_motility').text)
         self.contact_cell_ECM_threshold.value = float(uep.find('.//contact_cell_ECM_threshold').text)
+        self.ECM_TGFbeta_ratio.value = float(uep.find('.//ECM_TGFbeta_ratio').text)
         self.contact_cell_cell_threshold.value = float(uep.find('.//contact_cell_cell_threshold').text)
         self.homotypic_adhesion_min.value = float(uep.find('.//homotypic_adhesion_min').text)
         self.homotypic_adhesion_max.value = float(uep.find('.//homotypic_adhesion_max').text)
@@ -533,22 +594,25 @@ class UserTab(object):
         self.heterotypic_adhesion_max.value = float(uep.find('.//heterotypic_adhesion_max').text)
         self.cell_basement_membrane_repulsion.value = float(uep.find('.//cell_basement_membrane_repulsion').text)
         self.cell_basement_membrane_adhesion.value = float(uep.find('.//cell_basement_membrane_adhesion').text)
-        self.ecm_adhesion_min.value = int(uep.find('.//ecm_adhesion_min').text)
-        self.ecm_adhesion_max.value = int(uep.find('.//ecm_adhesion_max').text)
+        self.ecm_adhesion_min.value = float(uep.find('.//ecm_adhesion_min').text)
+        self.ecm_adhesion_max.value = float(uep.find('.//ecm_adhesion_max').text)
         self.cell_ecm_repulsion.value = float(uep.find('.//cell_ecm_repulsion').text)
-        self.ecm_degradation.value = int(uep.find('.//ecm_degradation').text)
-        self.max_interaction_factor.value = float(uep.find('.//max_interaction_factor').text)
+        self.ecm_degradation.value = float(uep.find('.//ecm_degradation').text)
         self.cell_radius.value = float(uep.find('.//cell_radius').text)
+        self.migration_bias.value = float(uep.find('.//migration_bias').text)
+        self.max_interaction_factor.value = float(uep.find('.//max_interaction_factor').text)
+        self.migration_speed.value = float(uep.find('.//migration_speed').text)
         self.nucleus_radius.value = float(uep.find('.//nucleus_radius').text)
         self.fluid_fraction.value = float(uep.find('.//fluid_fraction').text)
-        self.solid_nuclear.value = int(uep.find('.//solid_nuclear').text)
-        self.solid_cytoplasmic.value = int(uep.find('.//solid_cytoplasmic').text)
+        self.solid_nuclear.value = float(uep.find('.//solid_nuclear').text)
+        self.solid_cytoplasmic.value = float(uep.find('.//solid_cytoplasmic').text)
         self.protein_threshold.value = int(uep.find('.//protein_threshold').text)
         self.init_cells_filename.value = (uep.find('.//init_cells_filename').text)
         self.init_ecm_filename.value = (uep.find('.//init_ecm_filename').text)
         self.tgfb_threshold.value = float(uep.find('.//tgfb_threshold').text)
         self.membrane_shape.value = (uep.find('.//membrane_shape').text)
         self.membrane_length.value = float(uep.find('.//membrane_length').text)
+        self.config_radius.value = float(uep.find('.//config_radius').text)
         self.node_to_visualize.value = (uep.find('.//node_to_visualize').text)
         self.color_function.value = int(uep.find('.//color_function').text)
 
@@ -569,6 +633,7 @@ class UserTab(object):
         uep.find('.//motility_amplitude_max').text = str(self.motility_amplitude_max.value)
         uep.find('.//mode_motility').text = str(self.mode_motility.value)
         uep.find('.//contact_cell_ECM_threshold').text = str(self.contact_cell_ECM_threshold.value)
+        uep.find('.//ECM_TGFbeta_ratio').text = str(self.ECM_TGFbeta_ratio.value)
         uep.find('.//contact_cell_cell_threshold').text = str(self.contact_cell_cell_threshold.value)
         uep.find('.//homotypic_adhesion_min').text = str(self.homotypic_adhesion_min.value)
         uep.find('.//homotypic_adhesion_max').text = str(self.homotypic_adhesion_max.value)
@@ -580,8 +645,10 @@ class UserTab(object):
         uep.find('.//ecm_adhesion_max').text = str(self.ecm_adhesion_max.value)
         uep.find('.//cell_ecm_repulsion').text = str(self.cell_ecm_repulsion.value)
         uep.find('.//ecm_degradation').text = str(self.ecm_degradation.value)
-        uep.find('.//max_interaction_factor').text = str(self.max_interaction_factor.value)
         uep.find('.//cell_radius').text = str(self.cell_radius.value)
+        uep.find('.//migration_bias').text = str(self.migration_bias.value)
+        uep.find('.//max_interaction_factor').text = str(self.max_interaction_factor.value)
+        uep.find('.//migration_speed').text = str(self.migration_speed.value)
         uep.find('.//nucleus_radius').text = str(self.nucleus_radius.value)
         uep.find('.//fluid_fraction').text = str(self.fluid_fraction.value)
         uep.find('.//solid_nuclear').text = str(self.solid_nuclear.value)
@@ -592,5 +659,6 @@ class UserTab(object):
         uep.find('.//tgfb_threshold').text = str(self.tgfb_threshold.value)
         uep.find('.//membrane_shape').text = str(self.membrane_shape.value)
         uep.find('.//membrane_length').text = str(self.membrane_length.value)
+        uep.find('.//config_radius').text = str(self.config_radius.value)
         uep.find('.//node_to_visualize').text = str(self.node_to_visualize.value)
         uep.find('.//color_function').text = str(self.color_function.value)

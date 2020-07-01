@@ -114,6 +114,7 @@ void create_cell_types( void )
 	cell_defaults.functions.update_phenotype = tumor_cell_phenotype_with_signaling; 
 
 	cell_defaults.functions.cycle_model.phase_link(1,2).arrest_function = Custom_cell::wait_for_nucleus_growth;
+	cell_defaults.functions.cycle_model.phase_link(0,1).arrest_function = wait_for_cell_growth;
 
 	int apoptosis_model_index = cell_defaults.phenotype.death.find_death_model_index( "Apoptosis" );
 	cell_defaults.phenotype.death.models[apoptosis_model_index]->phase_link(0,1).arrest_function = Custom_cell::waiting_to_remove; 
@@ -127,16 +128,19 @@ void create_cell_types( void )
 	
 	// add custom data here, if any
 	cell_defaults.custom_data.add_variable("ecm_contact", "dimensionless", 0.0); //for paraview visualization
-	cell_defaults.custom_data.add_variable(parameters.strings("node_to_visualize"), "dimensionless", 0.0 ); //for paraview visualization
-	load_ecm_file();
+	cell_defaults.custom_data.add_variable("pintegrin", "dimensionless", 0.5); //for paraview visualization
+	cell_defaults.custom_data.add_variable("padhesion", "dimensionless", 0.5); //for paraview visualization
+	cell_defaults.custom_data.add_variable("cell_contact", "dimensionless", 0.0); //for paraview visualization
+	cell_defaults.custom_data.add_variable("node", "dimensionless", 0.0 ); //for paraview visualization
+	build_ecm_shape();
 
 	//Setting the custom_create_cell pointer to our create_custom_cell
 	cell_defaults.functions.instantiate_cell = Custom_cell::create_custom_cell;
-	cell_defaults.functions.custom_cell_rule = Custom_cell::check_passive;
+	// cell_defaults.functions.custom_cell_rule = Custom_cell::check_passive;
 	cell_defaults.functions.update_velocity = Custom_cell::custom_update_velocity;
 	cell_defaults.functions.custom_adhesion = Custom_cell::custom_adhesion_function;
-	cell_defaults.functions.add_cell_basement_membrane_interactions = Custom_cell::add_cell_basement_membrane_interactions;	
-	cell_defaults.functions.calculate_distance_to_membrane = Custom_cell::distance_to_membrane;
+	// cell_defaults.functions.add_cell_basement_membrane_interactions = Custom_cell::add_cell_basement_membrane_interactions;	
+	// cell_defaults.functions.calculate_distance_to_membrane = Custom_cell::distance_to_membrane;
 	return; 
 }
 
@@ -161,29 +165,35 @@ void setup_microenvironment( void )
 void setup_tissue( void )
 {
 	Custom_cell* pC;
-	std::vector<init_record> cells = read_init_file(parameters.strings("init_cells_filename"), ';', true);
+	//std::vector<init_record> cells = read_init_file(parameters.strings("init_cells_filename"), ';', true);
+	double cell_radius = cell_defaults.phenotype.geometry.radius; 
+	double cell_spacing = 0.95 * 2.0 * cell_radius; 
 	
-	for (int i = 0; i < cells.size(); i++)
+	double tumor_radius = parameters.doubles("config_radius");
+	std::vector<std::vector<double>> positions = create_cell_sphere_positions(cell_radius,tumor_radius);
+
+	for (int i = 0; i < positions.size(); i++)
 	{
+		/*
 		float x = cells[i].x;
 		float y = cells[i].y;
 		float z = cells[i].z;
 		float radius = cells[i].radius;
 		int phase = cells[i].phase;
 		double elapsed_time = cells[i].elapsed_time;
-
+*/
 		pC = static_cast<Custom_cell*>(create_cell(cell_defaults));
-		pC->assign_position( x, y, z );
-		double volume = sphere_volume_from_radius(radius);
+		pC->assign_position( positions[i] );
+		double volume = sphere_volume_from_radius(cell_radius);
 		pC->set_total_volume(volume);
 		pC->phenotype.volume.target_solid_nuclear = cell_defaults.phenotype.volume.target_solid_nuclear;
 		pC->phenotype.volume.target_solid_cytoplasmic = cell_defaults.phenotype.volume.target_solid_cytoplasmic;
 		pC->phenotype.volume.rupture_volume = cell_defaults.phenotype.volume.rupture_volume;
 		
-		pC->phenotype.cycle.data.current_phase_index = phase+1;
-		pC->phenotype.cycle.data.elapsed_time_in_phase = elapsed_time;
-		if ((phase+1) == 1)
-			pC->phenotype.cycle.pCycle_Model->phases[1].entry_function(pC, pC->phenotype, 0);
+		//pC->phenotype.cycle.data.current_phase_index = phase+1;
+		//pC->phenotype.cycle.data.elapsed_time_in_phase = elapsed_time;
+		//if ((phase+1) == 1)
+			//pC->phenotype.cycle.pCycle_Model->phases[1].entry_function(pC, pC->phenotype, 0);
 
 		pC->custom_data["ecm_contact"] = pC->ecm_contact;
 		color_node(pC);
@@ -220,7 +230,7 @@ std::vector<std::string> pMotility_coloring_function( Cell* pCell )
 	return output;
 }
 
-std::vector<std::string> migration_coloring_function( Cell* pCell )
+std::vector<std::string> node_coloring_function( Cell* pCell )
 {
 	std::vector< std::string > output( 4 , "rgb(0,0,0)" );
 	if ( !pCell->phenotype.intracellular->get_boolean_node_value( parameters.strings("node_to_visualize") ) )
@@ -248,7 +258,7 @@ std::vector<std::string> my_coloring_function( Cell* pCell )
 	 if (color_number == 1)
 	 	return pMotility_coloring_function(pCell);
 	 else 
-	 	return migration_coloring_function( pCell );
+	 	return node_coloring_function( pCell );
 }
 
 void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, double dt )
@@ -272,13 +282,14 @@ void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, dou
 		color_node(pCustomCell);
 	}
 	pCustomCell->custom_data["ecm_contact"] = pCustomCell->ecm_contact;
+	pCustomCell->custom_data["cell_contact"] = pCustomCell->cell_contact;
 	
 }
 
 void set_input_nodes(Custom_cell* pCell) 
 {	
 	if ( pCell->phenotype.intracellular->has_node( "Oxy" ) ){
-		pCell->phenotype.intracellular->set_boolean_node_value("Oxy", pCell->necrotic_oxygen());
+		pCell->phenotype.intracellular->set_boolean_node_value("Oxy", !pCell->necrotic_oxygen());
 	}
 
 	// 	nodes[ind] = ( !pCell->necrotic_oxygen() );
@@ -297,6 +308,10 @@ void set_input_nodes(Custom_cell* pCell)
 	if ( pCell->phenotype.intracellular->has_node( "ECM_sensing" ) )
 		pCell->phenotype.intracellular->set_boolean_node_value("ECM_sensing", touch_ECM(pCell));
 	
+	// If has enough contact with TGFbeta or not
+	if ( pCell->phenotype.intracellular->has_node( "TGFbeta" ) )
+		pCell->phenotype.intracellular->set_boolean_node_value("TGFbeta", touch_TGFbeta(pCell));
+
 	// If nucleus is deformed, probability of damage
 	// Change to increase proba with deformation ? + put as parameter
 	if ( pCell->phenotype.intracellular->has_node( "DNAdamage" ) )
@@ -318,12 +333,34 @@ void from_nodes_to_cell(Custom_cell* pCell, Phenotype& phenotype, double dt)
 		pCell->start_death(apoptosis_model_index);
 		return;
 	}
+	
+	if ( pCell->phenotype.intracellular->has_node( "Autophagy" ) 
+		&& pCell->phenotype.intracellular->get_boolean_node_value( "Autophagy" ) 
+	)
+	{
+		int apoptosis_model_index = phenotype.death.find_death_model_index( "Apoptosis" );
+		pCell->start_death(apoptosis_model_index);
+		return;
+	}
 
-	if ( pCell->phenotype.intracellular->has_node( "Migration" ) )
-		pCell->evolve_motility_coef( pCell->phenotype.intracellular->get_boolean_node_value( "Migration" ), dt );
+	if ( pCell->phenotype.intracellular->has_node( "Hypoxia" ) 
+		&& pCell->phenotype.intracellular->get_boolean_node_value( "Hypoxia" ) 
+	)
+	{
+		int apoptosis_model_index = phenotype.death.find_death_model_index( "Apoptosis" );
+		pCell->start_death(apoptosis_model_index);
+		return;
+	}
 
-	 if ( pCell->phenotype.intracellular->has_node( "Cell_growth" ) )
-	 	do_proliferation( pCell, phenotype, dt );
+
+	if ( pCell->phenotype.intracellular->has_node( "Migration" ))
+		pCell->set_oxygen_motility(pCell->phenotype.intracellular->get_boolean_node_value("Migration"));
+		
+		// pCell->evolve_motility_coef( pCell->phenotype.intracellular->get_boolean_node_value( "Migration" ), dt );
+
+	 if ( pCell->phenotype.intracellular->has_node( "Cell_growth" ) && pCell->phenotype.intracellular->get_boolean_node_value("Cell_growth") ){
+	 	//do_proliferation( pCell, phenotype, dt );
+	 }
 
 	/*if ( pCell->phenotype.intracellular->has_node("CCA") 
 		&& pCell->phenotype.intracellular->get_boolean_node_value("CCA") )
@@ -360,51 +397,44 @@ void from_nodes_to_cell(Custom_cell* pCell, Phenotype& phenotype, double dt)
 	pCell->freezing( 0 );
 
 	if ( pCell->phenotype.intracellular->has_node( "Quiescence" ) 
-		&& pCell->phenotype.intracellular->get_boolean_node_value( "Quiescence" ) 
-	)
+		&& pCell->phenotype.intracellular->get_boolean_node_value( "Quiescence" )
+	){
 		pCell->freezing(1);
-
+		cell_defaults.functions.volume_update_function = static_volume_function;
+	}
+	
+	if ( pCell->phenotype.intracellular->has_node( "Quiescence" ) 
+		&& !pCell->phenotype.intracellular->get_boolean_node_value( "Quiescence" )
+	){
+		pCell->freezing(1);
+		cell_defaults.functions.volume_update_function = standard_volume_update_function;
+	}
 	if ( pCell->phenotype.intracellular->has_node( "Cell_freeze" ) ){
 		pCell->freezer(3 * pCell->phenotype.intracellular->get_boolean_node_value( "Cell_freeze" ));
 	}
 }
 
 
-/* Load ecm density values from given file */
-void load_ecm_file()
-{
-	// strip( &ecm_file );
-	std::cout << "Loading ECM file " << parameters.strings("init_ecm_filename") << std::endl;
-	std::ifstream infile;
-	infile.open( parameters.strings("init_ecm_filename") );
-	std::string array[4];
-	int i = 0;
-	std::string line;
-	//skip first line: title
-	getline( infile, line, '\n' ); 
-	while ( getline( infile, line, '\n') )
-	{
-		std::stringstream ss;
-		ss.str( line );
-		i = 0;
-		while ( getline( ss, array[i], ';') )
-		{
-			i++;
-		}
-		double x = std::stod(array[0]);
-		double y = std::stod(array[1]);
-		double z = std::stod(array[2]);
-		double amount = std::stod(array[3]);
-		std::vector<double> pos(3);
-		pos[0] = x;
-		pos[1] = y;
-		pos[2] = z;
-		int voxel_index = microenvironment.nearest_voxel_index( pos );
-		microenvironment.density_vector(voxel_index)[microenvironment.find_density_index("ecm")] += amount; 		
-	}
-	infile.close();
-}
 
+
+void build_ecm_shape() {
+ 
+ // Here we design a spherical shell of ecm
+ std::vector<double> center(3, 0);
+ double inner_radius = parameters.doubles("config_radius");
+ //double outer_radius = 150;
+ 
+ for (auto voxel : microenvironment.mesh.voxels) {
+ // Compute norm to center
+ double t_norm = norm(voxel.center);
+ // If norm is in [inner_radius, outer_radius], then we add it
+ if (t_norm > inner_radius ) {
+ microenvironment.density_vector(voxel.mesh_index)[microenvironment.find_density_index("ecm")] = 0.3; 
+ microenvironment.density_vector(voxel.mesh_index)[microenvironment.find_density_index("TGFbeta")] = 0.3;
+ }
+ }
+ 
+}
 
 std::vector<init_record> read_init_file(std::string filename, char delimiter, bool header) 
 { 
@@ -476,6 +506,10 @@ bool touch_ECM(Custom_cell* pCell)
 	return pCell->contact_ecm() > parameters.doubles("contact_cell_ECM_threshold"); 
 }
 
+bool touch_TGFbeta(Custom_cell* pCell){
+	return pCell->contact_TGFbeta() > parameters.doubles("ECM_TGFbeta_ratio");
+}
+
 void enough_to_node( Custom_cell* pCell, std::string nody, std::string field )
 {
 	if ( pCell->phenotype.intracellular->has_node(nody) )
@@ -488,5 +522,42 @@ void enough_to_node( Custom_cell* pCell, std::string nody, std::string field )
 
 void color_node(Custom_cell* pCell){
 	std::string node_name = parameters.strings("node_to_visualize");
-	pCell->custom_data[node_name] = pCell->phenotype.intracellular->get_boolean_node_value(node_name);
+	pCell->custom_data["node"] = pCell->phenotype.intracellular->get_boolean_node_value(node_name);
+}
+
+std::vector<std::vector<double>> create_cell_sphere_positions(double cell_radius, double sphere_radius)
+{
+	std::vector<std::vector<double>> cells;
+	int xc=0,yc=0,zc=0;
+	double x_spacing= cell_radius*sqrt(3);
+	double y_spacing= cell_radius*2;
+	double z_spacing= cell_radius*sqrt(3);
+	
+	std::vector<double> tempPoint(3,0.0);
+	// std::vector<double> cylinder_center(3,0.0);
+	
+	for(double z=-sphere_radius;z<sphere_radius;z+=z_spacing, zc++)
+	{
+		for(double x=-sphere_radius;x<sphere_radius;x+=x_spacing, xc++)
+		{
+			for(double y=-sphere_radius;y<sphere_radius;y+=y_spacing, yc++)
+			{
+				tempPoint[0]=x + (zc%2) * 0.5 * cell_radius;
+				tempPoint[1]=y + (xc%2) * cell_radius;
+				tempPoint[2]=z;
+				
+				if(sqrt(norm_squared(tempPoint))< sphere_radius)
+				{ cells.push_back(tempPoint); }
+			}
+			
+		}
+	}
+	return cells;
+	
+}
+
+bool wait_for_cell_growth(Cell* pCell, Phenotype& phenotype, double dt){
+
+	return !pCell->phenotype.intracellular->get_boolean_node_value("Cell_growth");
+
 }

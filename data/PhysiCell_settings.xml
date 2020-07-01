@@ -74,12 +74,12 @@
 
 <PhysiCell_settings version="devel-version">
 	<domain>
-		<x_min>-400</x_min>
-		<x_max>400</x_max>
-		<y_min>-400</y_min>
-		<y_max>400</y_max>
-		<z_min>-20</z_min>
-		<z_max>20</z_max>
+		<x_min>-200</x_min>
+		<x_max>200</x_max>
+		<y_min>-200</y_min>
+		<y_max>200</y_max>
+		<z_min>-200</z_min>
+		<z_max>200</z_max>
 		<dx>10</dx>
 		<dy>10</dy>
 		<dz>10</dz>
@@ -91,8 +91,8 @@
 		<time_units>min</time_units>
 		<space_units>micron</space_units>
 
-		<dt_diffusion units="min">0.02</dt_diffusion>
-		<dt_mechanics units="min">0.1</dt_mechanics>
+		<dt_diffusion units="min">0.1</dt_diffusion>
+		<dt_mechanics units="min">1</dt_mechanics>
 		<dt_phenotype units="min">2</dt_phenotype>	
 	</overall>
 	
@@ -137,6 +137,15 @@
 			</physical_parameter_set>
 		</variable>
 
+		<variable name="TGFbeta" units="dimensionless" ID="2">
+			<physical_parameter_set>
+				<diffusion_coefficient units="micron^2/min">1e-85</diffusion_coefficient>
+				<decay_rate units="1/min">0</decay_rate> 
+			<initial_condition units="mmHg">0</initial_condition>
+			<Dirichlet_boundary_condition units="mmHg" enabled="true">0</Dirichlet_boundary_condition>
+			</physical_parameter_set>
+		</variable>
+
 		<options>
 			<calculate_gradients>true</calculate_gradients>
 			<track_internalized_substrates_in_each_agent>true</track_internalized_substrates_in_each_agent>
@@ -156,30 +165,30 @@
 			<phenotype>
 				<cycle code="0" name="advanced_Ki67_cycle_model">  
 					<!-- using higher than normal significant digits to match divisions in default code -->
-					<transition_rates units="1/min"> 
+					<phase_transition_rates units="1/min"> 
 						<!-- - to + -->
-						<rate start_index="0" end_index="1" fixed_duration="true">0.016666667</rate>
+						<rate start_index="0" end_index="1" fixed_duration="true">1e30</rate>
 						<!-- + (pre-mitotic) to + (post-mitotic)  -->
 						<rate start_index="1" end_index="2" fixed_duration="true">1e30</rate>
 						<!-- + (post-mitotic) to - -->
 						<rate start_index="2" end_index="0" fixed_duration="true">0.006666667</rate>
-					</transition_rates>
+					</phase_transition_rates>
 				</cycle>
 				
 				<death>  
 					<model code="100" name="apoptosis"> 
 						<death_rate units="1/min">5.31667e-05</death_rate>
-						<transition_rates units="1/min">
+						<phase_transition_rates units="1/min">
 							<rate start_index="0" end_index="1" fixed_duration="true">1e30</rate>
-						</transition_rates>
+						</phase_transition_rates>
 					</model> 
 
 					<model code="101" name="necrosis">
 						<death_rate units="1/min">0.0</death_rate>
-						<transition_rates units="1/min">
+						<phase_transition_rates units="1/min">
 							<rate start_index="0" end_index="1" fixed_duration="false">9e9</rate>
 							<rate start_index="1" end_index="2" fixed_duration="true">1.15741e-5</rate>
-						</transition_rates>
+						</phase_transition_rates>
 					</model> 
 				</death>					
 
@@ -199,11 +208,18 @@
 					<cfg_filename>../data/boolean_network/CCM_mod4_1.cfg</cfg_filename>
 					<time_step units="min">12</time_step>
 					<initial_values>
-						<initial_value node="ECM_sensing" units="dimensionless">0.5</initial_value>
-						<initial_value node="Apoptosis" units="dimensionless">0.01</initial_value>
+						<initial_value node="GF" units="dimensionless">1</initial_value>
+						<initial_value node="Single" units="dimensionless">1</initial_value>
+						<initial_value node="GF_strains" units="dimensionless">1</initial_value>
+						<initial_value node="Wnt" units="dimensionless">1</initial_value>
 					</initial_values>
 					<mutations>
-						<mutation node="Hypoxia" units="dimensionless">1.0</mutation>
+						<mutation node="GF" units="dimensionless">1</mutation>
+						<mutation node="Glucose" units="dimensionless">1</mutation>
+						<mutation node="Oxy" units="dimensionless">1</mutation>
+						<mutation node="TGFbeta" units="dimensionless">1</mutation>
+						<mutation node="Wnt" units="dimensionless">1</mutation>
+						<mutation node="Canonic_metab" units="dimensionless">1</mutation>
 					</mutations>
 				</intracellular>			
 			</phenotype>
@@ -220,6 +236,7 @@
     	<motility_amplitude_max type="double" units=""> 0.5 </motility_amplitude_max>
     	<mode_motility type="int" units=""> 1 </mode_motility>
 		<contact_cell_ECM_threshold type="double" units=""> 0.5 </contact_cell_ECM_threshold>
+		<ECM_TGFbeta_ratio type="double" units="">0.5</ECM_TGFbeta_ratio>
 		<contact_cell_cell_threshold type="double" units=""> 0.9 </contact_cell_cell_threshold> <!-- minimal contact necessary to activate ECM pathway-->
 		<homotypic_adhesion_min type="double" units=""> 0.2 </homotypic_adhesion_min>
 		<homotypic_adhesion_max type="double" units=""> 0.8 </homotypic_adhesion_max>
@@ -227,22 +244,25 @@
 		<heterotypic_adhesion_max type="double" units=""> 0.8 </heterotypic_adhesion_max>
 		<cell_basement_membrane_repulsion type="double" units="">10.0</cell_basement_membrane_repulsion>
 		<cell_basement_membrane_adhesion type="double" units="">1.70577155519015</cell_basement_membrane_adhesion>
-		<ecm_adhesion_min type="int" units=""> 1 </ecm_adhesion_min>
-		<ecm_adhesion_max type="int" units=""> 2 </ecm_adhesion_max>
+		<ecm_adhesion_min type="double" units=""> 1 </ecm_adhesion_min>
+		<ecm_adhesion_max type="double" units=""> 2 </ecm_adhesion_max>
 		<cell_ecm_repulsion type="double" units=""> 10.0 </cell_ecm_repulsion>
-		<ecm_degradation type="int" units=""> 5 </ecm_degradation>
-		<max_interaction_factor type="double" units=""> 1.3 </max_interaction_factor>
+		<ecm_degradation type="double" units=""> 0.5 </ecm_degradation>
 		<cell_radius type="double" units=""> 8.413 </cell_radius>
+		<migration_bias type="double" units="">0.9</migration_bias>
+		<max_interaction_factor type="double" units=""> 1.3 </max_interaction_factor>
+		<migration_speed type="double" units="">0.5</migration_speed>
 		<nucleus_radius type="double" units=""> 5.052 </nucleus_radius>
 		<fluid_fraction type="double" units=""> 0.75 </fluid_fraction>
-		<solid_nuclear type="int" units=""> 135 </solid_nuclear>
-		<solid_cytoplasmic type="int" units=""> 486 </solid_cytoplasmic>
+		<solid_nuclear type="double" units=""> 135 </solid_nuclear>
+		<solid_cytoplasmic type="double" units=""> 486 </solid_cytoplasmic>
 		<protein_threshold type="int" units=""> 1 </protein_threshold>
 		<init_cells_filename type="string" units="">../data/init.txt</init_cells_filename>
 		<init_ecm_filename type="string" units="">../data/ecm.txt</init_ecm_filename>
 		<tgfb_threshold type="double" units="dimensionless">1.</tgfb_threshold>
 		<membrane_shape type="string" units="">sphere</membrane_shape>	
 		<membrane_length type="double" units=""> 10 </membrane_length>
+		<config_radius type="double" units="">100</config_radius>
 		<node_to_visualize type="string" units="">Cell_cell</node_to_visualize> <!-- insert the name of the node you want to visualize in paraview-->
 		<color_function type="int" units="">0</color_function> <!-- 0 for ECM based color, 1 for pMotility based color, 2 for node based color-->
 	</user_parameters>

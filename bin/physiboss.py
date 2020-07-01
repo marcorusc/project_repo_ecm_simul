@@ -14,6 +14,7 @@ import numpy as np
 import csv
 import itertools
 import copy
+import scipy
 
 # from debug import debug_view
 
@@ -32,13 +33,37 @@ class PhysiBoSSTab(object):
 #        self.fig = plt.figure(figsize=(6, 6))
         # self.fig = plt.figure(figsize=(7, 7))
 
+        config_file = "data/PhysiCell_settings.xml"
+    
+        self.cell_lines = {}
+        self.cell_lines_by_name = {}
+        self.cell_lines_array = ["All"]
+        
+        if os.path.isfile(config_file):
+            
+            try:
+                tree = ET.parse(config_file)
+            except:
+                print("Cannot parse",config_file, "- check it's XML syntax.")
+                return
+
+            root = tree.getroot()
+            uep = root.find('.//cell_definitions')  # find unique entry point (uep) 
+            for child in uep.findall('cell_definition'):
+                self.cell_lines[int(child.attrib["ID"])] = child.attrib["name"]
+                self.cell_lines_by_name[child.attrib["name"]] = int(child.attrib["ID"])
+                self.cell_lines_array.append(child.attrib["name"])
+                    # print(child.attrib['name'])
+        else:
+            print("config.xml does not exist")
+
         max_frames = 0
-        self.svg_plot = interactive(self.create_area_chart, frame=(0, max_frames), total=False, percentage=(0.0, 10.0), continuous_update=False)
+        self.svg_plot = interactive(self.create_area_chart, frame=(0, max_frames), percentage=(0.0, 100.0), total=False, cell_line=self.cell_lines_array, continuous_update=False)
         plot_size = '500px'  # small: controls the size of the tab height, not the plot (rf. figsize for that)
         plot_size = '700px'  # medium
         plot_size = '750px'  # medium
         self.svg_plot.layout.width = '1000px'
-        self.svg_plot.layout.height = '1000px'
+        self.svg_plot.layout.height = '700px'
         self.use_defaults = True
         
         self.axes_min = 0.0
@@ -123,7 +148,8 @@ class PhysiBoSSTab(object):
 
 
 
-    def create_dict(self, number_of_files, folder):
+
+    def create_dict(self, number_of_files, folder, cells_indexes):
         "create a dictionary with the states file in the folder 'output', half of the dict is used to calculate the percentage of the node, the other half is for the states"
         # if not os.path.isfile("%sstates_00000000.csv" % folder):
         #     return
@@ -134,14 +160,12 @@ class PhysiBoSSTab(object):
                 nodes_dict = {}
                 states_dict = {}
                 with open('%s//states_%08u.csv' %(folder,i), newline='') as csvfile:
-                    has_header = csv.Sniffer().has_header(csvfile.read(1024))
-                    csvfile.seek(0)
                     states_reader = csv.reader(csvfile, delimiter=',')
-                    if has_header:
-                        next(states_reader)
+                
                     for row in states_reader:
-                        states_dict[row[0]] = row[1]
-                        nodes_dict[row[0]] = row[1].replace("--", "").split()
+                        if row[0] != 'ID' and (cells_indexes is None or int(row[0]) in cells_indexes):
+                            states_dict[row[0]] = row[1]
+                            nodes_dict[row[0]] = row[1].replace("--", "").split()
                 self.file_dict["node_step{0}".format(i)] = nodes_dict
                 self.file_dict["state_step{0}".format(i)] = states_dict
 
@@ -168,10 +192,38 @@ class PhysiBoSSTab(object):
             self.count_dict = self.filter_states(max_cell, temp_dict, percentage)
             # return self.count_dict
 
-    def create_area_chart(self, frame=None, total=False, percentage=(0.0, 10.0)):
+    def create_area_chart(self, frame=None, total=False, percentage=(0.0, 100.0), cell_line="All"):
         "plot an area chart with the evolution of the network states during the simulation"
 
-        self.create_dict(frame, self.output_dir)
+        cells_indexes = None
+        if cell_line != "All":
+            cells_indexes = set()
+            for i in range(0, frame):
+                fname = "output%08d_cells_physicell.mat" % i
+                full_fname = os.path.join(self.output_dir, fname)
+                
+                if not os.path.isfile(full_fname):
+                    print("Once output files are generated, click the slider.")  # No:  output00000000_microenvironment0.mat
+                    return
+
+                info_dict = {}
+                scipy.io.loadmat(full_fname, info_dict)
+
+                M = info_dict['cells'][[0,5], :].astype(int)
+                    
+                
+                
+                cell_line_index = self.cell_lines_by_name[cell_line]
+                indexes = np.where(M[1, :] == cell_line_index)
+                cells_indexes = cells_indexes.union(set(M[0, indexes][0]))
+
+            cells_indexes = list(cells_indexes)
+            
+            if len(cells_indexes) == 0:
+                print("There are no %s cells." % cell_line)
+                return
+                        
+        self.create_dict(frame, self.output_dir, cells_indexes)
         self.state_counter(frame, percentage)
         
         state_list = []
@@ -183,7 +235,7 @@ class PhysiBoSSTab(object):
                 for state in l:
                     all_state.append(state)
         all_state = list(dict.fromkeys(all_state))
-
+        
         for state_count in self.count_dict:
             b = []
             for states in all_state:
@@ -200,14 +252,16 @@ class PhysiBoSSTab(object):
         else:
             percent = a
         x = np.arange(len(self.count_dict))
-        self.fig = plt.figure(figsize=(10,7), dpi=200)
+        self.fig = plt.figure(figsize=(10,5), dpi=200)
         ax = self.fig.add_subplot(111)
         ax.stackplot(x, percent, labels=all_state)
-        handles, labels = ax.get_legend_handles_labels()
-        ax.legend(handles[::-1], labels[::-1], loc='upper center', bbox_to_anchor=(0.5, -0.05),shadow=True, ncol=2)
+        ax.legend(labels=all_state, loc='upper center', bbox_to_anchor=(0.5, -0.05),shadow=True, ncol=2)
         # ax.legend(labels=all_state, bbox_to_anchor=(1.05, 1), loc='lower center', borderaxespad=0.)
         ax.set_title('100 % stacked area chart')
-        ax.set_ylabel('Percent (%)')
+        if not total:
+            ax.set_ylabel('Percent (%)')
+        else:
+            ax.set_ylabel("Total")
         ax.margins(0, 0) # Set margins to avoid "whitespace"
 
         # plt.show()
@@ -257,5 +311,6 @@ class PhysiBoSSTab(object):
             all_counts[i]["others"] = b
 
         return all_counts
-    
+
+
 

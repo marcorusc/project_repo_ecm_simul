@@ -5,7 +5,6 @@ Custom_cell::Custom_cell() {
     pintegrin = 0.5;
 	pmotility = 0.5;
 	padhesion = 0.5;
-	mmped = 0;
 	ecmrad = sqrt(3.0) * get_microenvironment()->mesh.dx / 2.0;
 	motility.resize(3, 0.0);
 	ecm_contact = 0;
@@ -76,31 +75,18 @@ void Custom_cell::add_ecm_interaction( int index_ecm, int index_voxel )
 	}
 }
 
-/* Degrade the surrounding ECM 
- *
- * param dt time step */
-void Custom_cell::degrade_ecm( double dt )
-{
-	if ( is_out_of_domain )
-		return;
-	if ( !mmped ) 
-		return;
-
-	// Check if there is ECM material in given voxel
+/** \brief (De)-Activate ECM degradation by the cell */
+void Custom_cell::set_mmp( int activate )
+{ 
 	int ecm_index = get_microenvironment()->find_density_index("ecm");
-	int current_index = get_current_mechanics_voxel_index();
-	#pragma omp critical
-	{
-		double dens = get_microenvironment()->nearest_density_vector(current_index)[ecm_index];
-		if ( dens > EPSILON )
-		{
-			dens -= (PhysiCell::parameters.ints("ecm_degradation") * pintegrin) * dt; // to change by a rate
-			dens = dens > 0 ? dens : 0;
-			get_microenvironment()->nearest_density_vector(current_index)[ecm_index] = dens;
-		}
-	}
-}
 
+	if (activate)
+		phenotype.secretion.uptake_rates[ecm_index] = PhysiCell::parameters.doubles("ecm_degradation") * pintegrin;
+		
+	else
+		phenotype.secretion.uptake_rates[ecm_index] = 0;
+	
+}
 
 /* Return value of adhesion strength with ECM according to integrin level */
 double Custom_cell::integrinStrength()
@@ -144,79 +130,21 @@ double Custom_cell::get_adhesion()
 		return 1;
 }
 
-
-/* Motility with random direction, and magnitude of motion given by customed coefficient */
-void Custom_cell::set_3D_random_motility( double dt )
-{
-    double probability = UniformRandom();
-	
-    if ( probability < dt / PhysiCell::parameters.doubles("persistence") )
-    {
-        std::vector<double> tmp;
-        double temp_angle = 2 * M_PI * PhysiCell::UniformRandom();
-        double temp_phi = M_PI * PhysiCell::UniformRandom();
-        tmp[0] = cos( temp_angle ) * sin( temp_phi );
-        tmp[1] = sin( temp_angle ) * sin( temp_phi );
-        tmp[2] = cos( temp_phi );
-        motility = get_motility_amplitude(pmotility) * tmp;
-    }
-}
-
-/*
-* Motility in the polarity axis migration + little noise
-* Persistence in the update polarization
-* */
-void Custom_cell::set_3D_polarized_motility( double dt )
-{
-    // mot = (1-p) * r + p * pol
-    double temp_angle = 2 * M_PI * PhysiCell::UniformRandom();
-    double temp_phi = M_PI * PhysiCell::UniformRandom();
-    motility[0] = cos( temp_angle ) * sin( temp_phi );
-    motility[1] = sin( temp_angle ) * sin( temp_phi );
-    motility[2] = cos( temp_phi );
-    motility *= (1 - PhysiCell::parameters.doubles("polarity_coefficient"));
-    std::vector<double> polarization;
-    polarization.resize(3, 0.0);
-    polarization[0]= state.orientation[0];
-    polarization[1]= state.orientation[1];
-    polarization[2]= state.orientation[2];
-    std::vector<double> pol_dir;
-    pol_dir.resize(3, 0.0);
-    double pol_norm = norm(polarization); //normal to polaization used to calculate the vestor direction for polarization
-    pol_dir[0] = polarization[0]/pol_norm;
-    pol_dir[1] = polarization[1]/pol_norm;
-    pol_dir[2] = polarization[2]/pol_norm;
-    motility += PhysiCell::parameters.doubles("polarity_coefficient") * pol_dir;
-    // Normalized it
-    normalize(motility);
-    // mot = mot_coef * mot_dir
-    motility *= get_motility_amplitude(pmotility);
-}
-
-/**
- * Calculate motility forces according to mode:
- * 0, random; 1, along polarity axis; other: nothing
- * */
-void Custom_cell::set_motility( double dt )
-{
-    // Cell frozen, cannot actively move
-    if ( freezed > 2 )
-        return;
-	
-    switch( PhysiCell::parameters.ints("mode_motility") )
-    {
-        case 0:
-            set_3D_random_motility(dt);
-            break;
-        case 1:
-            set_3D_polarized_motility(dt);
-            break;
-        default:
-            return;
-            break;
-    }
-    velocity += motility;
-}
+void Custom_cell::set_oxygen_motility(bool active)
+{	
+	phenotype.motility.is_motile = active;
+		
+	if (active){
+		phenotype.motility.chemotaxis_index = get_microenvironment()->find_density_index( "oxygen");
+		// bias direction is gradient for the indicated substrate 
+		phenotype.motility.migration_bias_direction = nearest_gradient(phenotype.motility.chemotaxis_index);
+		phenotype.motility.migration_bias = PhysiCell::parameters.doubles("migration_bias");
+		phenotype.motility.chemotaxis_direction = 1.0;
+		phenotype.motility.migration_speed = PhysiCell::parameters.doubles("migration_speed");
+		// move up or down gradient based on this direction 
+		phenotype.motility.migration_bias_direction *= phenotype.motility.chemotaxis_direction * get_motility_amplitude(pmotility); 
+	}
+};
 
 /* Update the value of freezing of the cell with bitwise operation
 * Do a bitwise-or comparison on freezed and input parameter:
@@ -232,15 +160,6 @@ Cell* Custom_cell::create_custom_cell()
 	Custom_cell* pNew; 
 	pNew = new Custom_cell;		
 	return static_cast<Cell*>(pNew); 
-}
-
-// Here I'm hoping that the argument used, time_since_last_mechanics, has the same value
-// as mechanics_dt_. I should probably check later...
-void Custom_cell::check_passive(Cell* cell, Phenotype& phenotype, double dt) {
-	Custom_cell* t_cell = static_cast<Custom_cell*>(cell);
-	if (!(t_cell->passive())) {
-		t_cell->degrade_ecm(dt);
-	}
 }
 
 void Custom_cell::custom_update_velocity( Cell* pCell, Phenotype& phenotype, double dt)
@@ -282,9 +201,17 @@ void Custom_cell::custom_update_velocity( Cell* pCell, Phenotype& phenotype, dou
 		}
 	}
 	
-	// Add active motility term
-	if ( !(pCustomCell->passive()) )
-		pCustomCell->set_motility(dt);
+	if((pCustomCell->ecm_contact) > (pCustomCell->cell_contact * 20)){
+		pCustomCell->padhesion = 0;
+	}
+
+	if (pCustomCell->freezed > 2){
+		return ;
+	}
+
+	
+		pCell->update_motility_vector(dt);
+		pCell->velocity += phenotype.motility.motility_vector;
 	
 	return; 
 }
@@ -340,10 +267,10 @@ double Custom_cell::custom_adhesion_function(Cell* pCell, Cell* otherCell, doubl
 }
 
 bool Custom_cell::wait_for_nucleus_growth (Cell* cell, Phenotype& phenotype, double dt) {
-	return relative_diff( 
+	return (relative_diff( 
 		phenotype.volume.total, 
 		pow(PhysiCell::parameters.doubles("cell_radius"), 3.0) * 3.14159 * (4.0/3.0) * 2.0 
-	) > UniformRandom() * 0.1;
+	) > UniformRandom() * 0.1);
 }
 
 bool Custom_cell::waiting_to_remove(Cell* cell, Phenotype& phenotype, double dt) {
@@ -486,4 +413,12 @@ bool Custom_cell::necrotic_oxygen()
 	if ( ox >= 0 )	
 		return ( UniformRandom() * 5 < (this->parameters.o2_necrosis_threshold - ox) );
    return false;	
+}
+
+double Custom_cell::contact_TGFbeta(){
+	int ecm_index = BioFVM::microenvironment.find_density_index( "ecm" );
+	int TGFbeta_index = BioFVM::microenvironment.find_density_index( "TGFbeta" );
+	double ecm_amount = this->nearest_density_vector()[ecm_index];
+	double TGFbeta_amount = this->nearest_density_vector()[TGFbeta_index];
+	return ecm_amount/TGFbeta_amount;
 }

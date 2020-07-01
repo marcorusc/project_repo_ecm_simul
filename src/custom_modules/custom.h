@@ -96,7 +96,7 @@ void setup_microenvironment( void );
 std::vector<std::string> my_coloring_function( Cell* );
 std::vector<std::string> ECM_coloring_function( Cell* );
 std::vector<std::string> pMotility_coloring_function( Cell* );
-std::vector<std::string> migration_coloring_function( Cell* );
+std::vector<std::string> node_coloring_function( Cell* );
 
 // custom cell phenotype functions could go here 
 void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, double dt );
@@ -104,13 +104,17 @@ void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, dou
 void set_input_nodes(Custom_cell* pCell); 
 void from_nodes_to_cell(Custom_cell* pCell, Phenotype& phenotype, double dt);
 std::vector<init_record> read_init_file(std::string filename, char delimiter, bool header);
-void load_ecm_file();
+void build_ecm_shape();
+std::vector<std::vector<double>> create_cell_sphere_positions(double cell_radius, double sphere_radius);
 /** \brief Go to proliferative phase if proliferation ON and in G0 phase */
 void do_proliferation(Cell* pCell, Phenotype& phenotype, double dt);
+static bool wait_for_cell_growth(Cell* pCell, Phenotype& phenotype, double dt);
 
 inline float sphere_volume_from_radius(float radius) {return 4.0/3.0 * PhysiCell_constants::pi * std::pow(radius, 3);}
 
 bool touch_ECM(Custom_cell* pCell);
+bool touch_TGFbeta(Custom_cell* pCell);
 void enough_to_node( Custom_cell* pCell, std::string nody, std::string field );
 void color_node(Custom_cell* pCell);
+inline void static_volume_function( Cell* pCell, Phenotype& phenotype, double dt ){return ;}; // do not update volume
 #endif
