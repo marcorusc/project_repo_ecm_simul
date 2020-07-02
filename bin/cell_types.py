@@ -153,6 +153,8 @@ class CellTypesTab(object):
         box10 = Box(children=row, layout=box_layout)
         intracellular_initial_values = Button(description='initial_values', disabled=True, layout={'width':'30%'})
         intracellular_initial_values.style.button_color = '#ffde6b'
+        intracellular_mutations = Button(description='mutations', disabled=True, layout={'width':'30%'})
+        intracellular_mutations.style.button_color = '#ffde6b'
         name_btn = Button(description='GF', disabled=True, layout=name_button_layout)
         name_btn.style.button_color = 'tan'
         self.float9 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
@@ -161,92 +163,26 @@ class CellTypesTab(object):
         time_step = [name_btn, self.float9, units_btn, ]
         box11 = Box(children=time_step, layout=box_layout)
 
-        name_btn = Button(description='Single', disabled=True, layout=name_button_layout)
+        name_btn = Button(description='AKT1', disabled=True, layout=name_button_layout)
         name_btn.style.button_color = 'lightgreen'
-        self.float10 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
+        self.float10 = FloatText(value='0', step='0.01', style=style, layout=widget_layout)
         units_btn = Button(description='dimensionless', disabled=True, layout=name_button_layout)
         units_btn.style.button_color = 'lightgreen'
         time_step = [name_btn, self.float10, units_btn, ]
         box12 = Box(children=time_step, layout=box_layout)
 
-        name_btn = Button(description='GF_strains', disabled=True, layout=name_button_layout)
-        name_btn.style.button_color = 'tan'
-        self.float11 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
-        units_btn = Button(description='dimensionless', disabled=True, layout=name_button_layout)
-        units_btn.style.button_color = 'tan'
-        time_step = [name_btn, self.float11, units_btn, ]
-        box13 = Box(children=time_step, layout=box_layout)
-
-        name_btn = Button(description='Wnt', disabled=True, layout=name_button_layout)
-        name_btn.style.button_color = 'lightgreen'
-        self.float12 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
-        units_btn = Button(description='dimensionless', disabled=True, layout=name_button_layout)
-        units_btn.style.button_color = 'lightgreen'
-        time_step = [name_btn, self.float12, units_btn, ]
-        box14 = Box(children=time_step, layout=box_layout)
-
-        intracellular_mutations = Button(description='mutations', disabled=True, layout={'width':'30%'})
-        intracellular_mutations.style.button_color = '#ffde6b'
-        name_btn = Button(description='GF', disabled=True, layout=name_button_layout)
-        name_btn.style.button_color = 'tan'
-        self.float13 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
-        units_btn = Button(description='dimensionless', disabled=True, layout=name_button_layout)
-        units_btn.style.button_color = 'tan'
-        time_step = [name_btn, self.float13, units_btn, ]
-        box15 = Box(children=time_step, layout=box_layout)
-
-        name_btn = Button(description='Glucose', disabled=True, layout=name_button_layout)
-        name_btn.style.button_color = 'lightgreen'
-        self.float14 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
-        units_btn = Button(description='dimensionless', disabled=True, layout=name_button_layout)
-        units_btn.style.button_color = 'lightgreen'
-        time_step = [name_btn, self.float14, units_btn, ]
-        box16 = Box(children=time_step, layout=box_layout)
-
-        name_btn = Button(description='Oxy', disabled=True, layout=name_button_layout)
-        name_btn.style.button_color = 'tan'
-        self.float15 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
-        units_btn = Button(description='dimensionless', disabled=True, layout=name_button_layout)
-        units_btn.style.button_color = 'tan'
-        time_step = [name_btn, self.float15, units_btn, ]
-        box17 = Box(children=time_step, layout=box_layout)
-
-        name_btn = Button(description='TGFbeta', disabled=True, layout=name_button_layout)
-        name_btn.style.button_color = 'lightgreen'
-        self.float16 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
-        units_btn = Button(description='dimensionless', disabled=True, layout=name_button_layout)
-        units_btn.style.button_color = 'lightgreen'
-        time_step = [name_btn, self.float16, units_btn, ]
-        box18 = Box(children=time_step, layout=box_layout)
-
-        name_btn = Button(description='Wnt', disabled=True, layout=name_button_layout)
-        name_btn.style.button_color = 'tan'
-        self.float17 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
-        units_btn = Button(description='dimensionless', disabled=True, layout=name_button_layout)
-        units_btn.style.button_color = 'tan'
-        time_step = [name_btn, self.float17, units_btn, ]
-        box19 = Box(children=time_step, layout=box_layout)
-
-        name_btn = Button(description='Canonic_metab', disabled=True, layout=name_button_layout)
-        name_btn.style.button_color = 'lightgreen'
-        self.float18 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
-        units_btn = Button(description='dimensionless', disabled=True, layout=name_button_layout)
-        units_btn.style.button_color = 'lightgreen'
-        time_step = [name_btn, self.float18, units_btn, ]
-        box20 = Box(children=time_step, layout=box_layout)
-
 
 #      ================== <custom_data>, if present ==================
 
         self.cell_def_vbox0 = VBox([
-          div_row1, box0, box1, box2, div_row2, death_model1,box3, death_model2,box4, div_row3, box5,box6,box7,self.bool0,self.bool1,div_row4, box8,box9,box10,intracellular_initial_values,box11, box12, box13, box14, intracellular_mutations,box15, box16, box17, box18, box19, box20,         ])
+          div_row1, box0, box1, box2, div_row2, death_model1,box3, death_model2,box4, div_row3, box5,box6,box7,self.bool0,self.bool1,div_row4, box8,box9,box10,intracellular_initial_values,intracellular_mutations,box11, box12,         ])
         # ------------------------------------------
         self.cell_def_vboxes.append(self.cell_def_vbox0)
 
 
 
         row = [time_step, self.float8, units_btn]
-        box20 = Box(children=time_step, layout=box_layout)
+        box12 = Box(children=time_step, layout=box_layout)
 
 
         self.tab = VBox([
@@ -307,16 +243,8 @@ self.cell_def_vbox0,         ])
         self.bnd_filenames[0].value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//bnd_filename').text)
         self.cfg_filenames[0].value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//cfg_filename').text)
         self.float8.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//time_step').text)
-        self.float9.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//initial_values//initial_value[1]').text)
-        self.float10.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//initial_values//initial_value[2]').text)
-        self.float11.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//initial_values//initial_value[3]').text)
-        self.float12.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//initial_values//initial_value[4]').text)
-        self.float13.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[1]').text)
-        self.float14.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[2]').text)
-        self.float15.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[3]').text)
-        self.float16.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[4]').text)
-        self.float17.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[5]').text)
-        self.float18.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[6]').text)
+        self.float9.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[1]').text)
+        self.float10.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[2]').text)
 
 
     # Read values from the GUI widgets to enable editing XML
@@ -341,13 +269,5 @@ self.cell_def_vbox0,         ])
         uep.find('.//cell_definition[1]//phenotype//intracellular//bnd_filename').text = str(self.bnd_filenames[0].value)
         uep.find('.//cell_definition[1]//phenotype//intracellular//cfg_filename').text = str(self.cfg_filenames[0].value)
         uep.find('.//cell_definition[1]//phenotype//intracellular//time_step').text = str(self.float8.value)
-        uep.find('.//cell_definition[1]//phenotype//intracellular//initial_values//initial_value[1]').text = str(self.float9.value)
-        uep.find('.//cell_definition[1]//phenotype//intracellular//initial_values//initial_value[2]').text = str(self.float10.value)
-        uep.find('.//cell_definition[1]//phenotype//intracellular//initial_values//initial_value[3]').text = str(self.float11.value)
-        uep.find('.//cell_definition[1]//phenotype//intracellular//initial_values//initial_value[4]').text = str(self.float12.value)
-        uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[1]').text = str(self.float13.value)
-        uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[2]').text = str(self.float14.value)
-        uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[3]').text = str(self.float15.value)
-        uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[4]').text = str(self.float16.value)
-        uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[5]').text = str(self.float17.value)
-        uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[6]').text = str(self.float18.value)
+        uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[1]').text = str(self.float9.value)
+        uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[2]').text = str(self.float10.value)
