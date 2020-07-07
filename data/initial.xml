@@ -11,9 +11,9 @@
 		</software>
 		<citation />
 		<current_time units="min">0.000000</current_time>
-		<current_runtime units="sec">1.867997</current_runtime>
-		<created>2020-07-01T10:36:39Z</created>
-		<last_modified>2020-07-01T10:36:39Z</last_modified>
+		<current_runtime units="sec">1.790352</current_runtime>
+		<created>2020-07-07T09:11:42Z</created>
+		<last_modified>2020-07-07T09:11:42Z</last_modified>
 	</metadata>
 	<microenvironment>
 		<domain name="microenvironment">
@@ -86,7 +86,8 @@
 							<label index="28" size="1">pintegrin</label>
 							<label index="29" size="1">padhesion</label>
 							<label index="30" size="1">cell_contact</label>
-							<label index="31" size="1">node</label>
+							<label index="31" size="1">TGFbeta</label>
+							<label index="32" size="1">node</label>
 						</labels>
 						<filename>initial_cells_physicell.mat</filename>
 					</simplified_data>

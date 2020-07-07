@@ -177,7 +177,7 @@
 				
 				<death>  
 					<model code="100" name="apoptosis"> 
-						<death_rate units="1/min">5.31667e-05</death_rate>
+						<death_rate units="1/min">0.0</death_rate>
 						<phase_transition_rates units="1/min">
 							<rate start_index="0" end_index="1" fixed_duration="true">1e30</rate>
 						</phase_transition_rates>
@@ -211,7 +211,7 @@
 					</initial_values>
 					<mutations>
 						<mutation node="GF" units="dimensionless">1</mutation>
-						<mutation node="AKT1" units="dimensionless">0</mutation>
+						<mutation node="Glucose" units="dimensionless">1</mutation>
 					</mutations>
 				</intracellular>			
 			</phenotype>
