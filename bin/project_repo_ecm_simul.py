@@ -19,7 +19,7 @@ except:
 from substrates import SubstrateTab
 from animate_tab import AnimateTab
 from physiboss import PhysiBoSSTab
-from populations import PopulationsTab
+#from populations import PopulationsTab
 from pathlib import Path
 import platform
 import subprocess
