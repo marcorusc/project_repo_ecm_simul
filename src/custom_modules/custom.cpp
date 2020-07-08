@@ -222,14 +222,28 @@ std::vector<std::string> ECM_coloring_function( Cell* pCell )
 
 }
 
-std::vector<std::string> pMotility_coloring_function( Cell* pCell )
+std::vector<std::string> phase_coloring_function( Cell* pCell )
 {
 	std::vector< std::string > output( 4 , "rgb(0,0,0)" );
-	char szTempString [128];
-	Custom_cell* pCustomCell = static_cast<Custom_cell*>(pCell);
-	int color = (int) round(pCustomCell->pmotility * 255);
-	sprintf( szTempString , "rgb(%u,0,%u)", color, 255-color );
-	output[0].assign( szTempString );
+
+	if ( pCell->phenotype.cycle.current_phase().code == PhysiCell_constants::Ki67_negative )
+	{
+		output[0] = "rgb(0,255,0)"; //green
+		output[2] = "rgb(0,125,0)";
+		
+	}
+	if ( pCell->phenotype.cycle.current_phase().code == PhysiCell_constants::Ki67_positive_premitotic )
+	{
+		output[0] = "rgb(255,0,0)"; //red
+		output[2] = "rgb(125,0,0)";
+		
+	}
+	if ( pCell->phenotype.cycle.current_phase().code == PhysiCell_constants::Ki67_positive_postmitotic )
+	{
+		output[0] = "rgb(255,255,0)"; //yellow
+		output[2] = "rgb(125,125,0)";
+		
+	}
 	return output;
 }
 
@@ -259,7 +273,7 @@ std::vector<std::string> my_coloring_function( Cell* pCell )
 	 if (color_number == 0)
 	 	return ECM_coloring_function(pCell);
 	 if (color_number == 1)
-	 	return pMotility_coloring_function(pCell);
+	 	return phase_coloring_function(pCell);
 	 else 
 	 	return node_coloring_function( pCell );
 }
