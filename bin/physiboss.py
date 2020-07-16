@@ -58,7 +58,7 @@ class PhysiBoSSTab(object):
             print("config.xml does not exist")
 
         max_frames = 0
-        self.svg_plot = interactive(self.create_area_chart, frame=(0, max_frames), percentage=(0.0, 100.0), total=False, cell_line=self.cell_lines_array, continuous_update=False)
+        self.svg_plot = interactive(self.create_area_chart, frame=(0, max_frames), percentage=(0.0, 10.0), total=False, cell_line=self.cell_lines_array, continuous_update=False)
         plot_size = '500px'  # small: controls the size of the tab height, not the plot (rf. figsize for that)
         plot_size = '700px'  # medium
         plot_size = '750px'  # medium
