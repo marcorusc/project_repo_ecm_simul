@@ -199,6 +199,9 @@ void setup_tissue( void )
 
 		pC->custom_data["ecm_contact"] = pC->ecm_contact;
 		pC->custom_data["TGFbeta"] = pC->TGFbeta_contact;
+
+		int TGFbeta_index = microenvironment.find_density_index("TGFbeta");
+		pC->phenotype.secretion.uptake_rates[TGFbeta_index] = PhysiCell::parameters.doubles("TGFbeta_degradation");
 		color_node(pC);
 	}
 	std::cout << "tissue created" << std::endl;
@@ -250,6 +253,7 @@ std::vector<std::string> phase_coloring_function( Cell* pCell )
 std::vector<std::string> node_coloring_function( Cell* pCell )
 {
 	std::vector< std::string > output( 4 , "rgb(0,0,0)" );
+	//std::cout << pCell->phenotype.intracellular->get_boolean_node_value( parameters.strings("node_to_visualize"));
 	if ( !pCell->phenotype.intracellular->get_boolean_node_value( parameters.strings("node_to_visualize") ) ) //node off
 	{
 		output[0] = "rgb(0,0,255)"; //blue
@@ -344,7 +348,7 @@ void set_input_nodes(Custom_cell* pCell)
 
 void from_nodes_to_cell(Custom_cell* pCell, Phenotype& phenotype, double dt)
 {
-		
+	
 	if ( pCell->phenotype.intracellular->has_node( "Apoptosis" ) 
 		&& pCell->phenotype.intracellular->get_boolean_node_value( "Apoptosis" ) 
 	)
@@ -375,11 +379,21 @@ void from_nodes_to_cell(Custom_cell* pCell, Phenotype& phenotype, double dt)
 	}
 
 
-	if ( pCell->phenotype.intracellular->has_node( "Migration" ))
+	if ( pCell->phenotype.intracellular->has_node( "Migration" )){
 		pCell->set_oxygen_motility(pCell->phenotype.intracellular->get_boolean_node_value("Migration"));
 		
-		// pCell->evolve_motility_coef( pCell->phenotype.intracellular->get_boolean_node_value( "Migration" ), dt );
+		pCell->evolve_motility_coef( pCell->phenotype.intracellular->get_boolean_node_value( "Migration" ), dt );
 
+				
+	if ( pCell->phenotype.intracellular->has_node( "Single" ) 
+		&& pCell->phenotype.intracellular->get_boolean_node_value( "Single" ) 
+	)
+	{
+		pCell->padhesion = 0;
+		pCell->phenotype.motility.migration_bias = parameters.doubles("Single_cell_bias");
+	}
+
+	}
 	 if ( pCell->phenotype.intracellular->has_node( "Cell_growth" ) && pCell->phenotype.intracellular->get_boolean_node_value("Cell_growth") ){
 	 	//do_proliferation( pCell, phenotype, dt );
 	 }
@@ -403,12 +417,12 @@ void from_nodes_to_cell(Custom_cell* pCell, Phenotype& phenotype, double dt)
 	if ( pCell->phenotype.intracellular->has_node("Matrix_modif") )
 	 	pCell->set_mmp( pCell->phenotype.intracellular->get_boolean_node_value("Matrix_modif") );
 
-
+/*
 	if ( pCell->phenotype.intracellular->has_node("EMTreg") )
 	{
 		pCell->set_mmp( pCell->phenotype.intracellular->get_boolean_node_value("EMTreg") );
 	}
-
+*/
 	pCell->freezing( 0 );
 
 	if ( pCell->phenotype.intracellular->has_node( "Quiescence" ) 
@@ -430,12 +444,15 @@ void build_ecm_shape() {
  std::vector<double> center(3, 0);
  double inner_radius = parameters.doubles("config_radius");
  //double outer_radius = 150;
- 
+ double tgfb_radius = parameters.doubles("tgfbeta_radius");
  for (auto voxel : microenvironment.mesh.voxels) {
  // Compute norm to center
  double t_norm = norm(voxel.center);
  // If norm is in [inner_radius, outer_radius], then we add it
- if (t_norm > inner_radius ) {
+ if(t_norm > tgfb_radius && t_norm < inner_radius){
+ microenvironment.density_vector(voxel.mesh_index)[microenvironment.find_density_index("TGFbeta")] = 0.3;
+ }
+ if (t_norm >= inner_radius ) {
  microenvironment.density_vector(voxel.mesh_index)[microenvironment.find_density_index("ecm")] = 0.3; 
  microenvironment.density_vector(voxel.mesh_index)[microenvironment.find_density_index("TGFbeta")] = 0.3;
  }
@@ -514,8 +531,8 @@ bool touch_ECM(Custom_cell* pCell)
 }
 
 bool touch_TGFbeta(Custom_cell* pCell){
-	double TGFbeta_ratio = pCell->ecm_contact / pCell->TGFbeta_contact;
-	return TGFbeta_ratio > parameters.doubles("ECM_TGFbeta_ratio");
+	
+	return pCell->contact_TGFB() > parameters.doubles("contact_TGFB_treshold");
 }
 
 void enough_to_node( Custom_cell* pCell, std::string nody, std::string field )

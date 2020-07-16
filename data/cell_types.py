@@ -108,7 +108,7 @@ class CellTypesTab(object):
 
         name_btn = Button(description='speed', disabled=True, layout=name_button_layout)
         name_btn.style.button_color = 'tan'
-        self.float5 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
+        self.float5 = FloatText(value='0.3', step='0.01', style=style, layout=widget_layout)
         units_btn = Button(description='micron/min', disabled=True, layout=name_button_layout)
         units_btn.style.button_color = 'tan'
         row = [name_btn, self.float5, units_btn]
@@ -116,7 +116,7 @@ class CellTypesTab(object):
 
         name_btn = Button(description='persistence_time', disabled=True, layout=name_button_layout)
         name_btn.style.button_color = 'lightgreen'
-        self.float6 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
+        self.float6 = FloatText(value='10', step='1', style=style, layout=widget_layout)
         units_btn = Button(description='min', disabled=True, layout=name_button_layout)
         units_btn.style.button_color = 'lightgreen'
         row = [name_btn, self.float6, units_btn]
@@ -155,7 +155,7 @@ class CellTypesTab(object):
         intracellular_initial_values.style.button_color = '#ffde6b'
         name_btn = Button(description='Single', disabled=True, layout=name_button_layout)
         name_btn.style.button_color = 'tan'
-        self.float9 = FloatText(value='0.5', step='0.1', style=style, layout=widget_layout)
+        self.float9 = FloatText(value='0.1', step='0.01', style=style, layout=widget_layout)
         units_btn = Button(description='dimensionless', disabled=True, layout=name_button_layout)
         units_btn.style.button_color = 'tan'
         time_step = [name_btn, self.float9, units_btn, ]
@@ -248,8 +248,8 @@ self.cell_def_vbox0,         ])
         self.bool0.value = ('true' == (uep.find('.//cell_definition[1]//phenotype//motility//options//enabled').text.lower()))
         self.bool1.value = ('true' == (uep.find('.//cell_definition[1]//phenotype//motility//options//use_2D').text.lower()))
         # ---------  intracellular
-        self.bnd_filenames[0].value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//bnd_filename').text)
-        self.cfg_filenames[0].value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//cfg_filename').text)
+        self.bnd_filenames[0].value = str(uep.find('.//cell_definition[1]//phenotype//intracellular//bnd_filename').text)
+        self.cfg_filenames[0].value = str(uep.find('.//cell_definition[1]//phenotype//intracellular//cfg_filename').text)
         self.float8.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//time_step').text)
         self.float9.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//initial_values//initial_value[1]').text)
         self.float10.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[1]').text)
