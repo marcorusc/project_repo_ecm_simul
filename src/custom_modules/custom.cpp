@@ -203,6 +203,9 @@ void setup_tissue( void )
 		int TGFbeta_index = microenvironment.find_density_index("TGFbeta");
 		pC->phenotype.secretion.uptake_rates[TGFbeta_index] = PhysiCell::parameters.doubles("TGFbeta_degradation");
 		color_node(pC);
+		//std::cout << pC->phenotype.intracellular->get_boolean_node_value("Cell_growth");
+		//pC->phenotype.intracellular->print_current_nodes();
+		//std::cout << std::endl;
 	}
 	std::cout << "tissue created" << std::endl;
 
@@ -284,6 +287,7 @@ std::vector<std::string> my_coloring_function( Cell* pCell )
 
 void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, double dt )
 {
+	//std::cout << dt << std::endl;
 	Custom_cell* pCustomCell = static_cast<Custom_cell*>(pCell);
 	
 	if( phenotype.death.dead == true )
@@ -292,15 +296,22 @@ void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, dou
 		return;
 	}
 
+
 	if (pCell->phenotype.intracellular->need_update())
 	{
-		
+		//#pragma omp critical
+		//{//std::cout << pCell->phenotype.intracellular->get_boolean_node_value("Cell_growth");
+		//pCell->phenotype.intracellular->print_current_nodes();
 		set_input_nodes(pCustomCell);
-
+		//std::cout << std::endl;
 		pCell->phenotype.intracellular->update();
-		
+		//std::cout << pCustomCell->cell_contact;
+		//std::cout << pCell->phenotype.intracellular->get_boolean_node_value("Cell_growth");
+		//pCell->phenotype.intracellular->print_current_nodes();
+		//std::cout << std::endl;
 		from_nodes_to_cell(pCustomCell, phenotype, dt);
 		color_node(pCustomCell);
+		//}
 	}
 	pCustomCell->custom_data["ecm_contact"] = pCustomCell->ecm_contact;
 	pCustomCell->custom_data["cell_contact"] = pCustomCell->cell_contact;
@@ -310,6 +321,8 @@ void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, dou
 
 void set_input_nodes(Custom_cell* pCell) 
 {	
+
+
 	if ( pCell->phenotype.intracellular->has_node( "Oxy" ) ){
 		pCell->phenotype.intracellular->set_boolean_node_value("Oxy", !pCell->necrotic_oxygen());
 	}
@@ -433,6 +446,8 @@ void from_nodes_to_cell(Custom_cell* pCell, Phenotype& phenotype, double dt)
 	if ( pCell->phenotype.intracellular->has_node( "Cell_freeze" ) ){
 		pCell->freezer(3 * pCell->phenotype.intracellular->get_boolean_node_value( "Cell_freeze" ));
 	}
+
+	//pCell->phenotype.intracellular->print_current_nodes();
 }
 
 
@@ -554,9 +569,9 @@ std::vector<std::vector<double>> create_cell_sphere_positions(double cell_radius
 {
 	std::vector<std::vector<double>> cells;
 	int xc=0,yc=0,zc=0;
-	double x_spacing= cell_radius*sqrt(3);
+	double x_spacing= cell_radius*sqrt(2);
 	double y_spacing= cell_radius*2;
-	double z_spacing= cell_radius*sqrt(3);
+	double z_spacing= cell_radius*sqrt(2);
 	
 	std::vector<double> tempPoint(3,0.0);
 	// std::vector<double> cylinder_center(3,0.0);
@@ -582,7 +597,7 @@ std::vector<std::vector<double>> create_cell_sphere_positions(double cell_radius
 }
 
 bool wait_for_cell_growth(Cell* pCell, Phenotype& phenotype, double dt){
-
+	//std::cout << pCell->phenotype.intracellular->get_boolean_node_value("Cell_growth");
 	return !pCell->phenotype.intracellular->get_boolean_node_value("Cell_growth");
 
 }

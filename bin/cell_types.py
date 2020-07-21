@@ -29,10 +29,14 @@ class CellTypesTab(object):
         divider_button_layout={'width':'60%'}
         box_layout = Layout(display='flex', flex_flow='row', align_items='stretch', width='100%')
 
-        self.parent_name = Text(value='None',placeholder='Type something',description='Parent:',disabled=True)
-
         self.cell_type_dropdown = Dropdown(description='Cell type:',)
         self.cell_type_dropdown.style = {'description_width': '%sch' % str(len(self.cell_type_dropdown.description) + 1)}
+
+        cell_type_names_layout={'width':'30%'}
+        cell_type_names_style={'description_width':'initial'}
+        self.parent_name = Text(value='None',description='inherits properties from parent type:',disabled=True, style=cell_type_names_style, layout=cell_type_names_layout)
+
+        explain_inheritance = Label(value='    This cell line inherits its properties from its parent type. Any settings below override those inherited properties.')  # , style=cell_type_names_style, layout=cell_type_names_layout)
 
         self.cell_type_parent_row = HBox([self.cell_type_dropdown, self.parent_name])
         self.cell_type_parent_dict = {}
@@ -194,7 +198,7 @@ class CellTypesTab(object):
 
 
         self.tab = VBox([
-          self.cell_type_parent_row, 
+          self.cell_type_parent_row, explain_inheritance, 
 self.cell_def_vbox0,         ])
         self.display_cell_type_default()
 
@@ -248,8 +252,8 @@ self.cell_def_vbox0,         ])
         self.bool0.value = ('true' == (uep.find('.//cell_definition[1]//phenotype//motility//options//enabled').text.lower()))
         self.bool1.value = ('true' == (uep.find('.//cell_definition[1]//phenotype//motility//options//use_2D').text.lower()))
         # ---------  intracellular
-        self.bnd_filenames[0].value = str(uep.find('.//cell_definition[1]//phenotype//intracellular//bnd_filename').text)
-        self.cfg_filenames[0].value = str(uep.find('.//cell_definition[1]//phenotype//intracellular//cfg_filename').text)
+        self.bnd_filenames[0].value = uep.find('.//cell_definition[1]//phenotype//intracellular//bnd_filename').text
+        self.cfg_filenames[0].value = uep.find('.//cell_definition[1]//phenotype//intracellular//cfg_filename').text
         self.float8.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//time_step').text)
         self.float9.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//initial_values//initial_value[1]').text)
         self.float10.value = float(uep.find('.//cell_definition[1]//phenotype//intracellular//mutations//mutation[1]').text)

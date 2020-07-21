@@ -118,10 +118,14 @@ class CellTypesTab(object):
         divider_button_layout={'width':'60%'}
         box_layout = Layout(display='flex', flex_flow='row', align_items='stretch', width='100%')
 
-        self.parent_name = Text(value='None',placeholder='Type something',description='Parent:',disabled=True)
-
         self.cell_type_dropdown = Dropdown(description='Cell type:',)
         self.cell_type_dropdown.style = {'description_width': '%sch' % str(len(self.cell_type_dropdown.description) + 1)}
+
+        cell_type_names_layout={'width':'30%'}
+        cell_type_names_style={'description_width':'initial'}
+        self.parent_name = Text(value='None',description='inherits properties from parent type:',disabled=True, style=cell_type_names_style, layout=cell_type_names_layout)
+
+        explain_inheritance = Label(value='    This cell line inherits its properties from its parent type. Any settings below override those inherited properties.')  # , style=cell_type_names_style, layout=cell_type_names_layout)
 
         self.cell_type_parent_row = HBox([self.cell_type_dropdown, self.parent_name])
         self.cell_type_parent_dict = {}
@@ -402,7 +406,7 @@ cells_tab_header += "\n\n"
 # e.g., self.cell_type_parent_dict =  {'default': 'None', 'lung epithelium': 'default', 'immune': 'default', 'CD8 Tcell': 'immune', 'macrophage': 'immune', 'neutrophil': 'immune'}
 
 
-main_vbox_str += indent2 + "self.cell_type_parent_row, \n"
+main_vbox_str += indent2 + "self.cell_type_parent_row, explain_inheritance, \n"
 #    cells_tab_header += "\n" + indent + row_name + " = " + "Button(description='" + child.attrib['description'] + "', disabled=True, layout=divider_button_layout)\n"
 
 
@@ -1018,7 +1022,7 @@ for cell_def in uep.findall('cell_definition'):
                     bnd_filename_text_str = indent + bnd_filename_name + " = Text(value='" + elm.text + "', style=style, layout=widget_layout)\n"
                     cells_tab_header += bnd_filename_text_str
                     
-                    fill_gui_and_xml(bnd_filename_name, subpath2)
+                    fill_gui_and_xml_string(bnd_filename_name, subpath2)
 
                     row_str = indent + "row = [" + row_name + ", " + bnd_filename_name + "]\n"
                     cells_tab_header += row_str
@@ -1045,7 +1049,7 @@ for cell_def in uep.findall('cell_definition'):
                     cfg_filename_text_str = indent + cfg_filename_name + " = Text(value='" + elm.text + "', style=style, layout=widget_layout)\n"
                     cells_tab_header += cfg_filename_text_str
 
-                    fill_gui_and_xml(cfg_filename_name, subpath2)
+                    fill_gui_and_xml_string(cfg_filename_name, subpath2)
 
                     row_str = indent + "row = [" + row_name + ", " + cfg_filename_name + "]\n"
                     cells_tab_header += row_str

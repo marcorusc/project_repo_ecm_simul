@@ -242,6 +242,8 @@
 		<ecm_adhesion_min type="double" units="" description="used to set the min adhesion between cells and ECM"> 1 </ecm_adhesion_min>
 		<ecm_adhesion_max type="double" units="" description="used to set the min adhesion between cells and ECM"> 2 </ecm_adhesion_max>
 		<cell_ecm_repulsion type="double" units="" description="change the value of ECM repulsion"> 10.0 </cell_ecm_repulsion>
+		<ecm_cell_contact_factor type="double" units="" description="change the amount of ecm_contact needed to a cell to detach from the others">100</ecm_cell_contact_factor>
+		<initial_cell_contact_parameter type= "double" units="" description="set the initial amount of cell_contact allowing the immediate activation of Neighbours/Nei2 nodes in the boolean network">20</initial_cell_contact_parameter>
 		<ecm_degradation type="double" units="" description="chenage the amount of ECM degraded by the cells with Matrix_modifcation ON"> 0.5 </ecm_degradation>
 		<TGFbeta_degradation type="double" units="" description="chenage the amount of TGFbeta degraded by the cells"> 0.0015 </TGFbeta_degradation>
 		<cell_radius type="double" units="" description="initial radius of the cells"> 8.413 </cell_radius>

@@ -186,63 +186,79 @@ class UserTab(object):
           step=1,
           style=style, layout=widget_layout)
 
-        param_name21 = Button(description='ecm_degradation', disabled=True, layout=name_button_layout)
+        param_name21 = Button(description='ecm_cell_contact_factor', disabled=True, layout=name_button_layout)
         param_name21.style.button_color = 'lightgreen'
+
+        self.ecm_cell_contact_factor = FloatText(
+          value=100,
+          step=10,
+          style=style, layout=widget_layout)
+
+        param_name22 = Button(description='initial_cell_contact_parameter', disabled=True, layout=name_button_layout)
+        param_name22.style.button_color = 'tan'
+
+        self.initial_cell_contact_parameter = FloatText(
+          value=20,
+          step=1,
+          style=style, layout=widget_layout)
+
+        param_name23 = Button(description='ecm_degradation', disabled=True, layout=name_button_layout)
+        param_name23.style.button_color = 'lightgreen'
 
         self.ecm_degradation = FloatText(
           value= 0.5 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name22 = Button(description='TGFbeta_degradation', disabled=True, layout=name_button_layout)
-        param_name22.style.button_color = 'tan'
+        param_name24 = Button(description='TGFbeta_degradation', disabled=True, layout=name_button_layout)
+        param_name24.style.button_color = 'tan'
 
         self.TGFbeta_degradation = FloatText(
           value= 0.0015 ,
           step=0.0001,
           style=style, layout=widget_layout)
 
-        param_name23 = Button(description='cell_radius', disabled=True, layout=name_button_layout)
-        param_name23.style.button_color = 'lightgreen'
+        param_name25 = Button(description='cell_radius', disabled=True, layout=name_button_layout)
+        param_name25.style.button_color = 'lightgreen'
 
         self.cell_radius = FloatText(
           value= 8.413 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name24 = Button(description='max_interaction_factor', disabled=True, layout=name_button_layout)
-        param_name24.style.button_color = 'tan'
+        param_name26 = Button(description='max_interaction_factor', disabled=True, layout=name_button_layout)
+        param_name26.style.button_color = 'tan'
 
         self.max_interaction_factor = FloatText(
           value= 1.3 ,
           step=0.1,
           style=style, layout=widget_layout)
 
-        param_name25 = Button(description='config_radius', disabled=True, layout=name_button_layout)
-        param_name25.style.button_color = 'lightgreen'
+        param_name27 = Button(description='config_radius', disabled=True, layout=name_button_layout)
+        param_name27.style.button_color = 'lightgreen'
 
         self.config_radius = FloatText(
           value=100,
           step=10,
           style=style, layout=widget_layout)
 
-        param_name26 = Button(description='tgfbeta_radius', disabled=True, layout=name_button_layout)
-        param_name26.style.button_color = 'tan'
+        param_name28 = Button(description='tgfbeta_radius', disabled=True, layout=name_button_layout)
+        param_name28.style.button_color = 'tan'
 
         self.tgfbeta_radius = FloatText(
           value=90,
           step=1,
           style=style, layout=widget_layout)
 
-        param_name27 = Button(description='node_to_visualize', disabled=True, layout=name_button_layout)
-        param_name27.style.button_color = 'lightgreen'
+        param_name29 = Button(description='node_to_visualize', disabled=True, layout=name_button_layout)
+        param_name29.style.button_color = 'lightgreen'
 
         self.node_to_visualize = Text(
           value='Single',
           style=style, layout=widget_layout)
 
-        param_name28 = Button(description='color_function', disabled=True, layout=name_button_layout)
-        param_name28.style.button_color = 'tan'
+        param_name30 = Button(description='color_function', disabled=True, layout=name_button_layout)
+        param_name30.style.button_color = 'tan'
 
         self.color_function = IntText(
           value=2,
@@ -305,6 +321,10 @@ class UserTab(object):
         units_button27.style.button_color = 'lightgreen'
         units_button28 = Button(description='', disabled=True, layout=units_button_layout) 
         units_button28.style.button_color = 'tan'
+        units_button29 = Button(description='', disabled=True, layout=units_button_layout) 
+        units_button29.style.button_color = 'lightgreen'
+        units_button30 = Button(description='', disabled=True, layout=units_button_layout) 
+        units_button30.style.button_color = 'tan'
 
         desc_button1 = Button(description='change seed of the simulation' , tooltip='change seed of the simulation', disabled=True, layout=desc_button_layout) 
         desc_button1.style.button_color = 'lightgreen'
@@ -346,22 +366,26 @@ class UserTab(object):
         desc_button19.style.button_color = 'lightgreen'
         desc_button20 = Button(description='change the value of ECM repulsion' , tooltip='change the value of ECM repulsion', disabled=True, layout=desc_button_layout) 
         desc_button20.style.button_color = 'tan'
-        desc_button21 = Button(description='chenage the amount of ECM degraded by the cells with Matrix_modifcation ON' , tooltip='chenage the amount of ECM degraded by the cells with Matrix_modifcation ON', disabled=True, layout=desc_button_layout) 
+        desc_button21 = Button(description='change the amount of ecm_contact needed to a cell to detach from the others' , tooltip='change the amount of ecm_contact needed to a cell to detach from the others', disabled=True, layout=desc_button_layout) 
         desc_button21.style.button_color = 'lightgreen'
-        desc_button22 = Button(description='chenage the amount of TGFbeta degraded by the cells' , tooltip='chenage the amount of TGFbeta degraded by the cells', disabled=True, layout=desc_button_layout) 
+        desc_button22 = Button(description='set the initial amount of cell_contact allowing the immediate activation of Neighbours/Nei2 nodes in the boolean network' , tooltip='set the initial amount of cell_contact allowing the immediate activation of Neighbours/Nei2 nodes in the boolean network', disabled=True, layout=desc_button_layout) 
         desc_button22.style.button_color = 'tan'
-        desc_button23 = Button(description='initial radius of the cells' , tooltip='initial radius of the cells', disabled=True, layout=desc_button_layout) 
+        desc_button23 = Button(description='chenage the amount of ECM degraded by the cells with Matrix_modifcation ON' , tooltip='chenage the amount of ECM degraded by the cells with Matrix_modifcation ON', disabled=True, layout=desc_button_layout) 
         desc_button23.style.button_color = 'lightgreen'
-        desc_button24 = Button(description='used to set the max distance of interaction' , tooltip='used to set the max distance of interaction', disabled=True, layout=desc_button_layout) 
+        desc_button24 = Button(description='chenage the amount of TGFbeta degraded by the cells' , tooltip='chenage the amount of TGFbeta degraded by the cells', disabled=True, layout=desc_button_layout) 
         desc_button24.style.button_color = 'tan'
-        desc_button25 = Button(description='change the initial radius of the tumor' , tooltip='change the initial radius of the tumor', disabled=True, layout=desc_button_layout) 
+        desc_button25 = Button(description='initial radius of the cells' , tooltip='initial radius of the cells', disabled=True, layout=desc_button_layout) 
         desc_button25.style.button_color = 'lightgreen'
-        desc_button26 = Button(description='change radius of the tgfbeta substrate' , tooltip='change radius of the tgfbeta substrate', disabled=True, layout=desc_button_layout) 
+        desc_button26 = Button(description='used to set the max distance of interaction' , tooltip='used to set the max distance of interaction', disabled=True, layout=desc_button_layout) 
         desc_button26.style.button_color = 'tan'
-        desc_button27 = Button(description='change the node to visualize in the plot tab when coloring cells by custom data value' , tooltip='change the node to visualize in the plot tab when coloring cells by custom data value', disabled=True, layout=desc_button_layout) 
+        desc_button27 = Button(description='change the initial radius of the tumor' , tooltip='change the initial radius of the tumor', disabled=True, layout=desc_button_layout) 
         desc_button27.style.button_color = 'lightgreen'
-        desc_button28 = Button(description='change the basic color function: 0 for ECM based color, 1 for phase based color, 2 for node based color' , tooltip='change the basic color function: 0 for ECM based color, 1 for phase based color, 2 for node based color', disabled=True, layout=desc_button_layout) 
+        desc_button28 = Button(description='change radius of the tgfbeta substrate' , tooltip='change radius of the tgfbeta substrate', disabled=True, layout=desc_button_layout) 
         desc_button28.style.button_color = 'tan'
+        desc_button29 = Button(description='change the node to visualize in the plot tab when coloring cells by custom data value' , tooltip='change the node to visualize in the plot tab when coloring cells by custom data value', disabled=True, layout=desc_button_layout) 
+        desc_button29.style.button_color = 'lightgreen'
+        desc_button30 = Button(description='change the basic color function: 0 for ECM based color, 1 for phase based color, 2 for node based color' , tooltip='change the basic color function: 0 for ECM based color, 1 for phase based color, 2 for node based color', disabled=True, layout=desc_button_layout) 
+        desc_button30.style.button_color = 'tan'
 
         row1 = [param_name1, self.random_seed, units_button1, desc_button1] 
         row2 = [param_name2, self.polarity_coefficient, units_button2, desc_button2] 
@@ -383,14 +407,16 @@ class UserTab(object):
         row18 = [param_name18, self.ecm_adhesion_min, units_button18, desc_button18] 
         row19 = [param_name19, self.ecm_adhesion_max, units_button19, desc_button19] 
         row20 = [param_name20, self.cell_ecm_repulsion, units_button20, desc_button20] 
-        row21 = [param_name21, self.ecm_degradation, units_button21, desc_button21] 
-        row22 = [param_name22, self.TGFbeta_degradation, units_button22, desc_button22] 
-        row23 = [param_name23, self.cell_radius, units_button23, desc_button23] 
-        row24 = [param_name24, self.max_interaction_factor, units_button24, desc_button24] 
-        row25 = [param_name25, self.config_radius, units_button25, desc_button25] 
-        row26 = [param_name26, self.tgfbeta_radius, units_button26, desc_button26] 
-        row27 = [param_name27, self.node_to_visualize, units_button27, desc_button27] 
-        row28 = [param_name28, self.color_function, units_button28, desc_button28] 
+        row21 = [param_name21, self.ecm_cell_contact_factor, units_button21, desc_button21] 
+        row22 = [param_name22, self.initial_cell_contact_parameter, units_button22, desc_button22] 
+        row23 = [param_name23, self.ecm_degradation, units_button23, desc_button23] 
+        row24 = [param_name24, self.TGFbeta_degradation, units_button24, desc_button24] 
+        row25 = [param_name25, self.cell_radius, units_button25, desc_button25] 
+        row26 = [param_name26, self.max_interaction_factor, units_button26, desc_button26] 
+        row27 = [param_name27, self.config_radius, units_button27, desc_button27] 
+        row28 = [param_name28, self.tgfbeta_radius, units_button28, desc_button28] 
+        row29 = [param_name29, self.node_to_visualize, units_button29, desc_button29] 
+        row30 = [param_name30, self.color_function, units_button30, desc_button30] 
 
         box_layout = Layout(display='flex', flex_flow='row', align_items='stretch', width='100%')
         box1 = Box(children=row1, layout=box_layout)
@@ -421,6 +447,8 @@ class UserTab(object):
         box26 = Box(children=row26, layout=box_layout)
         box27 = Box(children=row27, layout=box_layout)
         box28 = Box(children=row28, layout=box_layout)
+        box29 = Box(children=row29, layout=box_layout)
+        box30 = Box(children=row30, layout=box_layout)
 
         self.tab = VBox([
           box1,
@@ -451,6 +479,8 @@ class UserTab(object):
           box26,
           box27,
           box28,
+          box29,
+          box30,
         ])
 
     # Populate the GUI widgets with values from the XML
@@ -482,6 +512,8 @@ class UserTab(object):
         self.ecm_adhesion_min.value = float(uep.find('.//ecm_adhesion_min').text)
         self.ecm_adhesion_max.value = float(uep.find('.//ecm_adhesion_max').text)
         self.cell_ecm_repulsion.value = float(uep.find('.//cell_ecm_repulsion').text)
+        self.ecm_cell_contact_factor.value = float(uep.find('.//ecm_cell_contact_factor').text)
+        self.initial_cell_contact_parameter.value = float(uep.find('.//initial_cell_contact_parameter').text)
         self.ecm_degradation.value = float(uep.find('.//ecm_degradation').text)
         self.TGFbeta_degradation.value = float(uep.find('.//TGFbeta_degradation').text)
         self.cell_radius.value = float(uep.find('.//cell_radius').text)
@@ -521,6 +553,8 @@ class UserTab(object):
         uep.find('.//ecm_adhesion_min').text = str(self.ecm_adhesion_min.value)
         uep.find('.//ecm_adhesion_max').text = str(self.ecm_adhesion_max.value)
         uep.find('.//cell_ecm_repulsion').text = str(self.cell_ecm_repulsion.value)
+        uep.find('.//ecm_cell_contact_factor').text = str(self.ecm_cell_contact_factor.value)
+        uep.find('.//initial_cell_contact_parameter').text = str(self.initial_cell_contact_parameter.value)
         uep.find('.//ecm_degradation').text = str(self.ecm_degradation.value)
         uep.find('.//TGFbeta_degradation').text = str(self.TGFbeta_degradation.value)
         uep.find('.//cell_radius').text = str(self.cell_radius.value)

@@ -9,7 +9,7 @@ Custom_cell::Custom_cell() {
 	motility.resize(3, 0.0);
 	ecm_contact = 0;
 	TGFbeta_contact = 0;
-	cell_contact = 0;
+	cell_contact = PhysiCell::parameters.doubles("initial_cell_contact_parameter");
 	nucleus_deform = 0;
 }
 
@@ -205,7 +205,7 @@ void Custom_cell::custom_update_velocity( Cell* pCell, Phenotype& phenotype, dou
 		}
 	}
 	
-	if((pCustomCell->ecm_contact) > (pCustomCell->cell_contact * 20)){
+	if((pCustomCell->ecm_contact) > (pCustomCell->cell_contact * PhysiCell::parameters.doubles("ecm_cell_contact_factor"))){
 		pCustomCell->padhesion = 0;
 	}
 
