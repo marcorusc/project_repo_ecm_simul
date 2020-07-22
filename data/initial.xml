@@ -11,9 +11,9 @@
 		</software>
 		<citation />
 		<current_time units="min">0.000000</current_time>
-		<current_runtime units="sec">2.587131</current_runtime>
-		<created>2020-07-21T11:33:06Z</created>
-		<last_modified>2020-07-21T11:33:06Z</last_modified>
+		<current_runtime units="sec">1.749399</current_runtime>
+		<created>2020-07-22T13:50:02Z</created>
+		<last_modified>2020-07-22T13:50:02Z</last_modified>
 	</metadata>
 	<microenvironment>
 		<domain name="microenvironment">
@@ -30,7 +30,7 @@
 				<variable name="oxygen" units="mmHg" ID="0">
 					<physical_parameter_set>
 						<conditions />
-						<diffusion_coefficient units="micron^2/min">100000.000000</diffusion_coefficient>
+						<diffusion_coefficient units="micron^2/min">4000.000000</diffusion_coefficient>
 						<decay_rate units="1/min">0.100000</decay_rate>
 					</physical_parameter_set>
 				</variable>
@@ -88,6 +88,7 @@
 							<label index="30" size="1">cell_contact</label>
 							<label index="31" size="1">TGFbeta</label>
 							<label index="32" size="1">node</label>
+							<label index="33" size="1">adh</label>
 						</labels>
 						<filename>initial_cells_physicell.mat</filename>
 					</simplified_data>

@@ -90,7 +90,7 @@ void create_cell_types( void )
 	*/ 
 	
 	cell_defaults.functions.volume_update_function = standard_volume_update_function;
-	cell_defaults.functions.update_velocity = standard_update_cell_velocity;
+	//cell_defaults.functions.update_velocity = standard_update_cell_velocity;
 
 	cell_defaults.functions.update_migration_bias = NULL; 
 	cell_defaults.functions.update_phenotype = NULL; // update_cell_and_death_parameters_O2_based; 
@@ -134,6 +134,7 @@ void create_cell_types( void )
 	cell_defaults.custom_data.add_variable("cell_contact", "dimensionless", 0.0); //for paraview visualization
 	cell_defaults.custom_data.add_variable("TGFbeta", "dimensionless", 0.0); //for paraview visualization
 	cell_defaults.custom_data.add_variable("node", "dimensionless", 0.0 ); //for paraview visualization
+	cell_defaults.custom_data.add_variable("adh", "dimensionless", 0.0 ); //for paraview visualization
 	build_ecm_shape();
 
 	//Setting the custom_create_cell pointer to our create_custom_cell
@@ -289,7 +290,6 @@ void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, dou
 {
 	//std::cout << dt << std::endl;
 	Custom_cell* pCustomCell = static_cast<Custom_cell*>(pCell);
-	
 	if( phenotype.death.dead == true )
 	{
 		pCell->functions.update_phenotype = NULL;
@@ -299,8 +299,7 @@ void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, dou
 
 	if (pCell->phenotype.intracellular->need_update())
 	{
-		//#pragma omp critical
-		//{//std::cout << pCell->phenotype.intracellular->get_boolean_node_value("Cell_growth");
+		
 		//pCell->phenotype.intracellular->print_current_nodes();
 		set_input_nodes(pCustomCell);
 		//std::cout << std::endl;
@@ -311,7 +310,7 @@ void tumor_cell_phenotype_with_signaling( Cell* pCell, Phenotype& phenotype, dou
 		//std::cout << std::endl;
 		from_nodes_to_cell(pCustomCell, phenotype, dt);
 		color_node(pCustomCell);
-		//}
+		
 	}
 	pCustomCell->custom_data["ecm_contact"] = pCustomCell->ecm_contact;
 	pCustomCell->custom_data["cell_contact"] = pCustomCell->cell_contact;
@@ -403,7 +402,6 @@ void from_nodes_to_cell(Custom_cell* pCell, Phenotype& phenotype, double dt)
 	)
 	{
 		pCell->padhesion = 0;
-		pCell->phenotype.motility.migration_bias = parameters.doubles("Single_cell_bias");
 	}
 
 	}
@@ -569,9 +567,9 @@ std::vector<std::vector<double>> create_cell_sphere_positions(double cell_radius
 {
 	std::vector<std::vector<double>> cells;
 	int xc=0,yc=0,zc=0;
-	double x_spacing= cell_radius*sqrt(2);
+	double x_spacing= cell_radius*sqrt(3);
 	double y_spacing= cell_radius*2;
-	double z_spacing= cell_radius*sqrt(2);
+	double z_spacing= cell_radius*sqrt(3);
 	
 	std::vector<double> tempPoint(3,0.0);
 	// std::vector<double> cylinder_center(3,0.0);

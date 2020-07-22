@@ -112,7 +112,7 @@ class CellTypesTab(object):
 
         name_btn = Button(description='speed', disabled=True, layout=name_button_layout)
         name_btn.style.button_color = 'tan'
-        self.float5 = FloatText(value='0.3', step='0.01', style=style, layout=widget_layout)
+        self.float5 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
         units_btn = Button(description='micron/min', disabled=True, layout=name_button_layout)
         units_btn.style.button_color = 'tan'
         row = [name_btn, self.float5, units_btn]
@@ -120,7 +120,7 @@ class CellTypesTab(object):
 
         name_btn = Button(description='persistence_time', disabled=True, layout=name_button_layout)
         name_btn.style.button_color = 'lightgreen'
-        self.float6 = FloatText(value='10', step='1', style=style, layout=widget_layout)
+        self.float6 = FloatText(value='1', step='0.1', style=style, layout=widget_layout)
         units_btn = Button(description='min', disabled=True, layout=name_button_layout)
         units_btn.style.button_color = 'lightgreen'
         row = [name_btn, self.float6, units_btn]
@@ -128,12 +128,12 @@ class CellTypesTab(object):
 
         name_btn = Button(description='migration_bias', disabled=True, layout=name_button_layout)
         name_btn.style.button_color = 'tan'
-        self.float7 = FloatText(value='0', step='0.01', style=style, layout=widget_layout)
+        self.float7 = FloatText(value='0.3', step='0.01', style=style, layout=widget_layout)
         units_btn = Button(description='dimensionless', disabled=True, layout=name_button_layout)
         units_btn.style.button_color = 'tan'
         row = [name_btn, self.float7, units_btn]
         box7 = Box(children=row, layout=box_layout)
-        self.bool0 = Checkbox(description='enabled', value=False,layout=name_button_layout)
+        self.bool0 = Checkbox(description='enabled', value=True,layout=name_button_layout)
         self.bool1 = Checkbox(description='use_2D', value=False,layout=name_button_layout)
         #  ------------------------- 
         div_row4 = Button(description='phenotype:intracellular (maboss)', disabled=True, layout=divider_button_layout)
