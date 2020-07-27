@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+
+  ecm_simul:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      
+    image: ecm_simul
+    container_name: ecm_simul
+    ports:
+      - "8888:8888"
+
