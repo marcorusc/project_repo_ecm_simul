@@ -1,4 +1,4 @@
-### Run in Binder : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vincent-noel/project_repo_ecm_simul/master)
+### Run in Binder : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marcorusc/project_repo_ecm_simul/master?filepath=project_repo_ecm_simul.ipynb)
 
 ### Run locally with Docker and Docker-compose
 ```
