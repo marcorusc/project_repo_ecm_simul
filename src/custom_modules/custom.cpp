@@ -348,12 +348,12 @@ void set_input_nodes(Custom_cell* pCell)
 
 	// If nucleus is deformed, probability of damage
 	// Change to increase proba with deformation ? + put as parameter
-	/*
+	
 	if ( pCell->phenotype.intracellular->has_node( "DNAdamage" ) )
 		pCell->phenotype.intracellular->set_boolean_node_value("DNAdamage", 
 			( pCell->nucleus_deform > 0.5 ) ? (2*PhysiCell::UniformRandom() < pCell->nucleus_deform) : 0
 		);
-	*/	
+		
 	/// example
 	
 }
