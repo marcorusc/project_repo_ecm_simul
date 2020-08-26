@@ -206,7 +206,7 @@ class UserTab(object):
         param_name23.style.button_color = 'lightgreen'
 
         self.TGFbeta_degradation = FloatText(
-          value= 0.0015 ,
+          value= 0.00018 ,
           step=0.0001,
           style=style, layout=widget_layout)
 

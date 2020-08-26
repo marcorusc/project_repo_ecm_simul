@@ -36,7 +36,7 @@ class MicroenvTab(object):
 
         param_name2 = Button(description='decay_rate', disabled=True, layout=name_button_layout)
 
-        self.oxygen_decay_rate = FloatText(value=.1,
+        self.oxygen_decay_rate = FloatText(value=.15,
           step=0.01,style=style, layout=widget_layout)
         param_name3 = Button(description='initial_condition', disabled=True, layout=name_button_layout)
 
